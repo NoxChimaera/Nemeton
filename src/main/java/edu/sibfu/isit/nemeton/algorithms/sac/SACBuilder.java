@@ -5,18 +5,19 @@
  */
 package edu.sibfu.isit.nemeton.algorithms.sac;
 
-import edu.sibfu.isit.nemeton.algorithms.IAlgorithmBuilder;
+import edu.sibfu.isit.nemeton.algorithms.AlgorithmBuilder;
 import edu.sibfu.isit.nemeton.algorithms.IOptimization;
+import edu.sibfu.isit.nemeton.models.functions.NFunction;
 import javax.swing.JFrame;
 
 /**
  *
  * @author Maximillian M.
  */
-public class SACBuilder implements IAlgorithmBuilder {
+public class SACBuilder extends AlgorithmBuilder {
 
     @Override
-    public IOptimization build() {
+    public IOptimization build(NFunction function) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

@@ -5,18 +5,18 @@
  */
 package edu.sibfu.isit.nemeton.controllers;
 
-import edu.sibfu.isit.nemeton.algorithms.IAlgorithmBuilder;
+import edu.sibfu.isit.nemeton.algorithms.AlgorithmBuilder;
 import edu.sibfu.isit.nemeton.algorithms.IOptimization;
 import edu.sibfu.isit.nemeton.models.functions.NFunction;
 import edu.sibfu.isit.nemeton.views.MainView;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+
 
 /**
  *
@@ -24,7 +24,7 @@ import javax.swing.table.TableModel;
  */
 public class MainController {
     MainView view;
-    ArrayList<IAlgorithmBuilder> builders;
+    ArrayList<AlgorithmBuilder> builders;
     DefaultTableModel buildersTableModel;
     
     ArrayList<NFunction> functions;
@@ -42,7 +42,7 @@ public class MainController {
         buildersTableModel = 
             new DefaultTableModel(new Object[][] {}, new String[] { "", "Название" }) {
                 Class[] types = new Class [] {
-                    Boolean.class, IAlgorithmBuilder.class
+                    Boolean.class, AlgorithmBuilder.class
                 };
 
                 @Override
@@ -61,7 +61,7 @@ public class MainController {
         return functionsListModel;
     }
     
-    public void registerBuilder(IAlgorithmBuilder bldr) {
+    public void registerBuilder(AlgorithmBuilder bldr) {
         builders.add(bldr);
         buildersTableModel.addRow(new Object[] { true, bldr });
     }
@@ -74,12 +74,24 @@ public class MainController {
         return functions.get(index);
     }
     
-    public void runAlgorithms(Goal g) {
-        Object[] foo = Stream.of(buildersTableModel.getDataVector().toArray())
-            .filter(v -> (Boolean) ((Vector) v).get(0))
-            .map(v -> ((Vector) v).get(1))
-            .toArray();
-        
-        IOptimization opt[] = new IOptimization[foo.length];
+    public void runAlgorithms(Goal g, NFunction function) {
+        ArrayList<IOptimization> algorithms = new ArrayList<>();
+        for (Object item : buildersTableModel.getDataVector().toArray()) {
+            Vector vector = (Vector) item;
+            if ((Boolean) vector.get(0)) {
+                AlgorithmBuilder bldr = (AlgorithmBuilder) vector.get(1);
+                algorithms.add(bldr.build(function));
+            }
+        }
+ 
+        for (IOptimization al : algorithms) {
+            switch (g) {
+                case Maximize:
+                    al.maximize();
+                    break;
+                case Minimize:
+                    al.minimize();
+            }
+        }
     }
 }

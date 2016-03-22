@@ -5,7 +5,7 @@
  */
 package edu.sibfu.isit.nemeton.views;
 
-import edu.sibfu.isit.nemeton.algorithms.IAlgorithmBuilder;
+import edu.sibfu.isit.nemeton.algorithms.AlgorithmBuilder;
 import edu.sibfu.isit.nemeton.controllers.MainController;
 import edu.sibfu.isit.nemeton.models.functions.NFunction;
 import java.awt.GridLayout;
@@ -38,7 +38,7 @@ public class MainView extends javax.swing.JFrame {
         return ctrl;
     }
     
-    public void addAlgorithmBuilder(IAlgorithmBuilder bldr) {
+    public void addAlgorithmBuilder(AlgorithmBuilder bldr) {
         DefaultTableModel m = (DefaultTableModel) algorithmsTable.getModel();
         m.addRow(new Object[] { true, bldr });
     }
@@ -234,14 +234,15 @@ public class MainView extends javax.swing.JFrame {
         Goal goal = goalMin.isSelected() 
             ? Goal.Minimize 
             : Goal.Maximize;
-        ctrl.runAlgorithms(goal);
+        // TODO: NEEDS REFACTORING!!!11
+        ctrl.runAlgorithms(goal, ctrl.getFunction(functionCombo.getSelectedIndex()));
     }//GEN-LAST:event_goActionPerformed
 
     private void algorithmsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_algorithmsTableMouseClicked
         Point p = evt.getPoint();
         int row = algorithmsTable.rowAtPoint(p);
         if (row != -1 && evt.getClickCount() == 2) {
-            IAlgorithmBuilder b = (IAlgorithmBuilder) algorithmsTable.getValueAt(row, 1);
+            AlgorithmBuilder b = (AlgorithmBuilder) algorithmsTable.getValueAt(row, 1);
             showBuilderForm(b);   
         }
     }//GEN-LAST:event_algorithmsTableMouseClicked
@@ -250,12 +251,12 @@ public class MainView extends javax.swing.JFrame {
         int keycode = evt.getKeyCode();
         int selected = algorithmsTable.getSelectedRow();
         if (selected != -1 && keycode == KeyEvent.VK_ENTER) {
-            IAlgorithmBuilder b = (IAlgorithmBuilder) algorithmsTable.getValueAt(selected, 1);
+            AlgorithmBuilder b = (AlgorithmBuilder) algorithmsTable.getValueAt(selected, 1);
             showBuilderForm(b);
         }
     }//GEN-LAST:event_algorithmsTableKeyPressed
 
-    private void showBuilderForm(IAlgorithmBuilder builder) {
+    private void showBuilderForm(AlgorithmBuilder builder) {
         builder.show().setVisible(true);
     }
 

@@ -63,5 +63,22 @@ public class Nemeton {
             + "(x<sub>1</sub><sup>2</sup> + x<sub>2</sub> - 11)<sup>2</sup> + "
             + "(x<sub>2</sub><sup>2</sup> + x<sub>1</sub> - 7)<sup>2</sup></html>");
         ctrl.registerFunction(himmelblau);
+        
+        NFunction dejong = new NFunction((x, y)
+            -> 3905.93 - 100 * Math.pow(x*x - y, 2) - Math.pow(1 - x, 2)
+        ).setTitle("Де Джонга")
+        .setText("<html>I(x<sub>1</sub>, x<sub>2</sub>) = "
+            + "3905.93 - 100(x<sub>1</sub><sup>2</sup> - x<sub>2</sub>)<sup>2</sup> - "
+            + "(1 - x<sub>1</sub>)<sup>2</sup>"
+            + "</html>");
+        ctrl.registerFunction(dejong);
+        
+        NFunction goldstein_price = new NFunction((x, y)
+            -> (1 + Math.pow(x + y + 1, 2)*(19 - 14*x+3*x*x+14*y+6*x*y+3*y*y)
+                * (30 + Math.pow(2*x-3*y, 2)*(18 - 32*x + 12*x*x + 48*y -36*x*y+27*y*y))
+            )
+        ).setTitle("Гольдшейта-Прайса")
+        .setText("BIG BIG FUNCTION");
+        ctrl.registerFunction(goldstein_price);
     }
 }

@@ -10,7 +10,7 @@ import org.apache.commons.lang3.ArrayUtils;
 
 /**
  *
- * @author Maximillian M.
+ * @author Max Balushkin
  */
 public class Point {
     private final int arity;
@@ -18,6 +18,11 @@ public class Point {
     public Point(double ... params) {
         this.arity = params.length;
         this.params = params;
+    }
+    
+    public Point(Point src) {
+        arity = src.getArity();
+        params = Arrays.copyOf(src.params, arity);
     }
     
     public static Point zero(int dim) {

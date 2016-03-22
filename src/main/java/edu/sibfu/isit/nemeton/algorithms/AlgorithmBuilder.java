@@ -5,13 +5,14 @@
  */
 package edu.sibfu.isit.nemeton.algorithms;
 
+import edu.sibfu.isit.nemeton.models.functions.NFunction;
 import javax.swing.JFrame;
 
 /**
  *
  * @author Maximillian M.
  */
-public interface IAlgorithmBuilder {
-    IOptimization build();
-    JFrame show();
+public abstract class AlgorithmBuilder {
+    public abstract IOptimization build(NFunction function);
+    public abstract JFrame show();
 }

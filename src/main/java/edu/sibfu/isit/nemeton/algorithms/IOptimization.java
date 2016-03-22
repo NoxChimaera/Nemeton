@@ -7,13 +7,14 @@ package edu.sibfu.isit.nemeton.algorithms;
 
 import edu.sibfu.isit.nemeton.models.Point;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  *
  * @author Maximillian M.
  */
 public interface IOptimization {
-    public Point run(Comparator<Point> comparator);
-    public Point minimize();
-    public Point maximize();
+    public List<Point> run(Comparator<Point> comparator);
+    public List<Point> minimize();
+    public List<Point> maximize();
 }
