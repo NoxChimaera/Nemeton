@@ -1,79 +1,41 @@
+/*
+ * The MIT License
+ *
+ * Copyright 2016 Max Balushkin.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 package edu.sibfu.isit.nemeton;
 
 import edu.sibfu.isit.nemeton.algorithms.bees.BeesAlgorithmBuilder;
 import edu.sibfu.isit.nemeton.algorithms.sac.SACBuilder;
 import edu.sibfu.isit.nemeton.controllers.MainController;
+import edu.sibfu.isit.nemeton.controllers.providers.FunctionProvider;
 import edu.sibfu.isit.nemeton.lib.FunctionTextFormatter;
 import edu.sibfu.isit.nemeton.models.functions.NFunction;
 import edu.sibfu.isit.nemeton.views.MainView;
-import org.jzy3d.chart.Chart;
-import org.jzy3d.chart.ChartLauncher;
-import org.jzy3d.colors.Color;
-import org.jzy3d.colors.ColorMapper;
-import org.jzy3d.colors.colormaps.ColorMapRainbow;
-import org.jzy3d.contour.DefaultContourColoringPolicy;
-import org.jzy3d.contour.MapperContourPictureGenerator;
-import org.jzy3d.factories.AxeFactory;
-import org.jzy3d.factories.JzyFactories;
-import org.jzy3d.maths.BoundingBox3d;
-import org.jzy3d.maths.Range;
-import org.jzy3d.plot3d.builder.Builder;
-import org.jzy3d.plot3d.builder.Mapper;
-import org.jzy3d.plot3d.builder.concrete.OrthonormalGrid;
-import org.jzy3d.plot3d.primitives.Shape;
-import org.jzy3d.plot3d.primitives.axes.ContourAxeBox;
-import org.jzy3d.plot3d.primitives.axes.IAxe;
-import org.jzy3d.plot3d.primitives.axes.layout.AxeBoxLayout;
-import org.jzy3d.plot3d.primitives.axes.layout.IAxeLayout;
-import org.jzy3d.plot3d.rendering.canvas.Quality;
-import org.jzy3d.plot3d.rendering.legends.colorbars.ColorbarLegend;
-import org.jzy3d.plot3d.rendering.view.View;
 
-/**
+/** 
  *
- * @author Maximillian M.
+ * @author Max Balushkin
  */
 public class Nemeton {
-    
-    private static void test() {
-       // Define a function to plot
-        Mapper mapper = new Mapper(){
-                public double f(double x, double y) {
-                        return 10*Math.sin(x/10)*Math.cos(y/20)*x;
-                }
-        };
-
-        // Define range and precision for the function to plot
-        Range xrange = new Range(50,100);
-        Range yrange = new Range(50,100);
-        int steps   = 50;
-        final Shape surface = (Shape)Builder.buildOrthonormal(new OrthonormalGrid(xrange, steps, yrange, steps), mapper);
-        ColorMapper myColorMapper=new ColorMapper(new ColorMapRainbow(), surface.getBounds().getZmin(), surface.getBounds().getZmax(), new Color(1,1,1,.5f)); 
-        surface.setColorMapper(myColorMapper);
-        surface.setFaceDisplayed(true);
-        surface.setWireframeDisplayed(true);
-        surface.setWireframeColor(Color.BLACK);
-
-        JzyFactories.axe = new AxeFactory() {
-            @Override
-            public IAxe getInstance(BoundingBox3d box, View view) {
-                return new ContourAxeBox(box);
-            }
-        };
-        
-        Chart chart = new Chart(); //TODO: Quality.Advanced contour buggy with axe box 
-        ContourAxeBox cab = (ContourAxeBox)chart.getView().getAxe();
-        MapperContourPictureGenerator contour = new MapperContourPictureGenerator(mapper, xrange, yrange);
-        cab.setContourImg( contour.getContourImage(new DefaultContourColoringPolicy(myColorMapper), 400, 400, 10), xrange, yrange);
-
-        // Add the surface and its colorbar
-        chart.addDrawable(surface);
-        surface.setLegend(new ColorbarLegend(surface, 
-            chart.getView().getAxe().getLayout().getZTickProvider(), 
-            chart.getView().getAxe().getLayout().getZTickRenderer()));
-        surface.setLegendDisplayed(true); // opens a colorbar on the right part of the display
-        ChartLauncher.openChart(chart);
-    }
     
     /**
      * @param args the command line arguments
@@ -107,7 +69,8 @@ public class Nemeton {
         MainController ctrl = view.getController();
         ctrl.registerBuilder(new BeesAlgorithmBuilder());
         ctrl.registerBuilder(new SACBuilder());
-
+        
+        FunctionProvider.subscribe(ctrl);
         registerFunctions();
     }
     

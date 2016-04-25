@@ -33,32 +33,51 @@ import java.util.ArrayList;
 public class FunctionProvider {
     
     private static final ArrayList<NFunction> functions = new ArrayList<>();
+    private static final ArrayList<FunctionProviderSubscriber> subscribers = new ArrayList<>();
+    
+    public static void subscribe(final FunctionProviderSubscriber aSubscriber) {
+        subscribers.add(aSubscriber);
+    }
+    
+    private static void publish(final NFunction aFunction) {
+        for (final FunctionProviderSubscriber subscriber : subscribers) {
+            subscriber.register(aFunction);
+        }
+    }
     
     /**
      * Registers function
      * @param aFunction Function
      */
-    public static void register(NFunction aFunction) {
+    public static void register(final NFunction aFunction) {
         functions.add(aFunction);
+        publish(aFunction);
     }
     
     /**
      * Provides function by index
-     * @param index Index of function
+     * @param aIndex Index of function
      * @return Function
      */
-    public static NFunction get(int index) {
-        return functions.get(index);
+    public static NFunction get(final int aIndex) {
+        return functions.get(aIndex);
     }
     
     /**
      * Provides function by title
-     * @param title Function title
+     * @param aTitle Function title
      * @return Function
      */
-    public static NFunction get(String title) {
-        return functions.stream().filter((NFunction f) -> f.getTitle().equals(title))
+    public static NFunction get(final String aTitle) {
+        return functions.stream().filter((NFunction f) -> f.getTitle().equals(aTitle))
             .findFirst().orElse(null);
+    }
+    
+    /**
+     * @return List of functions
+     */
+    public static ArrayList<NFunction> get() {
+        return functions;
     }
     
 }

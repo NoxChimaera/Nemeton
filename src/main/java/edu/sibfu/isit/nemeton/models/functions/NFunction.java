@@ -62,10 +62,11 @@ public class NFunction {
         this((Point t) ->  function.apply(t.get(0), t.get(1)), 2);
         mapper = new Mapper() {
             @Override
-            public double f(double d, double d1) {
-                return function.apply(d, d);
+            public double f(double x, double y) {
+                return function.apply(x, y);
             }
         };
+        isMapped = true;
     }
     
     /**
@@ -112,6 +113,10 @@ public class NFunction {
      */
     public boolean isMapped() {
         return isMapped;
+    }
+    
+    public Mapper getMapper() {
+        return mapper;
     }
     
     /**

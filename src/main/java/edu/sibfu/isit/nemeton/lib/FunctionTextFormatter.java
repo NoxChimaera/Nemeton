@@ -26,7 +26,7 @@ package edu.sibfu.isit.nemeton.lib;
 import java.util.Stack;
 
 /**
- *
+ * Converts TeX-based format to HTML
  * @author Max Balushkin
  */
 public class FunctionTextFormatter {
@@ -50,22 +50,28 @@ public class FunctionTextFormatter {
     }
     
     private static int idx;
+    /**
+     * Converts TeX-based formatted string to HTML
+     * 
+     * x -> x
+     * x^2 -> x<sup>2<sup>
+     * x_1 -> x<sub>1</sub>
+     * x_1^2 -> x<sub>1</sub><sup>2</sup>
+     * x^y^2 -> x<sup>y<sup>2</sup></sup>
+     * x^2 + y -> x<sup>2</sup> + 2
+     * x^(2 + y) -> x<sup>2 + y</sup>
+     * x + (y - 10) -> x + (y - 10)
+     * \\sigma -> Σ
+     * 
+     * @param src Source text
+     * @param placeHtmlTags Surround with `html` tag
+     * @return HTML formatted text
+     */
     public static String toHTML(String src, boolean placeHtmlTags) {
         return placeHtmlTags ? "<html>" + toHTML(src, 0) + "</html>"
             : toHTML(src, 0);
     }
     protected static String toHTML(String src, int index) {
-        /* x -> x
-         * x^2 -> x<sup>2</sup>
-         * x_1 -> x<sub>1</sub>
-         * x_1^2 -> x<sub>1</sub><sup>2</sup>
-         * x^y^2 -> x<sup>y<sup>2</sup></sup>
-         * x^2 + y -> x<sup>2<sup> + 2
-         * x^(2 + y) -> x<sup>2 + y</sup>
-         * x + (y - 10) -> x + (y - 10)
-         * \\sigma -> Σ
-         */
-        
         StringBuilder bldr = new StringBuilder();
         int n = src.length();
         
