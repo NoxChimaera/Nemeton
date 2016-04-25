@@ -6,8 +6,6 @@
 package edu.sibfu.isit.nemeton.models;
 
 import java.util.Arrays;
-import org.apache.commons.lang3.ArrayUtils;
-
 /**
  *
  * @author Max Balushkin
@@ -60,7 +58,7 @@ public class Point {
     }
     
     public Point add(double c, int dim) {
-        double[] p = ArrayUtils.clone(params);
+        double[] p = Arrays.copyOf(params, arity);
         if (dim < getArity()) {
             p[dim] = params[dim] + c;
         }
