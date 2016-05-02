@@ -23,35 +23,43 @@
  */
 package edu.sibfu.isit.nemeton.lib;
 
+import edu.sibfu.isit.nemeton.models.CalculatedPoint;
 import edu.sibfu.isit.nemeton.models.Point;
 import edu.sibfu.isit.nemeton.models.functions.NFunction;
+import java.util.List;
 import org.jzy3d.maths.Coord3d;
+import org.jzy3d.maths.Range;
 
 /**
  *
  * @author Max Balushkin
  */
-public class JzyDataAdapter {
+public class JzyHelper {
     
-    public static Coord3d toCoord3d(final NFunction aFunction, final Point aPoint) {
-        return new Coord3d(aPoint.get(0), aPoint.get(1), 0);
-//        return new Coord3d(aPoint.get(0), aPoint.get(1), aFunction.eval(aPoint));
+    public static Range range(final List<? extends Point> aPoints, final double aMargin) {
+        double min = Double.MAX_VALUE, max = Double.MIN_VALUE;
+        for (Point point : aPoints) {
+            double x = point.get(0);
+            double y = point.get(1);
+            
+            min = Math.min(Math.min(x, y), min);
+            max = Math.max(Math.max(x, y), max);
+        }
+        
+        return new Range(min - aMargin, max + aMargin);
     }
     
-//    public static List<List<Coord3d>> convertPoints(List<Point> points,
-//            AbstractFunction I) {
-//        List<List<Coord3d>> coordinates = new ArrayList<>();        
-//        try {
-//            List<Coord3d> coordOfExtremum = new ArrayList<>();
-//            for(Point point : points) {
-//                Coord3d coord = new Coord3d(point.getXv(1), point.getXv(2),
-//                    I.getValueWithNoise(point));
-//                coordOfExtremum.add(coord);
-//            }
-//            coordinates.add(coordOfExtremum);
-//        }
-//        catch(Exception exception) { }
-//        
-//        return coordinates;
-//    }
+    public static Range union(final Range a, final Range b) {
+        double min = Math.min(a.getMin(), b.getMin());
+        double max = Math.max(a.getMax(), b.getMax());
+        return new Range(min, max);
+    }
+    
+    public static Coord3d toCoord3d(final NFunction aFunction, final Point aPoint) {
+        return new Coord3d(aPoint.get(0), aPoint.get(1), aFunction.eval(aPoint));
+    }
+    
+    public static Coord3d toCoord3d(final CalculatedPoint aPoint) {
+        return new Coord3d(aPoint.get(0), aPoint.get(1), aPoint.getValue());
+    }
 }

@@ -24,6 +24,7 @@
 package edu.sibfu.isit.nemeton.algorithms.bees;
 
 import edu.sibfu.isit.nemeton.algorithms.IOptimization;
+import edu.sibfu.isit.nemeton.algorithms.PointHistory;
 import edu.sibfu.isit.nemeton.models.Point;
 import edu.sibfu.isit.nemeton.models.Result;
 import edu.sibfu.isit.nemeton.models.functions.NFunction;
@@ -46,7 +47,7 @@ public class BeesAlgorithm implements IOptimization {
     private final Point hivePosition;
     private final int hiveSize;
     private final int sources;
-    private double sourceSize;
+    private final double sourceSize;
     private final double gamma;
     
     private final int eliteSites;
@@ -76,6 +77,11 @@ public class BeesAlgorithm implements IOptimization {
     
     @Override
     public Result run(Comparator<Point> comparator) {
+        double sourceSize = this.sourceSize;
+        String endClause = "нет данных";
+        
+        PointHistory history = new PointHistory();
+        
         // Init algorithm
         List<Point> points = new ArrayList<>(sources);            
         int arity = f.getArity();
@@ -89,7 +95,11 @@ public class BeesAlgorithm implements IOptimization {
         points.sort(comparator);
         points = points.stream().limit(sources).collect(Collectors.toList());
 
-        for (int it = 0; it < 1000; it++) {
+        int it = 0;
+        int max = 1000000;
+        double eps = 0.000001;
+        
+        for (it = 0; it < max && sourceSize > eps; it++) {
             // Harvest elite sites
             for (int i = 0; i < eliteSites; i++) {
                 Point centre = points.get(i);
@@ -124,11 +134,32 @@ public class BeesAlgorithm implements IOptimization {
             }
             
             sourceSize *= gamma;            
-            points.sort(comparator);
+
+            try {
+                points.sort(comparator);
+            } catch (IllegalArgumentException ex) {
+                points = points.stream().limit(sources).collect(Collectors.toList());
+                endClause = "нарушение контракта сортировки";
+                break;
+            }
             points = points.stream().limit(sources).collect(Collectors.toList());
+            for (int i = 0; i < eliteSites; i++) {
+                Point p = points.get(i);
+                history.add(i, p, f.eval(p));
+            }
+            
         }
         
-        return new Result(f, points, 0, 0);
+        if (it == max) {
+            endClause = "по итерациям";
+        } else if (sourceSize <= eps) {
+            endClause = "по точности";
+        }
+        
+        Result result = new Result(this, f, points, it, 0);
+        result.setEndClause(endClause);
+        result.setHistory(history);
+        return result;
     }
     
     @Override
@@ -143,6 +174,11 @@ public class BeesAlgorithm implements IOptimization {
         return run((Point a, Point b) -> {
             return f.eval(a) > f.eval(b) ? -1 : 1;
         });
+    }
+
+    @Override
+    public String toString() {
+        return "Пчелиный алгоритм";
     }
 
 }

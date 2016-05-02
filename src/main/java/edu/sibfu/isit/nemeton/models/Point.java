@@ -23,6 +23,8 @@
  */
 package edu.sibfu.isit.nemeton.models;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 
 /**
@@ -78,6 +80,10 @@ public class Point {
         } else {
             return params[i];
         }
+    }
+    
+    public double[] get() {
+        return params;
     }
     
     /**
@@ -221,7 +227,8 @@ public class Point {
     public String toString() {
         StringBuilder builder = new StringBuilder("(");
         for (double d : params) {
-            builder.append(d).append(", ");
+//            builder.append(d).append(", ");
+            builder.append(new BigDecimal(d).setScale(4, RoundingMode.HALF_DOWN).doubleValue()).append(", ");
         }
         builder.replace(builder.lastIndexOf(","), builder.length(), ")");
         return builder.toString();

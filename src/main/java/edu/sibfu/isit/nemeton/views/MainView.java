@@ -185,7 +185,7 @@ public class MainView extends javax.swing.JFrame {
         jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {functionCombo, jButton1});
 
         go.setFont(new java.awt.Font("Tahoma", 0, 72)); // NOI18N
-        go.setText("GO");
+        go.setText("SOLVE");
         go.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 goActionPerformed(evt);
@@ -221,15 +221,6 @@ public class MainView extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void functionComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_functionComboActionPerformed
-        int selected = functionCombo.getSelectedIndex();
-        if (selected == -1) {
-            return;
-        }
-        NFunction f = ctrl.getFunction(selected);
-        functionLabel.setText(f.getText());
-    }//GEN-LAST:event_functionComboActionPerformed
-
     private void goActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goActionPerformed
         Goal goal = goalMin.isSelected() 
             ? Goal.Minimize 
@@ -255,6 +246,15 @@ public class MainView extends javax.swing.JFrame {
             showBuilderForm(b);
         }
     }//GEN-LAST:event_algorithmsTableKeyPressed
+
+    private void functionComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_functionComboActionPerformed
+        int selected = functionCombo.getSelectedIndex();
+        if (selected == -1) {
+            return;
+        }
+        NFunction f = ctrl.getFunction(selected);
+        functionLabel.setText(f.getText());
+    }//GEN-LAST:event_functionComboActionPerformed
 
     private void showBuilderForm(AlgorithmBuilder builder) {
         builder.show().setVisible(true);

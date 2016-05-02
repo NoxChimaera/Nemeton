@@ -23,6 +23,8 @@
  */
 package edu.sibfu.isit.nemeton.models;
 
+import edu.sibfu.isit.nemeton.algorithms.IOptimization;
+import edu.sibfu.isit.nemeton.algorithms.PointHistory;
 import edu.sibfu.isit.nemeton.models.functions.NFunction;
 import java.util.List;
 
@@ -32,20 +34,28 @@ import java.util.List;
  */
 public class Result {
     
+    private final IOptimization algorithm;
     private final NFunction function;
     private final List<Point> values;
     
     private final int iterations;
     private final int evaluations;
     
+    private PointHistory history;
+    private String endClause;
+    
     public Result(
+        final IOptimization aAlgorithm,
         final NFunction aFunction, final List<Point> aValues,
         final int aIterations, final int aEvaluations
     ) {
+        algorithm = aAlgorithm;
         function = aFunction;
         values = aValues;
         iterations = aIterations;
         evaluations = aEvaluations;
+        
+        endClause = "нет данных";
     }
     
     public NFunction getFunction() {
@@ -54,6 +64,31 @@ public class Result {
     
     public List<Point> getValues() {
         return values;
+    }
+    
+    public IOptimization getAlgorithm() {
+        return algorithm;
+    }
+
+    public PointHistory getHistory() {
+        return history;
+    }
+
+    public void setHistory(PointHistory aHistory) {
+        history = aHistory;
+    }
+    
+    public void setEndClause(String aEndClause) {
+        endClause = aEndClause;
+    }
+    
+    public String getEndClause() {
+        return endClause;
+    }
+
+    @Override
+    public String toString() {
+        return algorithm.toString();
     }
     
 }

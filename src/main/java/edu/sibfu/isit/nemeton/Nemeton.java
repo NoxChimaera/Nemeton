@@ -88,7 +88,7 @@ public class Nemeton {
         .setText(FunctionTextFormatter.toHTML(
             "I(x_1, x_2) = (x_1^2 + x_2 - 11)^2 + (x_2^2 + x_1 - 7)^2", true
         )).register();
-        
+    
         new NFunction((x, y)
             -> 3905.93 - 100 * Math.pow(x*x - y, 2) - Math.pow(1 - x, 2)
         ).setTitle("Де Джонга")
@@ -142,5 +142,65 @@ public class Nemeton {
         .setText(FunctionTextFormatter.toHTML(
             "\\Sigma^6_{i = 0} 100(x^2_i)", true
         )).register();
+        
+        new NFunction((x, y) 
+            -> {
+                double[] parts = new double[4];
+                parts[0] = -3*Math.exp(-3*(Math.pow(Math.abs(x - 3), 1.5) + Math.pow(Math.abs(y), 1.5)));
+                parts[1] = -5*Math.exp(-2.5*(Math.pow(Math.abs(x + 3), 2.5) + Math.pow(Math.abs(y), 2.5)));
+                parts[2] = -7*Math.exp(-(Math.pow(Math.abs(y - 3), 1.2) + Math.pow(Math.abs(x), 1.2)));
+                parts[3] = -10*Math.exp(-2*(Math.pow(Math.abs(y + 3), 2) + Math.pow(Math.abs(x), 2)));
+                
+                double minValue = Double.MAX_VALUE;
+                for (double part : parts) {
+                    minValue = Math.min(minValue, part);
+                }
+                return minValue;
+            }
+        ).setTitle("Потенциальная").register();
+        
+        new NFunction((x, y) 
+            -> {
+                double[] parts = new double[10];
+                parts[0] = 6*Math.pow(Math.abs(x), 2) + 7*Math.pow(Math.abs(y), 2);
+                parts[1] = 5*Math.pow(Math.abs(x+2), 0.5) + 5*Math.pow(Math.abs(y), 0.5) + 6;
+                parts[2] = 5*Math.pow(Math.abs(x), 1.3) + 5*Math.pow(Math.abs(y+2), 1.3) + 5;
+                parts[3] = 4*Math.pow(Math.abs(x), 0.8) + 3*Math.pow(Math.abs(y-4), 1.2)+8;
+                parts[4] = 6*Math.pow(Math.abs(x-2), 1.1) + 4*Math.pow(Math.abs(y-2), 1.7)+7;
+                parts[5] = 5*Math.pow(Math.abs(x-4), 1.1) + 5*Math.pow(Math.abs(y), 1.8)+9;
+                parts[6] = 6*Math.pow(Math.abs(x-4), 0.6) + 7*Math.pow(Math.abs(y-4), 0.6)+4;
+                parts[7] = 6*Math.pow(Math.abs(x+4), 0.6) + 6*Math.pow(Math.abs(y-4), 1.6)+3;
+                parts[8] = 3*Math.pow(Math.abs(x+4), 1.2) + 3*Math.pow(Math.abs(y+4), 0.5)+7.5;
+                parts[9] = 2*Math.pow(Math.abs(x-3), 0.9) + 4*Math.pow(Math.abs(y+5), 0.3)+8.5;
+
+                double minValue = parts[0];
+                for (double part : parts)
+                    minValue = part < minValue ? part : minValue;
+
+                return minValue;
+            }
+        ).setTitle("Многоэсктремальная").register();
+        
+        new NFunction((x, y) 
+            -> {
+                double num = 1.1 + (x*x/4000 + y*y/4000) - (Math.cos(x)*Math.cos(y/Math.sqrt(2)));
+                return num;
+            }
+        ).setTitle("Гриванка 3D").register();
+       
+        new NFunction((x) 
+            -> {
+                double sum = 0;
+                for (int i = 0; i < 9; i++) {
+                    sum += x.get(i) * x.get(i) / 4000;
+                }
+                
+                double prod = 1;
+                for (int i = 0; i < 9; i++) {
+                    prod *= Math.cos(x.get(i) / Math.sqrt(i + 1));
+                }
+                return 1 / (1.1 + sum + prod);
+            }, 10
+        ).setTitle("Гриванка 10D").register();
     }
 }

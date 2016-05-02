@@ -45,14 +45,25 @@ public class NFunction {
     
     /**
      * Creates new function with specified arity
-     * @param function Function of n variables
-     * @param arity Function arity
+     * @param aFunction Function of n variables
+     * @param aArity Function arity
      * Can't be mapped with Jzy3D
      */
-    public NFunction(Function<Point, Double> function, int arity) {
-        this.f = function;
-        this.arity = arity;
+    public NFunction(Function<Point, Double> aFunction, int aArity) {
+        this.f = aFunction;
+        arity = aArity;
+        
+        if (aArity == 2) {
+            mapper = new Mapper() {
+                @Override
+                public double f(double x, double y) {
+                    return aFunction.apply(new Point(x, y));
+                }
+            };
+            isMapped = true;
+        }
     }
+    
     
     /**
      * Creates new function of 2 variables
