@@ -28,6 +28,11 @@ import edu.sibfu.isit.nemeton.algorithms.IOptimization;
 import edu.sibfu.isit.nemeton.algorithms.PointHistory;
 import edu.sibfu.isit.nemeton.controllers.providers.FunctionProvider;
 import edu.sibfu.isit.nemeton.controllers.providers.FunctionProviderSubscriber;
+import edu.sibfu.isit.nemeton.jzy.JzyChart;
+import edu.sibfu.isit.nemeton.jzy.JzyContourPlot;
+import edu.sibfu.isit.nemeton.jzy.JzyLinePlot;
+import edu.sibfu.isit.nemeton.jzy.JzyScatterPlot;
+import edu.sibfu.isit.nemeton.jzy.JzySurface;
 import edu.sibfu.isit.nemeton.lib.JzyHelper;
 import edu.sibfu.isit.nemeton.models.CalculatedPoint;
 import edu.sibfu.isit.nemeton.models.Point;
@@ -140,59 +145,27 @@ public class MainController implements FunctionProviderSubscriber {
                     break;
                 case Minimize:
                     results.add(al.minimize());
-//                    results.add(al.minimize());
-//                    results.add(al.minimize());
-//                    results.add(al.minimize());
             }
         }
         
         ResultView resultView = new ResultView(results);
         resultView.setVisible(true);
         show(aFunction, results);
-//        showHistory(aFunction, results.get(0));
     }
     
     public void error(String message) {
         JOptionPane.showMessageDialog(view, message);
     }
     
-    public void showHistory(NFunction aFunction, Result result) {
-        PointHistory ph = result.getHistory();
-        
-        ArrayList<Coord3d> coords = new ArrayList<>();
-        Chart chart = new Chart(Quality.Advanced);
-        
-//        int n = ph.size();
-//        for (int i = 0; i < n; i++) {
-//            for (CalculatedPoint p : ph.get(i)) {
-//                coords.add(JzyHelper.toCoord3d(p));
-//            }
-//            LineStrip ls = new LineStrip(coords);
-//            ls.setWireframeColor(Color.BLUE);
-//            chart.addDrawable(ls);
-//            
-//            coords = new ArrayList<>();
-//        }
-//
-        LineStrip ls = new LineStrip(new ArrayList<Coord3d>() {{
-            add(new Coord3d(0, 0, 10));
-            add(new Coord3d(0, 10, 0));
-//            add(new Coord3d(10, 0, 0));
-        }});
-        ls.setWireframeColor(Color.BLUE);
-        chart.addDrawable(ls);
-        
-        ChartLauncher.openChart(chart, "Перемещение лучших точек");
-    }
-    
     public void show(final NFunction aFunction, final ArrayList<Result> aResults) {
         if (!aFunction.isMapped()) {
-            error("График выбранной функции не может быть построен");
+            error("Specified function can not be mapped with Jzy3d");
             return;
         }
         
-        Mapper mapper = aFunction.getMapper();
-   
+        // Calculate plot range: 
+        //  [ min(X) - margin .. max(X) + margin ] 
+        //      where X in [ sloutions, point history ]
         Range range = new Range(Double.MAX_VALUE, Double.MIN_VALUE);
         for (Result result : aResults) {
             Range r = JzyHelper.range(result.getValues(), 5);
@@ -205,97 +178,41 @@ public class MainController implements FunctionProviderSubscriber {
             }
         }
 
+        JzyChart chart = new JzyChart(Quality.Advanced);
+        
+        // Surface plot
         int steps = 80;
-        Shape surface = (Shape) 
-            Builder.buildOrthonormal(new OrthonormalGrid(range, steps), mapper);
-        ColorMapper colorMapper = new ColorMapper(
+        JzySurface surface = new JzySurface(aFunction, range, steps)
+            .colourize(new ColorMapRainbow(), 0.95f);
+        
+        // Contour plot
+        JzyContourPlot contour = new JzyContourPlot(
+            surface, 
             new ColorMapRainbow(), 
-            surface.getBounds().getZmin(),
-            surface.getBounds().getZmax(),
-            new Color(1, 1, 1, 0.25f)
+            0f, 
+            10, 
+            chart.getBounds()
         );
-        surface.setColorMapper(colorMapper);
-        surface.setFaceDisplayed(false);
-        surface.setWireframeDisplayed(false);
-//        surface.setWireframeColor(Color.BLACK);
         
-        JzyFactories.axe = new AxeFactory() {
-            @Override
-            public IAxe getInstance(BoundingBox3d box, View view) {
-                return new ContourAxeBox(box);
-            }
-        };
+        chart.addPlot(surface).addContourPlot(contour);
         
-        Chart chart = new Chart(Quality.Advanced);
-        
-        ArrayList<ArrayList<Coord3d>> results = new ArrayList<>();
         for (Result result : aResults) {
-            ArrayList<Coord3d> res = new ArrayList<>();
-            for (Point point : result.getValues()) {
-                res.add(JzyHelper.toCoord3d(aFunction, point));
-            }
-            results.add(res);
-        }
-        
-        for (ArrayList<Coord3d> points : results) {
-            Color colour = Color.random();
+            // Scatter plot. Solutions
+            final CalculatedPoint[] solution = result.getValues();
+            final Color colour = Color.random();
+            JzyScatterPlot scatterPlot = new JzyScatterPlot(solution, colour);
+            chart.addPlot(scatterPlot);
             
-            Color[] colours = new Color[points.size()];
-            Arrays.fill(colours, colour);
-            
-            MultiColorScatter scatter = new MultiColorScatter(
-                points.toArray(new Coord3d[] {}), 
-                colours,
-                new ColorMapper(new ColorMapRainbow(), -0.5f, 0.5f),
-                5
-            );
-            chart.addDrawable(scatter);
-        }
-  
-        MapperContourPictureGenerator contour = new MapperContourPictureGenerator(mapper, range, range);
-        ContourAxeBox cab = (ContourAxeBox) chart.getView().getAxe();
-        cab.setContourImg(
-            contour.getContourImage(new DefaultContourColoringPolicy(colorMapper), 1000, 1000, 5), range, range
-        );
-        
-        
-        PointHistory ph = aResults.get(0).getHistory();
-        
-        int n = ph.size();
-//        int n = 1;
-        for (int i = 0; i < n; i++) {
-            Color colour = Color.random();
-            
-            int m = ph.get(i).size();
-            for (int j = 0, k = 1; k < m; j++, k++) {
-                ArrayList<Coord3d> coords = new ArrayList<>();
-                coords.add(JzyHelper.toCoord3d(ph.get(i).get(j)));
-                coords.add(JzyHelper.toCoord3d(ph.get(i).get(k)));
-                LineStrip ls = new LineStrip(coords);
-                ls.setWireframeColor(colour);
-                chart.addDrawable(ls);
+            // Best solution iterations
+            // final int n = result.getHistory().size();
+            final int n = 1;
+            for (int i = 0; i < n; i++) {
+                final ArrayList<CalculatedPoint> points = result.getHistory().get(i);
+                JzyLinePlot line = new JzyLinePlot(points);
+                chart.addPlot(line);
             }
         }
         
-        
-//        ArrayList<Coord3d> coords = new ArrayList<>();
-////        Chart chart = new Chart(Quality.Advanced);
-//        
-//        int n = ph.size();
-//        for (int i = 0; i < n; i++) {
-//            Color colour = Color.random();
-//            
-//            for (CalculatedPoint p : ph.get(i)) {
-//                coords.add(JzyHelper.toCoord3d(p));
-//            }
-//            LineStrip ls = new LineStrip(coords);
-//            ls.setWireframeColor(Color.BLUE);
-//            chart.addDrawable(ls);
-//            
-//            coords = new ArrayList<>();
-//        }
-//        
-        chart.addDrawable(surface);
-        ChartLauncher.openChart(chart);
+        chart.show("График функции и найденные точки");
     }
 }

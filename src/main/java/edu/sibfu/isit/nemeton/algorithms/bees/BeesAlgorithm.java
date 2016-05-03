@@ -25,14 +25,18 @@ package edu.sibfu.isit.nemeton.algorithms.bees;
 
 import edu.sibfu.isit.nemeton.algorithms.IOptimization;
 import edu.sibfu.isit.nemeton.algorithms.PointHistory;
+import edu.sibfu.isit.nemeton.models.CalculatedPoint;
 import edu.sibfu.isit.nemeton.models.Point;
 import edu.sibfu.isit.nemeton.models.Result;
 import edu.sibfu.isit.nemeton.models.functions.NFunction;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.DoubleSummaryStatistics;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
+import java.util.stream.Stream;
 
 /**
  *
@@ -54,6 +58,8 @@ public class BeesAlgorithm implements IOptimization {
     private final int onElite;
     private final int onOther;
     
+    private int evaluations;
+    
     public BeesAlgorithm(
         NFunction function, Point hivePosition, int hiveSize, int scouts,
         int sources, double sourceSize, double gamma,
@@ -73,6 +79,23 @@ public class BeesAlgorithm implements IOptimization {
         
         this.f = function;
         rnd = new Random();
+        
+        evaluations = 0;
+    }
+    
+    private List<Point> scouting() {        
+        List<Point> points = new ArrayList<>(sources);            
+        final int arity = f.getArity();
+
+        for (int i = 0; i < scouts; i++) {
+            Point x = Point.zero(arity).add(hivePosition);
+            for (int v = 0; v < arity; v++) {
+                x = x.add(((rnd.nextDouble() * 2) - 1) * hiveSize, v);
+            }
+            points.add(x);
+        }
+        evaluations += scouts;
+        return points;
     }
     
     @Override
@@ -83,21 +106,15 @@ public class BeesAlgorithm implements IOptimization {
         PointHistory history = new PointHistory();
         
         // Init algorithm
-        List<Point> points = new ArrayList<>(sources);            
-        int arity = f.getArity();
-        for (int i = 0; i < scouts; i++) {
-            Point x = Point.zero(arity).add(hivePosition);
-            for (int v = 0; v < arity; v++) {
-                x = x.add(((rnd.nextDouble() * 2) - 1) * hiveSize, v);
-            }
-            points.add(x);
-        }
+        List<Point> points = scouting();
+        evaluations += scouts;
         points.sort(comparator);
         points = points.stream().limit(sources).collect(Collectors.toList());
 
         int it = 0;
         int max = 1000000;
-        double eps = 0.000001;
+        final double eps = 0.0001;
+        final int arity = f.getArity();
         
         for (it = 0; it < max && sourceSize > eps; it++) {
             // Harvest elite sites
@@ -108,8 +125,9 @@ public class BeesAlgorithm implements IOptimization {
                     for (int v = 0; v < arity; v++) {
                         x = x.add(((rnd.nextDouble() * 2) - 1) * sourceSize, v);
                     }
-                    if (!x.equals(centre))
+                    if (!x.equals(centre)) {
                         points.add(x);
+                    }
                 }
             }
             // Harvest other sites
@@ -125,14 +143,8 @@ public class BeesAlgorithm implements IOptimization {
                 }
             }
             // Scouts
-            for (int i = 0; i < scouts; i++) {
-                Point x = Point.zero(arity).add(hivePosition);
-                for (int v = 0; v < arity; v++) {
-                    x = x.add(((rnd.nextDouble() * 2) - 1) * hiveSize, v);
-                }
-                points.add(x);
-            }
-            
+            points.addAll(scouting());
+            evaluations += sources;
             sourceSize *= gamma;            
 
             try {
@@ -148,15 +160,32 @@ public class BeesAlgorithm implements IOptimization {
                 history.add(i, p, f.eval(p));
             }
             
+            // End by accuracy
+            DoubleSummaryStatistics stat = points
+                .stream()
+                .limit(eliteSites)
+                .mapToDouble((point) -> f.eval(point))
+                .summaryStatistics();
+            if (stat.getAverage() <= eps) {
+                endClause = "по точности";
+                break;
+            }
         }
         
         if (it == max) {
             endClause = "по итерациям";
         } else if (sourceSize <= eps) {
-            endClause = "по точности";
+            endClause = "по размеру области локального поиска";
         }
         
-        Result result = new Result(this, f, points, it, 0);
+        final CalculatedPoint[] solutions = new CalculatedPoint[points.size()];
+        final int n = points.size();
+        for (int i = 0; i < n; i++) {
+            Point x = points.get(i);
+            solutions[i] = new CalculatedPoint(x, f.eval(x));
+        }
+        
+        Result result = new Result(this, f, solutions, it, evaluations);
         result.setEndClause(endClause);
         result.setHistory(history);
         return result;

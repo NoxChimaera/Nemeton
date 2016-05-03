@@ -49,6 +49,19 @@ public class JzyHelper {
         return new Range(min - aMargin, max + aMargin);
     }
     
+    public static Range range(final Point[] aPoints, final double aMargin) {
+        double min = Double.MAX_VALUE, max = Double.MIN_VALUE;
+        for (Point point : aPoints) {
+            double x = point.get(0);
+            double y = point.get(1);
+            
+            min = Math.min(Math.min(x, y), min);
+            max = Math.max(Math.max(x, y), max);
+        }
+        
+        return new Range(min - aMargin, max + aMargin);
+    }
+    
     public static Range union(final Range a, final Range b) {
         double min = Math.min(a.getMin(), b.getMin());
         double max = Math.max(a.getMax(), b.getMax());

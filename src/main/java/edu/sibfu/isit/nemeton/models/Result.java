@@ -36,7 +36,7 @@ public class Result {
     
     private final IOptimization algorithm;
     private final NFunction function;
-    private final List<Point> values;
+    private final CalculatedPoint[] values;
     
     private final int iterations;
     private final int evaluations;
@@ -46,7 +46,7 @@ public class Result {
     
     public Result(
         final IOptimization aAlgorithm,
-        final NFunction aFunction, final List<Point> aValues,
+        final NFunction aFunction, final CalculatedPoint[] aValues,
         final int aIterations, final int aEvaluations
     ) {
         algorithm = aAlgorithm;
@@ -62,7 +62,7 @@ public class Result {
         return function;
     }
     
-    public List<Point> getValues() {
+    public CalculatedPoint[] getValues() {
         return values;
     }
     
@@ -84,6 +84,13 @@ public class Result {
     
     public String getEndClause() {
         return endClause;
+    }
+    
+    public int getIterations() {
+        return iterations;
+    }
+    public int getEvaluations() {
+        return evaluations;
     }
 
     @Override

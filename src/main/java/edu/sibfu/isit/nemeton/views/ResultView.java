@@ -12,7 +12,6 @@ import java.awt.Point;
 import java.util.ArrayList;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 /**
  *
@@ -33,8 +32,12 @@ public class ResultView extends javax.swing.JFrame {
             ListSelectionModel lsm = (ListSelectionModel) e.getSource();
             if (lsm.isSelectionEmpty()) return;
             
-            ctrl.fillSolutionsTable(algorithmList.getSelectedValue());
-            endClause.setText(algorithmList.getSelectedValue().getEndClause());
+            Result res = algorithmList.getSelectedValue();
+            
+            ctrl.fillSolutionsTable(res);
+            endClause.setText(res.getEndClause());
+            iterations.setText(String.valueOf(res.getIterations()));
+            evals.setText(String.valueOf(res.getEvaluations()));
         });
         
         solutionsTable.setModel(ctrl.getSolutionsTableModel());
@@ -73,6 +76,10 @@ public class ResultView extends javax.swing.JFrame {
         solutionsTable = new javax.swing.JTable();
         lblEndClause = new java.awt.Label();
         endClause = new java.awt.Label();
+        lblIterations = new javax.swing.JLabel();
+        lblEvals = new javax.swing.JLabel();
+        iterations = new javax.swing.JLabel();
+        evals = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Решения");
@@ -168,6 +175,14 @@ public class ResultView extends javax.swing.JFrame {
 
         endClause.setText("endClause");
 
+        lblIterations.setText("Количество итераций:");
+
+        lblEvals.setText("Количество вычислений ЦФ:");
+
+        iterations.setText("iterations");
+
+        evals.setText("evals");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -175,12 +190,22 @@ public class ResultView extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(lblEndClause, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(endClause, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane2))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(lblEndClause, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(endClause, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(lblIterations)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(iterations))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(lblEvals)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(evals)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -191,7 +216,15 @@ public class ResultView extends javax.swing.JFrame {
                     .addComponent(lblEndClause, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(endClause, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblIterations)
+                    .addComponent(iterations))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblEvals)
+                    .addComponent(evals))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -227,13 +260,17 @@ public class ResultView extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList<Result> algorithmList;
     private java.awt.Label endClause;
+    private javax.swing.JLabel evals;
     private javax.swing.ButtonGroup functionGoalGroup;
     private javax.swing.JLabel functionText;
     private javax.swing.JLabel functionTitle;
+    private javax.swing.JLabel iterations;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private java.awt.Label lblEndClause;
+    private javax.swing.JLabel lblEvals;
+    private javax.swing.JLabel lblIterations;
     private javax.swing.JTable solutionsTable;
     // End of variables declaration//GEN-END:variables
 }
