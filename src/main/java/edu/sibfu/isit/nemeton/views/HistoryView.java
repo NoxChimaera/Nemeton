@@ -21,39 +21,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package edu.sibfu.isit.nemeton.algorithms;
+package edu.sibfu.isit.nemeton.views;
 
-import edu.sibfu.isit.nemeton.models.Point;
+import de.erichseifert.gral.ui.InteractivePanel;
+import edu.sibfu.isit.nemeton.controllers.HistoryController;
 import edu.sibfu.isit.nemeton.models.Result;
-import java.util.Comparator;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.util.ArrayList;
+import javax.swing.BorderFactory;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 /**
- * Base class for optimizing algorithms.
- * 
+ *
  * @author Max Balushkin
  */
-public interface IOptimization {
+public class HistoryView extends JPanel {
     
-    /**
-     * Runs algorithm with custom comparator.
-     * 
-     * @param comparator Custom comparator for points
-     * @return Result
-     */
-    public Result run(Comparator<Point> comparator);
+    private final HistoryController ctrl;
     
-    /**
-     * Minimizes function.
-     * 
-     * @return Result
-     */
-    public Result minimize();
+    public HistoryView(final ArrayList<Result> aResults) {
+        super(new BorderLayout());
+        setPreferredSize(new Dimension(800, 600));
+        setBackground(Color.WHITE);
+        setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
+        
+        ctrl = new HistoryController(this, aResults);
+        add(new InteractivePanel(ctrl.getPlot()));
+    }
     
-    /**
-     * Maximizes function.
-     * 
-     * @return Result
-     */
-    public Result maximize();
+    public JFrame showAsFrame() {
+        JFrame frame = new JFrame("История поиска");
+        frame.getContentPane().add(this, BorderLayout.CENTER);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setSize(getPreferredSize());
+        frame.setVisible(true);
+        return frame;
+    }
     
 }

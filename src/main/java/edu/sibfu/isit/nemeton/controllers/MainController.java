@@ -25,7 +25,6 @@ package edu.sibfu.isit.nemeton.controllers;
 
 import edu.sibfu.isit.nemeton.algorithms.AlgorithmBuilder;
 import edu.sibfu.isit.nemeton.algorithms.IOptimization;
-import edu.sibfu.isit.nemeton.algorithms.PointHistory;
 import edu.sibfu.isit.nemeton.controllers.providers.FunctionProvider;
 import edu.sibfu.isit.nemeton.controllers.providers.FunctionProviderSubscriber;
 import edu.sibfu.isit.nemeton.jzy.JzyChart;
@@ -35,41 +34,22 @@ import edu.sibfu.isit.nemeton.jzy.JzyScatterPlot;
 import edu.sibfu.isit.nemeton.jzy.JzySurface;
 import edu.sibfu.isit.nemeton.lib.JzyHelper;
 import edu.sibfu.isit.nemeton.models.CalculatedPoint;
-import edu.sibfu.isit.nemeton.models.Point;
 import edu.sibfu.isit.nemeton.models.Result;
 import edu.sibfu.isit.nemeton.models.functions.NFunction;
+import edu.sibfu.isit.nemeton.views.HistoryView;
 import edu.sibfu.isit.nemeton.views.MainView;
 import edu.sibfu.isit.nemeton.views.ResultView;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Vector;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
-import org.jzy3d.chart.Chart;
-import org.jzy3d.chart.ChartLauncher;
 import org.jzy3d.colors.Color;
-import org.jzy3d.colors.ColorMapper;
 import org.jzy3d.colors.colormaps.ColorMapRainbow;
-import org.jzy3d.contour.DefaultContourColoringPolicy;
-import org.jzy3d.contour.MapperContourPictureGenerator;
-import org.jzy3d.factories.AxeFactory;
-import org.jzy3d.factories.JzyFactories;
-import org.jzy3d.maths.BoundingBox3d;
-import org.jzy3d.maths.Coord3d;
 import org.jzy3d.maths.Range;
-import org.jzy3d.plot3d.builder.Builder;
-import org.jzy3d.plot3d.builder.Mapper;
-import org.jzy3d.plot3d.builder.concrete.OrthonormalGrid;
-import org.jzy3d.plot3d.primitives.LineStrip;
-import org.jzy3d.plot3d.primitives.MultiColorScatter;
-import org.jzy3d.plot3d.primitives.Shape;
-import org.jzy3d.plot3d.primitives.axes.ContourAxeBox;
-import org.jzy3d.plot3d.primitives.axes.IAxe;
 import org.jzy3d.plot3d.rendering.canvas.Quality;
-import org.jzy3d.plot3d.rendering.view.View;
 
 
 /**
@@ -127,10 +107,10 @@ public class MainController implements FunctionProviderSubscriber {
         return FunctionProvider.get(index);
     }
     
-    public void runAlgorithms(Goal aGoal, final NFunction aFunction) {
+    public void runAlgorithms(Goal aGoal, final NFunction aFunction, final boolean showSurface, final boolean showHistory) {
         final ArrayList<IOptimization> algorithms = new ArrayList<>();
         for (Object item : buildersTableModel.getDataVector().toArray()) {
-            Vector vector = (Vector) item;
+            final Vector vector = (Vector) item;
             if ((Boolean) vector.get(0)) {
                 AlgorithmBuilder bldr = (AlgorithmBuilder) vector.get(1);
                 algorithms.add(bldr.build(aFunction));
@@ -148,13 +128,21 @@ public class MainController implements FunctionProviderSubscriber {
             }
         }
         
+        if (showSurface) show(aFunction, results);
+        
         ResultView resultView = new ResultView(results);
         resultView.setVisible(true);
-        show(aFunction, results);
+        
+        if (showHistory) showHistory(results);
     }
     
     public void error(String message) {
         JOptionPane.showMessageDialog(view, message);
+    }
+    
+    public void showHistory(final ArrayList<Result> aResults) {
+        HistoryView history = new HistoryView(aResults);
+        history.showAsFrame();
     }
     
     public void show(final NFunction aFunction, final ArrayList<Result> aResults) {

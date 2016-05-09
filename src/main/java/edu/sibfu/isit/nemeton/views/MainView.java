@@ -65,6 +65,9 @@ public class MainView extends javax.swing.JFrame {
         javax.swing.JLabel jLabel3 = new javax.swing.JLabel();
         goalMin = new javax.swing.JRadioButton();
         goalMax = new javax.swing.JRadioButton();
+        jPanel2 = new javax.swing.JPanel();
+        outShowSurface = new javax.swing.JCheckBox();
+        outShowHistory = new javax.swing.JCheckBox();
         go = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -184,6 +187,34 @@ public class MainView extends javax.swing.JFrame {
 
         jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {functionCombo, jButton1});
 
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Вывод"));
+
+        outShowSurface.setSelected(true);
+        outShowSurface.setText("Отображать график функции");
+
+        outShowHistory.setSelected(true);
+        outShowHistory.setText("Отображать историю поиска");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(outShowSurface)
+                    .addComponent(outShowHistory))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(outShowSurface)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(outShowHistory))
+        );
+
         go.setFont(new java.awt.Font("Tahoma", 0, 72)); // NOI18N
         go.setText("SOLVE");
         go.addActionListener(new java.awt.event.ActionListener() {
@@ -202,7 +233,8 @@ public class MainView extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(go, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(go, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -214,6 +246,8 @@ public class MainView extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(go, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -222,11 +256,16 @@ public class MainView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void goActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goActionPerformed
-        Goal goal = goalMin.isSelected() 
+        final Goal goal = goalMin.isSelected() 
             ? Goal.Minimize 
             : Goal.Maximize;
-        // TODO: NEEDS REFACTORING!!!11
-        ctrl.runAlgorithms(goal, ctrl.getFunction(functionCombo.getSelectedIndex()));
+
+        final NFunction function = (NFunction) functionCombo.getSelectedItem();
+        final boolean showSurface = outShowSurface.isSelected();       
+        final boolean showHistory = outShowHistory.isSelected();
+
+        ctrl.runAlgorithms(goal, function, showSurface, showHistory);
+//        ctrl.runAlgorithms(goal, ctrl.getFunction(functionCombo.getSelectedIndex()));
     }//GEN-LAST:event_goActionPerformed
 
     private void algorithmsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_algorithmsTableMouseClicked
@@ -269,6 +308,9 @@ public class MainView extends javax.swing.JFrame {
     private javax.swing.JRadioButton goalMax;
     private javax.swing.JRadioButton goalMin;
     private javax.swing.JButton jButton1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JCheckBox outShowHistory;
+    private javax.swing.JCheckBox outShowSurface;
     // End of variables declaration//GEN-END:variables
 }

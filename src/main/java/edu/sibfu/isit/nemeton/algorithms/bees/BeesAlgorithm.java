@@ -113,7 +113,7 @@ public class BeesAlgorithm implements IOptimization {
 
         int it = 0;
         int max = 1000000;
-        final double eps = 0.0001;
+        final double eps = 0.00000001;
         final int arity = f.getArity();
         
         for (it = 0; it < max && sourceSize > eps; it++) {
@@ -161,12 +161,17 @@ public class BeesAlgorithm implements IOptimization {
             }
             
             // End by accuracy
-            DoubleSummaryStatistics stat = points
+            double[] doubles = points
                 .stream()
                 .limit(eliteSites)
-                .mapToDouble((point) -> f.eval(point))
-                .summaryStatistics();
-            if (stat.getAverage() <= eps) {
+                .mapToDouble((point) -> f.eval(point)).toArray();
+            
+            double avg = DoubleStream.of(doubles).average().getAsDouble();
+            double stdDev = Math.sqrt(
+                    DoubleStream.of(doubles).reduce(0, (a, b) -> a + Math.pow(b - avg, 2)) / eliteSites
+            );
+            
+            if (stdDev <= eps) {
                 endClause = "по точности";
                 break;
             }

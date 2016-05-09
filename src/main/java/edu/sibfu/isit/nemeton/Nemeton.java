@@ -74,13 +74,18 @@ public class Nemeton {
         registerFunctions();
     }
     
+    /**
+     * Registers function
+     */
     private static void registerFunctions() {
+        // 2D Hypersphere
         new NFunction((x, y) -> x*x + y*y)
         .setTitle("Гиперсфера")
         .setText(FunctionTextFormatter.toHTML(
             "I(x_1, x_2) = x_1^2 + x_2^2", true
         )).register();
            
+        // Himmelblau function
         new NFunction((x, y) 
             -> Math.pow((Math.pow(x, 2) + y - 11), 2) +
                 Math.pow((Math.pow(y, 2) + x - 7), 2)
@@ -89,6 +94,7 @@ public class Nemeton {
             "I(x_1, x_2) = (x_1^2 + x_2 - 11)^2 + (x_2^2 + x_1 - 7)^2", true
         )).register();
     
+        // De Jong function
         new NFunction((x, y)
             -> 3905.93 - 100 * Math.pow(x*x - y, 2) - Math.pow(1 - x, 2)
         ).setTitle("Де Джонга")
@@ -97,6 +103,7 @@ public class Nemeton {
             + "(1 - x_1)^2", true
         )).register();
         
+        // Goldstein-Price function
         new NFunction((x, y)
             -> (1 + Math.pow(x + y + 1, 2)*(19 - 14*x+3*x*x-14*y+6*x*y+3*y*y)
                 * (30 + Math.pow(2*x-3*y, 2)*(18 - 32*x + 12*x*x + 48*y -36*x*y+27*y*y))
@@ -107,6 +114,7 @@ public class Nemeton {
             + "[30 + (2x_1 - 3x_2)^2 (18 - 32x_1 + 12x_1^2 + 48x_2 - 36x_1 x_2 + 27x_2^2)]", true
         )).register();
         
+        // Branin function
         final double a = 1, b = (5.1 / 4.0) * Math.pow(7.0 / 22.0, 2);
         final double c = 7.0 * (5.0 / 22.0), d = 6.0;
         final double e = 10.0, f = (1.0 / 8.0) * (7.0 / 22.0);
@@ -118,6 +126,7 @@ public class Nemeton {
             "a(x_2 - bx_1^2 + cx_1 - d)^2 + e(1 - f)cos(x_1) + e", true
         )).register();
         
+        // Martin-Gaddy function
         new NFunction((x, y) 
             -> Math.pow(x - y, 2) + Math.pow((x + y - 10)/ 3, 2)
         ).setTitle("Мартина-Гедди")
@@ -125,6 +134,7 @@ public class Nemeton {
             "(x_1 - x_2)^2 + ((x_1 + x_2 - 10)/3)^2", true
         )).register();
         
+        // Rosenbrock function
         new NFunction((x, y) 
             -> 100 * Math.pow(x*x - y, 2) + Math.pow(1 - x, 2)
         ).setTitle("Розенброка")
@@ -132,6 +142,7 @@ public class Nemeton {
             "100(x_1^2 - x_2)^2 + (1 - x_1)^2", true
         )).register();
         
+        // 6D Hypersphere
         new NFunction((x) -> {
             double y = 0;
             for (int i = 0; i < 6; i++) {
@@ -143,6 +154,7 @@ public class Nemeton {
             "\\Sigma^6_{i = 0} 100(x^2_i)", true
         )).register();
         
+        // Algorithmic function with four extremums
         new NFunction((x, y) 
             -> {
                 double[] parts = new double[4];
@@ -159,6 +171,7 @@ public class Nemeton {
             }
         ).setTitle("Потенциальная").register();
         
+        // Yet another algorithmic function
         new NFunction((x, y) 
             -> {
                 double[] parts = new double[10];
@@ -181,6 +194,7 @@ public class Nemeton {
             }
         ).setTitle("Многоэсктремальная").register();
         
+        // 3D Griewank function
         new NFunction((x, y) 
             -> {
                 double num = 1.1 + (x*x/4000 + y*y/4000) - (Math.cos(x)*Math.cos(y/Math.sqrt(2)));
@@ -188,6 +202,7 @@ public class Nemeton {
             }
         ).setTitle("Гриванка 3D").register();
        
+        // 10D Griewank function
         new NFunction((x) 
             -> {
                 double sum = 0;

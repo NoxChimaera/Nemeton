@@ -28,7 +28,8 @@ import edu.sibfu.isit.nemeton.models.Point;
 import java.util.ArrayList;
 
 /**
- *
+ * Represents points by iterations.
+ * 
  * @author Max Balushkin
  */
 public class PointHistory {
