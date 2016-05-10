@@ -21,34 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package edu.sibfu.isit.nemeton.algorithms;
-
-import edu.sibfu.isit.nemeton.models.functions.NFunction;
-import edu.sibfu.isit.nemeton.views.BeesSettings;
-import javax.swing.JFrame;
+package edu.sibfu.isit.nemeton.models;
 
 /**
- * Base class for algorithm builders.
- * Used in setting windows
- * @see BeesSettings
- * 
+ *
  * @author Max Balushkin
  */
-public abstract class AlgorithmBuilder {
+public class HyperRectangle {
     
-    /**
-     * Creates new Optimizing Algorithm object with specified function.
-     * 
-     * @param function Optimized function
-     * @return Algorithm object
-     */
-    public abstract OptimizationAlgorithm build(NFunction function);
+    private final double[] min;
+    private final double[] max;
     
-    /**
-     * Show settings window.
-     * 
-     * @return Frame
-     */
-    public abstract JFrame show();
+    public HyperRectangle(final double[] aMin, final double[] aMax) {
+        min = aMin;
+        max = aMax;
+    }
     
 }

@@ -23,10 +23,10 @@
  */
 package edu.sibfu.isit.nemeton.models;
 
-import edu.sibfu.isit.nemeton.algorithms.IOptimization;
 import edu.sibfu.isit.nemeton.algorithms.PointHistory;
 import edu.sibfu.isit.nemeton.models.functions.NFunction;
 import java.util.List;
+import edu.sibfu.isit.nemeton.algorithms.OptimizationAlgorithm;
 
 /**
  * Contains result of algorithm run
@@ -34,7 +34,7 @@ import java.util.List;
  */
 public class Result {
     
-    private final IOptimization algorithm;
+    private final OptimizationAlgorithm algorithm;
     private final NFunction function;
     private final CalculatedPoint[] values;
     
@@ -45,7 +45,7 @@ public class Result {
     private String endClause;
     
     public Result(
-        final IOptimization aAlgorithm,
+        final OptimizationAlgorithm aAlgorithm,
         final NFunction aFunction, final CalculatedPoint[] aValues,
         final int aIterations, final int aEvaluations
     ) {
@@ -66,7 +66,7 @@ public class Result {
         return values;
     }
     
-    public IOptimization getAlgorithm() {
+    public OptimizationAlgorithm getAlgorithm() {
         return algorithm;
     }
 

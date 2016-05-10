@@ -156,6 +156,15 @@ public class Point {
         return new Point(points);
     }
     
+    public Point mul(final Point b) {
+        int n = Math.max(arity, b.getArity());
+        double[] points = new double[n];
+        for (int i = 0; i < n; i++) {
+            points[i] = get(i) * b.get(i);
+        }
+        return new Point(points);
+    }
+    
     /**
      * Multiplies point on constant
      * @param c Constant
@@ -196,6 +205,24 @@ public class Point {
             res += Math.pow(get(i) - b.get(i), n);
         }
         return Math.pow(res, 1 / n);
+    }
+    
+    public Point abs() {
+        int n = getArity();
+        double[] points = new double[n];
+        for (int i = 0; i < n; i++) {
+            points[i] = Math.abs(get(i));
+        }
+        return new Point(points);
+    }
+    
+    public Point pow(double power) {
+        int n = getArity();
+        double[] points = new double[n];
+        for (int i = 0; i < n; i++) {
+            points[i] = Math.pow(get(i), power);
+        }
+        return new Point(points);
     }
 
     @Override

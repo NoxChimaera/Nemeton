@@ -24,7 +24,6 @@
 package edu.sibfu.isit.nemeton.controllers;
 
 import edu.sibfu.isit.nemeton.algorithms.AlgorithmBuilder;
-import edu.sibfu.isit.nemeton.algorithms.IOptimization;
 import edu.sibfu.isit.nemeton.controllers.providers.FunctionProvider;
 import edu.sibfu.isit.nemeton.controllers.providers.FunctionProviderSubscriber;
 import edu.sibfu.isit.nemeton.jzy.JzyChart;
@@ -50,6 +49,7 @@ import org.jzy3d.colors.Color;
 import org.jzy3d.colors.colormaps.ColorMapRainbow;
 import org.jzy3d.maths.Range;
 import org.jzy3d.plot3d.rendering.canvas.Quality;
+import edu.sibfu.isit.nemeton.algorithms.OptimizationAlgorithm;
 
 
 /**
@@ -108,7 +108,7 @@ public class MainController implements FunctionProviderSubscriber {
     }
     
     public void runAlgorithms(Goal aGoal, final NFunction aFunction, final boolean showSurface, final boolean showHistory) {
-        final ArrayList<IOptimization> algorithms = new ArrayList<>();
+        final ArrayList<OptimizationAlgorithm> algorithms = new ArrayList<>();
         for (Object item : buildersTableModel.getDataVector().toArray()) {
             final Vector vector = (Vector) item;
             if ((Boolean) vector.get(0)) {
@@ -118,7 +118,7 @@ public class MainController implements FunctionProviderSubscriber {
         }
  
         final ArrayList<Result> results = new ArrayList<>();
-        for (IOptimization al : algorithms) {
+        for (OptimizationAlgorithm al : algorithms) {
             switch (aGoal) {
                 case Maximize:
                     results.add(al.maximize());

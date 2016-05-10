@@ -5,13 +5,13 @@
  */
 package edu.sibfu.isit.nemeton.views;
 
-import edu.sibfu.isit.nemeton.algorithms.IOptimization;
 import edu.sibfu.isit.nemeton.controllers.ResultController;
 import edu.sibfu.isit.nemeton.models.Result;
 import java.awt.Point;
 import java.util.ArrayList;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
+import edu.sibfu.isit.nemeton.algorithms.OptimizationAlgorithm;
 
 /**
  *

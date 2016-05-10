@@ -21,39 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package edu.sibfu.isit.nemeton.algorithms;
-
-import edu.sibfu.isit.nemeton.models.Point;
-import edu.sibfu.isit.nemeton.models.Result;
-import java.util.Comparator;
+package edu.sibfu.isit.nemeton.algorithms.sac.kernels;
 
 /**
- * Base class for optimizing algorithms.
- * 
+ *
  * @author Max Balushkin
  */
-public interface IOptimization {
-    
-    /**
-     * Runs algorithm with custom comparator.
-     * 
-     * @param comparator Custom comparator for points
-     * @return Result
-     */
-    public Result run(Comparator<Point> comparator);
-    
-    /**
-     * Minimizes function.
-     * 
-     * @return Result
-     */
-    public Result minimize();
-    
-    /**
-     * Maximizes function.
-     * 
-     * @return Result
-     */
-    public Result maximize();
+public class LinearKernel extends SelectiveKernel {
+
+    @Override
+    public double eval(double s, double g) {
+        return Math.pow(1 - g, s);
+    }
+
+    @Override
+    public String toString() {
+        return "Линейное";
+    }
     
 }

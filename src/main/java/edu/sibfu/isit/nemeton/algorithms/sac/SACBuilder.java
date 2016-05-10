@@ -6,9 +6,11 @@
 package edu.sibfu.isit.nemeton.algorithms.sac;
 
 import edu.sibfu.isit.nemeton.algorithms.AlgorithmBuilder;
-import edu.sibfu.isit.nemeton.algorithms.IOptimization;
+import edu.sibfu.isit.nemeton.algorithms.sac.kernels.ParabolicKernel;
+import edu.sibfu.isit.nemeton.algorithms.sac.kernels.SelectiveKernel;
 import edu.sibfu.isit.nemeton.models.functions.NFunction;
 import javax.swing.JFrame;
+import edu.sibfu.isit.nemeton.algorithms.OptimizationAlgorithm;
 
 /**
  *
@@ -16,8 +18,11 @@ import javax.swing.JFrame;
  */
 public class SACBuilder extends AlgorithmBuilder {
 
+    private SelectiveKernel kernel = new ParabolicKernel();
+    private double selectiveness = 100;
+    
     @Override
-    public IOptimization build(NFunction function) {
+    public OptimizationAlgorithm build(NFunction function) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

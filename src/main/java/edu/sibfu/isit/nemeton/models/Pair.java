@@ -21,34 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package edu.sibfu.isit.nemeton.algorithms;
-
-import edu.sibfu.isit.nemeton.models.functions.NFunction;
-import edu.sibfu.isit.nemeton.views.BeesSettings;
-import javax.swing.JFrame;
+package edu.sibfu.isit.nemeton.models;
 
 /**
- * Base class for algorithm builders.
- * Used in setting windows
- * @see BeesSettings
- * 
+ *
  * @author Max Balushkin
+ * @param <L>
+ * @param <R>
  */
-public abstract class AlgorithmBuilder {
+public class Pair<L, R> {
     
-    /**
-     * Creates new Optimizing Algorithm object with specified function.
-     * 
-     * @param function Optimized function
-     * @return Algorithm object
-     */
-    public abstract OptimizationAlgorithm build(NFunction function);
+    private final L left;
+    private final R right;
     
-    /**
-     * Show settings window.
-     * 
-     * @return Frame
-     */
-    public abstract JFrame show();
+    public Pair(final L aLeft, final R aRight) {
+        left = aLeft;
+        right = aRight;
+    }
+    
+    public L left() {
+        return left;
+    }
+    
+    public R right() {
+        return right;
+    }
     
 }

@@ -23,32 +23,52 @@
  */
 package edu.sibfu.isit.nemeton.algorithms;
 
+import edu.sibfu.isit.nemeton.models.Point;
+import edu.sibfu.isit.nemeton.models.Result;
 import edu.sibfu.isit.nemeton.models.functions.NFunction;
-import edu.sibfu.isit.nemeton.views.BeesSettings;
-import javax.swing.JFrame;
+import java.util.Comparator;
 
 /**
- * Base class for algorithm builders.
- * Used in setting windows
- * @see BeesSettings
+ * Base class for optimizing algorithms.
  * 
  * @author Max Balushkin
  */
-public abstract class AlgorithmBuilder {
+public abstract class OptimizationAlgorithm {
+    
+    protected final NFunction f;
+    
+    protected OptimizationAlgorithm(final NFunction aFunction) {
+        f = aFunction;
+    }
     
     /**
-     * Creates new Optimizing Algorithm object with specified function.
+     * Runs algorithm with custom comparator.
      * 
-     * @param function Optimized function
-     * @return Algorithm object
+     * @param comparator Custom comparator for points
+     * @return Result
      */
-    public abstract OptimizationAlgorithm build(NFunction function);
+    public abstract Result run(Comparator<Point> comparator);
     
     /**
-     * Show settings window.
+     * Minimizes function.
      * 
-     * @return Frame
+     * @return Result
      */
-    public abstract JFrame show();
+    public Result minimize() {
+        return run((Point a, Point b) -> {
+            return f.eval(a) > f.eval(b) ? 1 : -1;
+        });
+    }
+    
+    /**
+     * Maximizes function.
+     * 
+     * @return Result
+     */
+    public Result maximize() {
+        return run((Point a, Point b) -> {
+            return f.eval(a) > f.eval(b) ? -1 : 1;
+        });
+    }
     
 }

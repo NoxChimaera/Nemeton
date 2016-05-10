@@ -23,7 +23,6 @@
  */
 package edu.sibfu.isit.nemeton.algorithms.bees;
 
-import edu.sibfu.isit.nemeton.algorithms.IOptimization;
 import edu.sibfu.isit.nemeton.algorithms.PointHistory;
 import edu.sibfu.isit.nemeton.models.CalculatedPoint;
 import edu.sibfu.isit.nemeton.models.Point;
@@ -31,60 +30,60 @@ import edu.sibfu.isit.nemeton.models.Result;
 import edu.sibfu.isit.nemeton.models.functions.NFunction;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.DoubleSummaryStatistics;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
-import java.util.stream.Stream;
+import edu.sibfu.isit.nemeton.algorithms.OptimizationAlgorithm;
 
 /**
  *
  * @author Max Balushkin
  */
-public class BeesAlgorithm implements IOptimization {
-    private final NFunction f;
-    
+public class BeesAlgorithm extends OptimizationAlgorithm {
+
     private final int scouts;
     private final Random rnd;
     
     private final Point hivePosition;
     private final int hiveSize;
-    private final int sources;
-    private final double sourceSize;
+    private final int sites;
+    private final double siteSize;
     private final double gamma;
     
     private final int eliteSites;
     private final int onElite;
     private final int onOther;
     
+    private final int iterations;
+    private final double accuracy;
+    
     private int evaluations;
     
-    public BeesAlgorithm(
-        NFunction function, Point hivePosition, int hiveSize, int scouts,
-        int sources, double sourceSize, double gamma,
-        int eliteSites,
-        int onElite, int onOther
-    ) {
-        this.hivePosition = hivePosition;
-        this.scouts = scouts;
-        this.hiveSize = hiveSize;
-        this.sources = sources;
-        this.sourceSize = sourceSize;
-        this.gamma = gamma;
+    public BeesAlgorithm(final NFunction aFunction, final BeesAlgorithmParameters aParams) {
+        super(aFunction);
+        hivePosition = aParams.hivePosition;
+        hiveSize = aParams.hiveSize;
+        scouts = aParams.scouts;
         
-        this.eliteSites = eliteSites;
-        this.onElite = onElite;
-        this.onOther = onOther;
+        sites = aParams.sites;
+        siteSize = aParams.siteSize;
+        gamma = aParams.gamma;
         
-        this.f = function;
+        eliteSites = aParams.eliteSites;
+        onElite = aParams.onElite;
+        onOther = aParams.onOther;
+        
+        iterations = aParams.iterations;
+        accuracy = aParams.accuracy;
+        
         rnd = new Random();
         
         evaluations = 0;
     }
     
     private List<Point> scouting() {        
-        List<Point> points = new ArrayList<>(sources);            
+        List<Point> points = new ArrayList<>(sites);            
         final int arity = f.getArity();
 
         for (int i = 0; i < scouts; i++) {
@@ -100,23 +99,21 @@ public class BeesAlgorithm implements IOptimization {
     
     @Override
     public Result run(Comparator<Point> comparator) {
-        double sourceSize = this.sourceSize;
+        double sourceSize = this.siteSize;
         String endClause = "нет данных";
         
-        PointHistory history = new PointHistory();
+        final PointHistory history = new PointHistory();
         
         // Init algorithm
         List<Point> points = scouting();
         evaluations += scouts;
         points.sort(comparator);
-        points = points.stream().limit(sources).collect(Collectors.toList());
+        points = points.stream().limit(sites).collect(Collectors.toList());
 
         int it = 0;
-        int max = 1000000;
-        final double eps = 0.00000001;
         final int arity = f.getArity();
         
-        for (it = 0; it < max && sourceSize > eps; it++) {
+        for (it = 0; it < iterations && sourceSize > accuracy; it++) {
             // Harvest elite sites
             for (int i = 0; i < eliteSites; i++) {
                 Point centre = points.get(i);
@@ -131,7 +128,7 @@ public class BeesAlgorithm implements IOptimization {
                 }
             }
             // Harvest other sites
-            for (int i = eliteSites; i < sources; i++) {
+            for (int i = eliteSites; i < sites; i++) {
                 Point centre = points.get(i);
                 for (int j = 0; j < onOther; j++) {
                     Point x = new Point(centre);
@@ -144,17 +141,17 @@ public class BeesAlgorithm implements IOptimization {
             }
             // Scouts
             points.addAll(scouting());
-            evaluations += sources;
+            evaluations += sites;
             sourceSize *= gamma;            
 
             try {
                 points.sort(comparator);
             } catch (IllegalArgumentException ex) {
-                points = points.stream().limit(sources).collect(Collectors.toList());
+                points = points.stream().limit(sites).collect(Collectors.toList());
                 endClause = "нарушение контракта сортировки";
                 break;
             }
-            points = points.stream().limit(sources).collect(Collectors.toList());
+            points = points.stream().limit(sites).collect(Collectors.toList());
             for (int i = 0; i < eliteSites; i++) {
                 Point p = points.get(i);
                 history.add(i, p, f.eval(p));
@@ -171,15 +168,15 @@ public class BeesAlgorithm implements IOptimization {
                     DoubleStream.of(doubles).reduce(0, (a, b) -> a + Math.pow(b - avg, 2)) / eliteSites
             );
             
-            if (stdDev <= eps) {
+            if (stdDev <= accuracy) {
                 endClause = "по точности";
                 break;
             }
         }
         
-        if (it == max) {
+        if (it == iterations) {
             endClause = "по итерациям";
-        } else if (sourceSize <= eps) {
+        } else if (sourceSize <= accuracy) {
             endClause = "по размеру области локального поиска";
         }
         
@@ -195,21 +192,7 @@ public class BeesAlgorithm implements IOptimization {
         result.setHistory(history);
         return result;
     }
-    
-    @Override
-    public Result minimize() {
-        return run((Point a, Point b) -> {
-            return f.eval(a) > f.eval(b) ? 1 : -1;
-        });
-    }
-    
-    @Override
-    public Result maximize() {
-        return run((Point a, Point b) -> {
-            return f.eval(a) > f.eval(b) ? -1 : 1;
-        });
-    }
-
+   
     @Override
     public String toString() {
         return "Пчелиный алгоритм";

@@ -6,11 +6,11 @@
 package edu.sibfu.isit.nemeton.algorithms.bees;
 
 import edu.sibfu.isit.nemeton.algorithms.AlgorithmBuilder;
-import edu.sibfu.isit.nemeton.algorithms.IOptimization;
 import edu.sibfu.isit.nemeton.models.Point;
 import edu.sibfu.isit.nemeton.models.functions.NFunction;
 import edu.sibfu.isit.nemeton.views.BeesSettings;
 import javax.swing.JFrame;
+import edu.sibfu.isit.nemeton.algorithms.OptimizationAlgorithm;
 
 /**
  *
@@ -32,56 +32,62 @@ public class BeesAlgorithmBuilder extends AlgorithmBuilder {
     int onElite = 6;
     int onOther = 4;
 
-    int maxIteration = 10000;
+    int maxIteration = 100000;
+    double accuracy = 0.000001;
 
     public BeesAlgorithmBuilder() {
     }
-    public BeesAlgorithmBuilder(BeesAlgorithmBuilder src) {
-        copy(src);
+    public BeesAlgorithmBuilder(final BeesAlgorithmBuilder aSrc) {
+        copy(aSrc);
     }
 
-    public BeesAlgorithmBuilder hivePosition(Point point) {
-        hivePosition = point;
+    public BeesAlgorithmBuilder hivePosition(final Point aPosition) {
+        hivePosition = aPosition;
         return this;
     }
-    public BeesAlgorithmBuilder hiveSize(int hiveSize) {
-        this.hiveSize = hiveSize;
-        return this;
-    }
-
-    public BeesAlgorithmBuilder scouts(int scouts) {
-        this.scouts = scouts;
+    public BeesAlgorithmBuilder hiveSize(final int aHiveSize) {
+        hiveSize = aHiveSize;
         return this;
     }
 
-    public BeesAlgorithmBuilder sources(int sources) {
-        this.sources = sources;
-        return this;
-    }
-    public BeesAlgorithmBuilder sourceSize(int size) {
-        sourceSize = size;
-        return this;
-    }
-    public BeesAlgorithmBuilder gamma(double gamma) {
-        this.gamma = gamma;
-        return this;
-    }
-    public BeesAlgorithmBuilder eliteSources(int best) {
-        eliteSources = best;
+    public BeesAlgorithmBuilder scouts(final int aScouts) {
+        scouts = aScouts;
         return this;
     }
 
-    public BeesAlgorithmBuilder onElite(int onBest) {
-        this.onElite = onBest;
+    public BeesAlgorithmBuilder sources(final int aSources) {
+        sources = aSources;
         return this;
     }
-    public BeesAlgorithmBuilder onOther(int onNonBest) {
-        this.onOther = onNonBest;
+    public BeesAlgorithmBuilder sourceSize(final int aSize) {
+        sourceSize = aSize;
+        return this;
+    }
+    public BeesAlgorithmBuilder gamma(final double aGamma) {
+        gamma = aGamma;
+        return this;
+    }
+    public BeesAlgorithmBuilder eliteSources(final int aBest) {
+        eliteSources = aBest;
         return this;
     }
 
-    public BeesAlgorithmBuilder maxIteration(int max) {
-        this.maxIteration = max;
+    public BeesAlgorithmBuilder onElite(final int aOnBest) {
+        onElite = aOnBest;
+        return this;
+    }
+    public BeesAlgorithmBuilder onOther(final int aOnNonBest) {
+        onOther = aOnNonBest;
+        return this;
+    }
+
+    public BeesAlgorithmBuilder maxIteration(final int aMax) {
+        maxIteration = aMax;
+        return this;
+    }
+    
+    public BeesAlgorithmBuilder accuracy(final double aAccuracy) {
+        accuracy = aAccuracy;
         return this;
     }
 
@@ -119,18 +125,24 @@ public class BeesAlgorithmBuilder extends AlgorithmBuilder {
     public int getMaxIteration() {
         return maxIteration;
     }
+    
+    public double getAccuracy() {
+        return accuracy;
+    }
 
     // ??
-    public void copy(BeesAlgorithmBuilder src) {
-        scouts = src.scouts;
-        sources = src.sources;
-        eliteSources = src.eliteSources;
-        onElite = src.onElite;
-        onOther = src.onOther;
-        hivePosition = new Point(src.hivePosition);
-        sourceSize = src.sourceSize;
-        hiveSize = src.hiveSize;
-        gamma = src.gamma;
+    public void copy(final BeesAlgorithmBuilder aSrc) {
+        scouts = aSrc.scouts;
+        sources = aSrc.sources;
+        eliteSources = aSrc.eliteSources;
+        onElite = aSrc.onElite;
+        onOther = aSrc.onOther;
+        hivePosition = new Point(aSrc.hivePosition);
+        sourceSize = aSrc.sourceSize;
+        hiveSize = aSrc.hiveSize;
+        gamma = aSrc.gamma;
+        maxIteration = aSrc.maxIteration;
+        accuracy = aSrc.accuracy;
     }
    
     @Override
@@ -142,11 +154,12 @@ public class BeesAlgorithmBuilder extends AlgorithmBuilder {
     }
     
     @Override
-    public IOptimization build(NFunction function) {
-        return new BeesAlgorithm(
-                function, hivePosition, hiveSize, scouts, sources, sourceSize,
-                gamma, eliteSources, onElite, onOther
+    public OptimizationAlgorithm build(final NFunction aFunction) {
+        BeesAlgorithmParameters params = new BeesAlgorithmParameters(
+                hivePosition, hiveSize, sources, scouts, eliteSources, 
+                sourceSize, gamma, onElite, onOther, maxIteration, accuracy
         );
+        return new BeesAlgorithm(aFunction, params);
     }
 
     @Override

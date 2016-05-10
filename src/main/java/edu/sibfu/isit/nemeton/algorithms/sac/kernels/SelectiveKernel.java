@@ -21,34 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package edu.sibfu.isit.nemeton.algorithms;
-
-import edu.sibfu.isit.nemeton.models.functions.NFunction;
-import edu.sibfu.isit.nemeton.views.BeesSettings;
-import javax.swing.JFrame;
+package edu.sibfu.isit.nemeton.algorithms.sac.kernels;
 
 /**
- * Base class for algorithm builders.
- * Used in setting windows
- * @see BeesSettings
- * 
+ *
  * @author Max Balushkin
  */
-public abstract class AlgorithmBuilder {
+public abstract class SelectiveKernel {
     
     /**
-     * Creates new Optimizing Algorithm object with specified function.
+     * Calculates kernel value.
      * 
-     * @param function Optimized function
-     * @return Algorithm object
+     * @param s Selectiveness
+     * @param g Dimensionless quantity
+     * @return Kernel value
      */
-    public abstract OptimizationAlgorithm build(NFunction function);
-    
-    /**
-     * Show settings window.
-     * 
-     * @return Frame
-     */
-    public abstract JFrame show();
+    public abstract double eval(double s, double g);
+
+    @Override
+    public abstract String toString();
     
 }
