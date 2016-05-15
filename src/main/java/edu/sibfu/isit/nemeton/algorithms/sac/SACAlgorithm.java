@@ -24,20 +24,16 @@
 package edu.sibfu.isit.nemeton.algorithms.sac;
 
 import edu.sibfu.isit.nemeton.algorithms.OptimizationAlgorithm;
-import edu.sibfu.isit.nemeton.algorithms.sac.kernels.ParabolicKernel;
-import edu.sibfu.isit.nemeton.algorithms.sac.kernels.SelectiveKernel;
+import edu.sibfu.isit.nemeton.algorithms.PointHistory;
 import edu.sibfu.isit.nemeton.models.CalculatedPoint;
 import edu.sibfu.isit.nemeton.models.Pair;
 import edu.sibfu.isit.nemeton.models.Point;
 import edu.sibfu.isit.nemeton.models.Result;
 import edu.sibfu.isit.nemeton.models.functions.NFunction;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Random;
-import java.util.function.Function;
 import java.util.stream.DoubleStream;
-import java.util.stream.Stream;
 
 /**
  *
@@ -55,15 +51,18 @@ public class SACAlgorithm extends OptimizationAlgorithm {
     
     private Point centre = Point.zero(2);
     private Point delta = new Point(10, 10);
-    private double selectiveness = 10;
-    private SelectiveKernel kernel = new ParabolicKernel();
     
-    private double accuracy = 0.00001;
+    private final SACAlgorithmParameters params;
     
     private int evaluations;
     
-    public SACAlgorithm(final NFunction aFunction) {
+    public SACAlgorithm(final NFunction aFunction, final SACAlgorithmParameters aParams) {
         super(aFunction);
+        params = aParams;
+        
+        centre = new Point(aParams.centre);
+        delta = new Point(centre.getArity(), aParams.searchRange);
+        
         rnd = new Random();
         evaluations = 0;
     }
@@ -133,7 +132,7 @@ public class SACAlgorithm extends OptimizationAlgorithm {
             .map(
                 (value) -> { 
                     double g = transition.apply(value, min, max);
-                    return kernel.eval(selectiveness, g); 
+                    return params.kernel.eval(params.selectiveness, g); 
                 }
             ).toArray();
         final double kernelSum = DoubleStream.of(kernelUndim).sum();
@@ -146,7 +145,7 @@ public class SACAlgorithm extends OptimizationAlgorithm {
             uMin = uMin.add(u.mul(p));
         }
         
-        Point delta = nextDelta(aPoints, aDelta, 1, 4, kernelUndim, kernelSum);
+        Point delta = nextDelta(aPoints, aDelta, params.gamma, params.metric, kernelUndim, kernelSum);
         return new Pair<>(uMin, delta);
     }
     
@@ -163,24 +162,33 @@ public class SACAlgorithm extends OptimizationAlgorithm {
     @Override
     public Result run(Comparator<Point> comparator) {
         String endClause = "нет данных";
+        final PointHistory history = new PointHistory();
         
-        for (int it = 0; it < 1000; it++) {
-            ArrayList<Pair<CalculatedPoint, Point>> points = generateSample(50, centre, delta);
+        int it;
+        for (it = 0; it < params.iterations; it++) {
+            ArrayList<Pair<CalculatedPoint, Point>> points = generateSample(params.sampleSize, centre, delta);
             Pair<Point, Point> res = uMin(centre.getArity(), points, delta);
             Point uMin = res.left();
             centre = centre.add(delta.mul(uMin));
             delta = res.right();
-            if (stopCondition(delta, accuracy)) {
-                endClause = "по размеру delta x";
+            
+            history.add(centre, f.eval(centre));
+            if (stopCondition(delta, params.accuracy)) {
+                endClause = "по точности";
                 break;
             }
         }
+        if (it == params.iterations) {
+            endClause = "по итерациям";
+        }
+        
         Result result = new Result(
             this, f, 
             new CalculatedPoint[] { new CalculatedPoint(centre, f.eval(centre)) }, 
-            evaluations, evaluations
+            it, evaluations
         );
-                
+        result.setEndClause(endClause);
+        result.setHistory(history);
         return result;
     }
 
@@ -194,6 +202,11 @@ public class SACAlgorithm extends OptimizationAlgorithm {
     public Result minimize() {
         transition = (val, min, max) -> { return (val - min) / (max - min); };
         return super.minimize();
+    }
+
+    @Override
+    public String toString() {
+        return "Селективное усреднение координат";
     }
     
 }

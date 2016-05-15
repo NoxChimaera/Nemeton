@@ -21,29 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package edu.sibfu.isit.nemeton.algorithms.sac;
+package edu.sibfu.isit.nemeton.algorithms.sac.kernels;
 
-import edu.sibfu.isit.nemeton.algorithms.OptimizationAlgorithm;
-import edu.sibfu.isit.nemeton.models.Result;
-import edu.sibfu.isit.nemeton.models.functions.NFunction;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import java.util.ArrayList;
+import javax.swing.DefaultComboBoxModel;
 
 /**
  *
  * @author Max Balushkin
  */
-public class SACAlgorithmTest {
-
-    @Test
-    public void testRun() {
-        NFunction func = new NFunction((x, y) -> x*x + y*y);
-        
-        SACBuilder bldr = new SACBuilder();
-        OptimizationAlgorithm sac = bldr.build(func);
-        
-        Result res = sac.minimize();
-        int foo = 42;
+public class Kernels {
+    
+    private static final ArrayList<SelectiveKernel> kernels;
+    private static final DefaultComboBoxModel<SelectiveKernel> comboboxModel;
+    
+    static {
+        kernels = new ArrayList<>();
+        comboboxModel = new DefaultComboBoxModel<>();
+    }
+    
+    public static void register(final SelectiveKernel aKernel) {
+        kernels.add(aKernel);
+        comboboxModel.addElement(aKernel);
+    }
+    
+    public static DefaultComboBoxModel<SelectiveKernel> model() {
+        return comboboxModel;
     }
     
 }

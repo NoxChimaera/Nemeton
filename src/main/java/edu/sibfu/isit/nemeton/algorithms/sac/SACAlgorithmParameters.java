@@ -23,27 +23,45 @@
  */
 package edu.sibfu.isit.nemeton.algorithms.sac;
 
-import edu.sibfu.isit.nemeton.algorithms.OptimizationAlgorithm;
-import edu.sibfu.isit.nemeton.models.Result;
-import edu.sibfu.isit.nemeton.models.functions.NFunction;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import edu.sibfu.isit.nemeton.algorithms.sac.kernels.SelectiveKernel;
+import edu.sibfu.isit.nemeton.models.Point;
 
 /**
  *
  * @author Max Balushkin
  */
-public class SACAlgorithmTest {
-
-    @Test
-    public void testRun() {
-        NFunction func = new NFunction((x, y) -> x*x + y*y);
+public class SACAlgorithmParameters {
+    
+    public final Point centre;
+    public final double searchRange;
+    public final int sampleSize;
+    public final double gamma;
+    public final int metric;
+    
+    public final SelectiveKernel kernel;
+    public final int selectiveness;
+    
+    public final int iterations;
+    public final double accuracy;
+    
+    public SACAlgorithmParameters(
+        final Point aCentre, final double aSearchRange,
+        final int aSampleSize, final double aGamma,
+        final int aMetric, 
+        final SelectiveKernel aKernel, final int aSelectiveness,
+        final int aIterations, final double aAccuracy
+    ) {
+        centre = aCentre;
+        searchRange = aSearchRange;
+        sampleSize = aSampleSize;
+        gamma = aGamma;
+        metric = aMetric;
         
-        SACBuilder bldr = new SACBuilder();
-        OptimizationAlgorithm sac = bldr.build(func);
+        kernel = aKernel;
+        selectiveness = aSelectiveness;
         
-        Result res = sac.minimize();
-        int foo = 42;
+        iterations = aIterations;
+        accuracy = aAccuracy;
     }
     
 }

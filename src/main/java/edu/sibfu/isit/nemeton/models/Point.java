@@ -28,7 +28,8 @@ import java.math.RoundingMode;
 import java.util.Arrays;
 
 /**
- * Represents point in N-dimensional space
+ * Represents point in N-dimensional space.
+ * 
  * @author Max Balushkin
  */
 public class Point {
@@ -51,6 +52,12 @@ public class Point {
     public Point(Point src) {
         arity = src.getArity();
         params = Arrays.copyOf(src.params, arity);
+    }
+    
+    public Point(final int aArity, double aValue) {
+        arity = aArity;
+        params = new double[aArity];
+        Arrays.fill(params, aValue);
     }
     
     /**

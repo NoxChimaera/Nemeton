@@ -25,6 +25,10 @@ package edu.sibfu.isit.nemeton;
 
 import edu.sibfu.isit.nemeton.algorithms.bees.BeesAlgorithmBuilder;
 import edu.sibfu.isit.nemeton.algorithms.sac.SACBuilder;
+import edu.sibfu.isit.nemeton.algorithms.sac.kernels.CubicKernel;
+import edu.sibfu.isit.nemeton.algorithms.sac.kernels.Kernels;
+import edu.sibfu.isit.nemeton.algorithms.sac.kernels.LinearKernel;
+import edu.sibfu.isit.nemeton.algorithms.sac.kernels.ParabolicKernel;
 import edu.sibfu.isit.nemeton.controllers.MainController;
 import edu.sibfu.isit.nemeton.controllers.providers.FunctionProvider;
 import edu.sibfu.isit.nemeton.lib.FunctionTextFormatter;
@@ -72,10 +76,17 @@ public class Nemeton {
         
         FunctionProvider.subscribe(ctrl);
         registerFunctions();
+        registerKernels();
+    }
+    
+    private static void registerKernels() {
+        Kernels.register(new LinearKernel());
+        Kernels.register(new ParabolicKernel());
+        Kernels.register(new CubicKernel());
     }
     
     /**
-     * Registers function
+     * Registers function.
      */
     private static void registerFunctions() {
         // 2D Hypersphere
