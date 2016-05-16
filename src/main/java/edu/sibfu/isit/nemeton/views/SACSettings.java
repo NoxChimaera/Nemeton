@@ -27,10 +27,12 @@ import edu.sibfu.isit.nemeton.algorithms.bees.BeesAlgorithmBuilder;
 import edu.sibfu.isit.nemeton.algorithms.sac.SACBuilder;
 import edu.sibfu.isit.nemeton.algorithms.sac.kernels.Kernels;
 import edu.sibfu.isit.nemeton.algorithms.sac.kernels.SelectiveKernel;
+import edu.sibfu.isit.nemeton.lib.PointUtil;
 import static edu.sibfu.isit.nemeton.lib.Utils.intg;
 import static edu.sibfu.isit.nemeton.lib.Utils.real;
 import static edu.sibfu.isit.nemeton.lib.Utils.str;
 import javax.swing.JFrame;
+import static edu.sibfu.isit.nemeton.lib.Utils.str;
 
 /**
  *
@@ -43,26 +45,27 @@ public class SACSettings extends JFrame {
     /**
      * Creates new form SACSettings.
      * 
-     * @param builder SAC algorithm builder
+     * @param aBuilder SAC algorithm builder
      */
-    public SACSettings(SACBuilder builder) {
+    public SACSettings( final SACBuilder aBuilder ) {
         initComponents();
-        bldr = builder;
-        kernel.setModel(Kernels.model());
-        loadData(bldr);
+        bldr = aBuilder;
+        kernel.setModel( Kernels.model() );
+        loadData( bldr );
     }
     
-    private void loadData(SACBuilder bldr) {
-        searchRange.setText(str(bldr.searchRange()));
-        sampleSize.setText(str(bldr.sampleSize()));
-        gamma.setText(str(bldr.gamma()));
-        metric.setText(str(bldr.metric()));
+    private void loadData( final SACBuilder aBldr ) {
+        centre.setText(PointUtil.str( aBldr.centre() ) );
+        searchRange.setText( str( aBldr.searchRange() ) );
+        sampleSize.setText( str( aBldr.sampleSize() ) );
+        gamma.setText( str( aBldr.gamma() ) );
+        metric.setText( str( aBldr.metric() ) );
         
-        kernel.setSelectedItem(bldr.kernel());
-        selectiveness.setText(str(bldr.selectiveness()));
+        kernel.setSelectedItem( aBldr.kernel() );
+        selectiveness.setText( str( aBldr.selectiveness() ) );
         
-        iterations.setText(str(bldr.iterations()));
-        accuracy.setText(str(bldr.accuracy()));
+        iterations.setText( str( aBldr.iterations() ) );
+        accuracy.setText( str( aBldr.accuracy() ) );
     }
 
     /**
@@ -112,7 +115,6 @@ public class SACSettings extends JFrame {
         jLabel1.setText("<html>Начальная точка x<sup>0</sup>: </html>");
 
         centre.setText("0");
-        centre.setEnabled(false);
 
         jLabel2.setText("<html>Размер области Δx:</html>");
 
@@ -312,12 +314,13 @@ public class SACSettings extends JFrame {
 
     private void saveData() {
         bldr
-            .searchRange(real(searchRange.getText()))
-            .sampleSize(intg(sampleSize.getText()))
-            .gamma(real(gamma.getText()))
-            .metric(intg(metric.getText()))
-            .iterations(intg(iterations.getText()))
-            .accuracy(real(accuracy.getText()));
+            .centre( PointUtil.parse( centre.getText() ) )
+            .searchRange( real( searchRange.getText() ) )
+            .sampleSize( intg( sampleSize.getText() ) )
+            .gamma( real( gamma.getText() ) )
+            .metric( intg( metric.getText() ) )
+            .iterations( intg( iterations.getText() ) )
+            .accuracy( real( accuracy.getText() ) );
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -163,6 +163,7 @@ public class SACAlgorithm extends OptimizationAlgorithm {
     public Result run(Comparator<Point> comparator) {
         String endClause = "нет данных";
         final PointHistory history = new PointHistory();
+        history.add(centre, f.eval(centre));
         
         int it;
         for (it = 0; it < params.iterations; it++) {

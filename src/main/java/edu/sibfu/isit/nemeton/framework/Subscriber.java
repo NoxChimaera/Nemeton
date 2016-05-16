@@ -21,49 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package edu.sibfu.isit.nemeton.lib;
+package edu.sibfu.isit.nemeton.framework;
 
 /**
  *
  * @author Max Balushkin
+ * @param <T>
  */
-public class Utils {
+public interface Subscriber<T> {
     
-    /**
-     * Converts integer to string.
-     * 
-     * @param num Number
-     * @return String
-     */
-    public static String str(int num) {
-        return Integer.toString(num);
-    }
-    /**
-     * Converts double to string.
-     * 
-     * @param num Number
-     * @return String
-     */
-    public static String str(double num) {
-        return Double.toString(num);
-    }
+    void publish( T aObject );
     
-    /**
-     * Converts string to integer.
-     * 
-     * @param str String
-     * @return Integer
-     */
-    public static int intg(String str) {
-        return Integer.parseInt(str);
-    }
-    /**
-     * Converts string to double.
-     * 
-     * @param str Stirng
-     * @return Double
-     */
-    public static double real(String str) {
-        return Double.parseDouble(str);
-    }
 }

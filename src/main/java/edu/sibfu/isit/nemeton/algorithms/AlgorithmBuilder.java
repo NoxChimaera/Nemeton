@@ -42,7 +42,7 @@ public abstract class AlgorithmBuilder {
      * @param function Optimized function
      * @return Algorithm object
      */
-    public abstract OptimizationAlgorithm build(NFunction function);
+    public abstract OptimizationAlgorithm build( NFunction function );
     
     /**
      * Show settings window.

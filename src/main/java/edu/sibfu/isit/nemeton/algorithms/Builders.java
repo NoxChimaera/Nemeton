@@ -21,49 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package edu.sibfu.isit.nemeton.lib;
+package edu.sibfu.isit.nemeton.algorithms;
+
+import edu.sibfu.isit.nemeton.framework.Subscriber;
+import java.util.ArrayList;
 
 /**
- *
+ * Provides algorithm builders and notifies subscribers about them.
+ * 
  * @author Max Balushkin
  */
-public class Utils {
+public class Builders {
+
+    private static final ArrayList<Subscriber<AlgorithmBuilder>> subscribers;
+    private static final ArrayList<AlgorithmBuilder> builders;
     
-    /**
-     * Converts integer to string.
-     * 
-     * @param num Number
-     * @return String
-     */
-    public static String str(int num) {
-        return Integer.toString(num);
-    }
-    /**
-     * Converts double to string.
-     * 
-     * @param num Number
-     * @return String
-     */
-    public static String str(double num) {
-        return Double.toString(num);
+    static {
+       subscribers = new ArrayList<>();
+       builders = new ArrayList<>();
     }
     
-    /**
-     * Converts string to integer.
-     * 
-     * @param str String
-     * @return Integer
-     */
-    public static int intg(String str) {
-        return Integer.parseInt(str);
+    public static void subscribe( final Subscriber<AlgorithmBuilder> aSubscriber ) {
+        subscribers.add(aSubscriber);
     }
-    /**
-     * Converts string to double.
-     * 
-     * @param str Stirng
-     * @return Double
-     */
-    public static double real(String str) {
-        return Double.parseDouble(str);
+    
+    public static void register( final AlgorithmBuilder aBldr ) {
+        builders.add( aBldr );
+        for ( Subscriber<AlgorithmBuilder> subscriber : subscribers ) {
+            subscriber.publish(aBldr);
+        }
     }
+
 }

@@ -32,18 +32,56 @@ import edu.sibfu.isit.nemeton.models.Point;
  */
 public class SACAlgorithmParameters {
     
+    /**
+     * Centre point of search area, x^0.
+     */
     public final Point centre;
+    /**
+     * Search range, delta x.
+     */
     public final double searchRange;
+    /**
+     * Amount of points in sample, n.
+     */
     public final int sampleSize;
+    /**
+     * Shrink coefficient, gamma.
+     */
     public final double gamma;
+    /**
+     * Metric, q.
+     */
     public final int metric;
     
+    /**
+     * Selective kernel, p(...).
+     */
     public final SelectiveKernel kernel;
+    /**
+     * Kernel selectiveness, s.
+     */
     public final int selectiveness;
     
+    /**
+     * Maximum iterations.
+     */
     public final int iterations;
+    /**
+     * Search accuracy, eps.
+     */
     public final double accuracy;
     
+    /**
+     * @param aCentre Centre of search area, x^0
+     * @param aSearchRange Search range, delta x
+     * @param aSampleSize Amount of points in sample, n
+     * @param aGamma Shrink coefficient, gamma
+     * @param aMetric Metric, q
+     * @param aKernel Selective kernel, p(...)
+     * @param aSelectiveness Kernel selectiveness, s
+     * @param aIterations Maximum iterations
+     * @param aAccuracy Search accuracy, eps
+     */
     public SACAlgorithmParameters(
         final Point aCentre, final double aSearchRange,
         final int aSampleSize, final double aGamma,

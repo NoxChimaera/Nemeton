@@ -24,7 +24,7 @@
 package edu.sibfu.isit.nemeton.controllers;
 
 import edu.sibfu.isit.nemeton.algorithms.AlgorithmBuilder;
-import edu.sibfu.isit.nemeton.controllers.providers.FunctionProvider;
+import edu.sibfu.isit.nemeton.controllers.providers.Functions;
 import edu.sibfu.isit.nemeton.controllers.providers.FunctionProviderSubscriber;
 import edu.sibfu.isit.nemeton.jzy.JzyChart;
 import edu.sibfu.isit.nemeton.jzy.JzyContourPlot;
@@ -50,17 +50,31 @@ import org.jzy3d.colors.colormaps.ColorMapRainbow;
 import org.jzy3d.maths.Range;
 import org.jzy3d.plot3d.rendering.canvas.Quality;
 import edu.sibfu.isit.nemeton.algorithms.OptimizationAlgorithm;
+import edu.sibfu.isit.nemeton.framework.Subscriber;
 
 
 /**
  *
  * @author Max Balushkin
  */
-public class MainController implements FunctionProviderSubscriber {
-    MainView view;
-    ArrayList<AlgorithmBuilder> builders;
-    DefaultTableModel buildersTableModel;
+public class MainController {
     
+    public final Subscriber<NFunction> functionRegisterCallback = new Subscriber<NFunction>() {
+        @Override
+        public void publish( final NFunction aFunc ) {
+            functionsListModel.addElement( aFunc );
+        }
+    };
+    
+    public final Subscriber<AlgorithmBuilder> builderRegisterCallback = new Subscriber<AlgorithmBuilder>() {
+        @Override
+        public void publish( final AlgorithmBuilder aBldr ) {
+            buildersTableModel.addRow( new Object[] { true, aBldr } );
+        }
+    };
+    
+    MainView view;
+    DefaultTableModel buildersTableModel;
     DefaultComboBoxModel<NFunction> functionsListModel;
     
     public enum Goal {
@@ -70,16 +84,15 @@ public class MainController implements FunctionProviderSubscriber {
     
     public MainController(MainView view) {
         this.view = view;
-        builders = new ArrayList<>();
         buildersTableModel = 
-            new DefaultTableModel(new Object[][] {}, new String[] { "", "Название" }) {
+            new DefaultTableModel( new Object[][] {}, new String[] { "", "Название" } ) {
                 Class[] types = new Class [] {
                     Boolean.class, AlgorithmBuilder.class
                 };
 
                 @Override
-                public Class getColumnClass(int columnIndex) {
-                    return types [columnIndex];
+                public Class getColumnClass( int columnIndex ) {
+                    return types [ columnIndex ];
                 }
             };
         functionsListModel = new DefaultComboBoxModel<>();
@@ -88,90 +101,80 @@ public class MainController implements FunctionProviderSubscriber {
     public TableModel getAlghotitmsTableModel() {
         return buildersTableModel;
     }
-
-    @Override
-    public void register(final NFunction aFunction) {
-        functionsListModel.addElement(aFunction);
-    }
     
     public ComboBoxModel getFunctionListModel() {
         return functionsListModel;
     }
-    
-    public void registerBuilder(AlgorithmBuilder bldr) {
-        builders.add(bldr);
-        buildersTableModel.addRow(new Object[] { true, bldr });
-    }
    
-    public NFunction getFunction(int index) {
-        return FunctionProvider.get(index);
+    public NFunction getFunction( int index ) {
+        return Functions.get(index);
     }
     
-    public void runAlgorithms(Goal aGoal, final NFunction aFunction, final boolean showSurface, final boolean showHistory) {
+    public void runAlgorithms( Goal aGoal, final NFunction aFunction, final boolean showSurface, final boolean showHistory ) {
         final ArrayList<OptimizationAlgorithm> algorithms = new ArrayList<>();
-        for (Object item : buildersTableModel.getDataVector().toArray()) {
+        for ( Object item : buildersTableModel.getDataVector().toArray() ) {
             final Vector vector = (Vector) item;
-            if ((Boolean) vector.get(0)) {
-                AlgorithmBuilder bldr = (AlgorithmBuilder) vector.get(1);
-                algorithms.add(bldr.build(aFunction));
+            if ( (Boolean) vector.get( 0 ) ) {
+                AlgorithmBuilder bldr = (AlgorithmBuilder) vector.get( 1 );
+                algorithms.add( bldr.build( aFunction ) );
             }
         }
  
         final ArrayList<Result> results = new ArrayList<>();
-        for (OptimizationAlgorithm al : algorithms) {
-            switch (aGoal) {
+        for ( OptimizationAlgorithm al : algorithms ) {
+            switch ( aGoal ) {
                 case Maximize:
-                    results.add(al.maximize());
+                    results.add( al.maximize() );
                     break;
                 case Minimize:
-                    results.add(al.minimize());
+                    results.add( al.minimize() );
             }
         }
         
-        if (showSurface) show(aFunction, results);
+        if ( showSurface ) show( aFunction, results );
         
-        ResultView resultView = new ResultView(results);
-        resultView.setVisible(true);
+        ResultView resultView = new ResultView( results );
+        resultView.setVisible( true );
         
-        if (showHistory) showHistory(results);
+        if ( showHistory ) showHistory( results );
     }
     
-    public void error(String message) {
-        JOptionPane.showMessageDialog(view, message);
+    public void error( String message ) {
+        JOptionPane.showMessageDialog( view, message );
     }
     
-    public void showHistory(final ArrayList<Result> aResults) {
-        HistoryView history = new HistoryView(aResults);
+    public void showHistory( final ArrayList<Result> aResults ) {
+        HistoryView history = new HistoryView( aResults );
         history.showAsFrame();
     }
     
-    public void show(final NFunction aFunction, final ArrayList<Result> aResults) {
-        if (!aFunction.isMapped()) {
-            error("Specified function can not be mapped with Jzy3d");
+    public void show( final NFunction aFunction, final ArrayList<Result> aResults ) {
+        if ( !aFunction.isMapped() ) {
+            error( "Specified function can not be mapped with Jzy3d" );
             return;
         }
         
         // Calculate plot range: 
         //  [ min(X) - margin .. max(X) + margin ] 
         //      where X in [ sloutions, point history ]
-        Range range = new Range(Double.MAX_VALUE, Double.MIN_VALUE);
-        for (Result result : aResults) {
-            Range r = JzyHelper.range(result.getValues(), 5);
-            range = JzyHelper.union(range, r);
+        Range range = new Range( Double.MAX_VALUE, Double.MIN_VALUE );
+        for ( Result result : aResults ) {
+            Range r = JzyHelper.range( result.getValues(), 5 );
+            range = JzyHelper.union( range, r );
             
-            int n = result.getHistory().size();
-            for (int i = 0; i < n; i++) {
-                r = JzyHelper.range(result.getHistory().get(i), 5);
-                range = JzyHelper.union(range, r);
+            final int n = result.getHistory().size();
+            for ( int i = 0; i < n; i++ ) {
+                r = JzyHelper.range( result.getHistory().get( i ), 5 );
+                range = JzyHelper.union( range, r );
             }
         }
 
-        JzyChart chart = new JzyChart(Quality.Advanced);
+        JzyChart chart = new JzyChart( Quality.Advanced );
         
         // Surface plot
-        int steps = 80;
-        JzySurface surface = new JzySurface(aFunction, range, steps)
-            .colourize(new ColorMapRainbow(), 0.95f);
+        final int steps = 80;
+        JzySurface surface = new JzySurface( aFunction, range, steps )
+            .colourize( new ColorMapRainbow(), 0.95f );
         
         // Contour plot
         JzyContourPlot contour = new JzyContourPlot(
@@ -182,25 +185,25 @@ public class MainController implements FunctionProviderSubscriber {
             chart.getBounds()
         );
         
-        chart.addPlot(surface).addContourPlot(contour);
+        chart.addPlot( surface ).addContourPlot( contour );
         
-        for (Result result : aResults) {
+        for ( Result result : aResults ) {
             // Scatter plot. Solutions
             final CalculatedPoint[] solution = result.getValues();
             final Color colour = Color.random();
-            JzyScatterPlot scatterPlot = new JzyScatterPlot(solution, colour);
-            chart.addPlot(scatterPlot);
+            JzyScatterPlot scatterPlot = new JzyScatterPlot( solution, colour );
+            chart.addPlot( scatterPlot );
             
             // Best solution iterations
             // final int n = result.getHistory().size();
             final int n = 1;
-            for (int i = 0; i < n; i++) {
-                final ArrayList<CalculatedPoint> points = result.getHistory().get(i);
-                JzyLinePlot line = new JzyLinePlot(points);
+            for ( int i = 0; i < n; i++ ) {
+                final ArrayList<CalculatedPoint> points = result.getHistory().get( i );
+                JzyLinePlot line = new JzyLinePlot( points );
                 chart.addPlot(line);
             }
         }
         
-        chart.show("График функции и найденные точки");
+        chart.show( "График функции и найденные точки" );
     }
 }

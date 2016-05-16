@@ -23,7 +23,6 @@
  */
 package edu.sibfu.isit.nemeton.lib;
 
-import com.sun.javafx.binding.StringFormatter;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -31,19 +30,17 @@ import static org.junit.Assert.*;
  *
  * @author Max Balushkin
  */
-public class FunctionTextFormatterTest extends FunctionTextFormatter {
-    public FunctionTextFormatterTest() {
-    }
+public class FunctionTextFormatterTest {
 
     @Test
     public void testToHTML() {
-        String foo = FunctionTextFormatter.toHTML("\\Sigma^3_{i = 0} 100(x_i^2)", false);
+        String foo = FunctionTextFormatter.toHTML( "\\Sigma^3_{i = 0} 100(x_i^2)", false );
         
-        assertEquals("x<sub>1</sub>", FunctionTextFormatter.toHTML("x_1", 0));
-        assertEquals("x<sub>1</sub><sup>2</sup>", FunctionTextFormatter.toHTML("x_1^2", 0));
-        assertEquals("x<sub>(y<sup>2</sup>)</sub>", FunctionTextFormatter.toHTML("x_(y^2)", 0));
-        assertEquals("y<sup>(x*(1+2))</sup>", FunctionTextFormatter.toHTML("y^(x*(1+2))", 0));
-        assertEquals("y<sup>x*(1+2)</sup>", FunctionTextFormatter.toHTML("y^{x*(1+2)}", 0));
-        assertEquals("Σ", FunctionTextFormatter.toHTML("\\Sigma", 0));
+        assertEquals( "x<sub>1</sub>", FunctionTextFormatter.toHTML( "x_1", 0 ) );
+        assertEquals( "x<sub>1</sub><sup>2</sup>", FunctionTextFormatter.toHTML( "x_1^2", 0 ) );
+        assertEquals( "x<sub>(y<sup>2</sup>)</sub>", FunctionTextFormatter.toHTML( "x_(y^2)", 0 ) );
+        assertEquals( "y<sup>(x*(1+2))</sup>", FunctionTextFormatter.toHTML( "y^(x*(1+2))", 0 ) );
+        assertEquals( "y<sup>x*(1+2)</sup>", FunctionTextFormatter.toHTML( "y^{x*(1+2)}", 0 ) );
+        assertEquals( "Σ", FunctionTextFormatter.toHTML( "\\Sigma", 0 ) );
     }
 }

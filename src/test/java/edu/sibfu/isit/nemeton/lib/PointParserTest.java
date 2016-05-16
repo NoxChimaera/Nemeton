@@ -23,47 +23,28 @@
  */
 package edu.sibfu.isit.nemeton.lib;
 
+import edu.sibfu.isit.nemeton.models.Point;
+import static org.junit.Assert.*;
+import org.junit.Test;
+
 /**
  *
  * @author Max Balushkin
  */
-public class Utils {
+public class PointParserTest {
     
-    /**
-     * Converts integer to string.
-     * 
-     * @param num Number
-     * @return String
-     */
-    public static String str(int num) {
-        return Integer.toString(num);
+    @Test
+    public void testParse_String() {
+        Point expected = new Point( 3.14, 42 );
+        Point actual = PointUtil.parse( "3.14, 42" );
+        assertEquals( expected, actual );
     }
-    /**
-     * Converts double to string.
-     * 
-     * @param num Number
-     * @return String
-     */
-    public static String str(double num) {
-        return Double.toString(num);
+
+    @Test
+    public void testParse_String_int() {
+        Point expected = new Point( 3.14, 42, 42 );
+        Point actual = PointUtil.parse( "3.14, 42", 3 );
+        assertEquals( expected, actual );
     }
     
-    /**
-     * Converts string to integer.
-     * 
-     * @param str String
-     * @return Integer
-     */
-    public static int intg(String str) {
-        return Integer.parseInt(str);
-    }
-    /**
-     * Converts string to double.
-     * 
-     * @param str Stirng
-     * @return Double
-     */
-    public static double real(String str) {
-        return Double.parseDouble(str);
-    }
 }

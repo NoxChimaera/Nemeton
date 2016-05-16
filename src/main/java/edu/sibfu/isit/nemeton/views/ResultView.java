@@ -24,6 +24,7 @@
 package edu.sibfu.isit.nemeton.views;
 
 import edu.sibfu.isit.nemeton.controllers.ResultController;
+import static edu.sibfu.isit.nemeton.lib.Utils.str;
 import edu.sibfu.isit.nemeton.models.Result;
 import java.util.ArrayList;
 import javax.swing.ListSelectionModel;
@@ -34,34 +35,36 @@ import javax.swing.event.ListSelectionEvent;
  * @author Max Balushkin
  */
 public class ResultView extends javax.swing.JFrame {
-    ResultController ctrl;
+    
+    private final ResultController ctrl;
     
     /**
      * Creates new form MainView
      * @param aResults
      */
-    public ResultView(final ArrayList<Result> aResults) {
-        ctrl = new ResultController(this, aResults);
+    public ResultView( final ArrayList<Result> aResults ) {
+        ctrl = new ResultController( this, aResults );
         initComponents();
-        algorithmList.setModel(ctrl.getAlgorithmListModel());
-        algorithmList.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
+        algorithmList.setModel( ctrl.getAlgorithmListModel() );
+        algorithmList.getSelectionModel().addListSelectionListener( ( ListSelectionEvent e ) -> {
             ListSelectionModel lsm = (ListSelectionModel) e.getSource();
-            if (lsm.isSelectionEmpty()) return;
+            if ( lsm.isSelectionEmpty() ) return;
             
             Result res = algorithmList.getSelectedValue();
             
-            ctrl.fillSolutionsTable(res);
-            endClause.setText(res.getEndClause());
-            iterations.setText(String.valueOf(res.getIterations()));
-            evals.setText(String.valueOf(res.getEvaluations()));
+            ctrl.fillSolutionsTable( res );
+            endClause.setText( res.getEndClause() );
+            iterations.setText( str( res.getIterations() ) );
+            evals.setText( str( res.getEvaluations() ) );
         });
         
-        solutionsTable.setModel(ctrl.getSolutionsTableModel());
+        solutionsTable.setModel( ctrl.getSolutionsTableModel() );
         
-        if (aResults.isEmpty()) return;
+        if ( aResults.isEmpty() ) return;
         
-        functionTitle.setText(aResults.get(0).getFunction().getTitle());
-        functionText.setText(aResults.get(0).getFunction().getText());
+        algorithmList.setSelectedIndex( 0 );
+        functionTitle.setText( aResults.get( 0 ).getFunction().getTitle() );
+        functionText.setText( aResults.get( 0 ).getFunction().getText() );
     }
     
     

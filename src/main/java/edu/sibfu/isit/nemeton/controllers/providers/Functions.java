@@ -23,54 +23,59 @@
  */
 package edu.sibfu.isit.nemeton.controllers.providers;
 
+import edu.sibfu.isit.nemeton.framework.Subscriber;
 import edu.sibfu.isit.nemeton.models.functions.NFunction;
 import java.util.ArrayList;
 
 /**
- * Provides functions
+ * Provides functions.
+ * 
  * @author Max Balushkin
  */
-public class FunctionProvider {
+public class Functions {
     
     private static final ArrayList<NFunction> functions = new ArrayList<>();
-    private static final ArrayList<FunctionProviderSubscriber> subscribers = new ArrayList<>();
+    private static final ArrayList<Subscriber<NFunction>> subscribers = new ArrayList<>();
     
-    public static void subscribe(final FunctionProviderSubscriber aSubscriber) {
+    public static void subscribe( final Subscriber<NFunction> aSubscriber ) {
         subscribers.add(aSubscriber);
     }
     
-    private static void publish(final NFunction aFunction) {
-        for (final FunctionProviderSubscriber subscriber : subscribers) {
-            subscriber.register(aFunction);
+    private static void publish( final NFunction aFunction ) {
+        for ( final Subscriber<NFunction> subscriber : subscribers ) {
+            subscriber.publish( aFunction );
         }
     }
     
     /**
-     * Registers function
+     * Registers function.
+     * 
      * @param aFunction Function
      */
-    public static void register(final NFunction aFunction) {
-        functions.add(aFunction);
-        publish(aFunction);
+    public static void register( final NFunction aFunction ) {
+        functions.add( aFunction );
+        publish( aFunction );
     }
     
     /**
-     * Provides function by index
+     * Provides function by index.
+     * 
      * @param aIndex Index of function
      * @return Function
      */
-    public static NFunction get(final int aIndex) {
-        return functions.get(aIndex);
+    public static NFunction get( final int aIndex ) {
+        return functions.get( aIndex );
     }
     
     /**
-     * Provides function by title
+     * Provides function by title.
+     * 
      * @param aTitle Function title
      * @return Function
      */
-    public static NFunction get(final String aTitle) {
-        return functions.stream().filter((NFunction f) -> f.getTitle().equals(aTitle))
-            .findFirst().orElse(null);
+    public static NFunction get( final String aTitle ) {
+        return functions.stream().filter( (NFunction f) -> f.getTitle().equals( aTitle ) )
+            .findFirst().orElse( null );
     }
     
     /**

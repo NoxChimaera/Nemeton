@@ -23,7 +23,7 @@
  */
 package edu.sibfu.isit.nemeton.models.functions;
 
-import edu.sibfu.isit.nemeton.controllers.providers.FunctionProvider;
+import edu.sibfu.isit.nemeton.controllers.providers.Functions;
 import edu.sibfu.isit.nemeton.models.Point;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -148,7 +148,7 @@ public class NFunction {
      * Registers function in function provider
      */
     public void register() {
-        FunctionProvider.register(this);
+        Functions.register( this );
     }
     
 }

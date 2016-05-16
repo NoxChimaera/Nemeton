@@ -39,7 +39,7 @@ public class BeesAlgorithmBuilder extends AlgorithmBuilder {
     
     BeesSettings settingsView;
 
-    Point hivePosition = new Point(0, 0);
+    Point hivePosition = Point.zero(2);
     int hiveSize = 255;
     
     int scouts = 10;
