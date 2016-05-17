@@ -29,6 +29,7 @@ import edu.sibfu.isit.nemeton.models.CalculatedPoint;
 import edu.sibfu.isit.nemeton.models.Pair;
 import edu.sibfu.isit.nemeton.models.Point;
 import edu.sibfu.isit.nemeton.models.Result;
+import edu.sibfu.isit.nemeton.models.functions.Constraint;
 import edu.sibfu.isit.nemeton.models.functions.NFunction;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -66,6 +67,17 @@ public class SACAlgorithm extends OptimizationAlgorithm {
         rnd = new Random();
         evaluations = 0;
     }
+      
+    private boolean isConstrained() {
+        return !constraints.isEmpty();
+    }
+    
+    private boolean check( final Point aPoint ) {
+        for ( Constraint c : constraints ) {
+            if ( !c.check( aPoint ) ) return false;
+        }
+        return true;
+    }
     
     /**
      * Generates sample point around centre.
@@ -87,6 +99,12 @@ public class SACAlgorithm extends OptimizationAlgorithm {
                 point = point.add(dx, v);
                 uPoint = uPoint.add(u, v);
             }
+            
+            if ( isConstrained() && !check( point ) ) {
+                i--;
+                continue;
+            }
+            
             final Pair<CalculatedPoint, Point> pair = new Pair<>(
                 new CalculatedPoint(point, f.eval(point)), 
                 uPoint

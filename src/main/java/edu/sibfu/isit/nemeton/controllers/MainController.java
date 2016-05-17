@@ -116,12 +116,18 @@ public class MainController {
             final Vector vector = (Vector) item;
             if ( (Boolean) vector.get( 0 ) ) {
                 AlgorithmBuilder bldr = (AlgorithmBuilder) vector.get( 1 );
-                algorithms.add( bldr.build( aFunction ) );
+                OptimizationAlgorithm alg = bldr.build( aFunction );
+                if ( bldr.isConstrained() ) {
+                    alg.constraint( aFunction.constraints() );
+                }
+                
+                algorithms.add( alg );
             }
         }
  
         final ArrayList<Result> results = new ArrayList<>();
         for ( OptimizationAlgorithm al : algorithms ) {
+            
             switch ( aGoal ) {
                 case Maximize:
                     results.add( al.maximize() );

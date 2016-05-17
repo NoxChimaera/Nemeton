@@ -23,7 +23,6 @@
  */
 package edu.sibfu.isit.nemeton.views;
 
-import edu.sibfu.isit.nemeton.algorithms.bees.BeesAlgorithmBuilder;
 import edu.sibfu.isit.nemeton.algorithms.sac.SACBuilder;
 import edu.sibfu.isit.nemeton.algorithms.sac.kernels.Kernels;
 import edu.sibfu.isit.nemeton.algorithms.sac.kernels.SelectiveKernel;
@@ -32,7 +31,6 @@ import static edu.sibfu.isit.nemeton.lib.Utils.intg;
 import static edu.sibfu.isit.nemeton.lib.Utils.real;
 import static edu.sibfu.isit.nemeton.lib.Utils.str;
 import javax.swing.JFrame;
-import static edu.sibfu.isit.nemeton.lib.Utils.str;
 
 /**
  *
@@ -66,6 +64,8 @@ public class SACSettings extends JFrame {
         
         iterations.setText( str( aBldr.iterations() ) );
         accuracy.setText( str( aBldr.accuracy() ) );
+        
+        fConstraints.setSelected( aBldr.isConstrained() );
     }
 
     /**
@@ -100,6 +100,7 @@ public class SACSettings extends JFrame {
         selectiveness = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         kernel = new javax.swing.JComboBox<>();
+        fConstraints = new javax.swing.JCheckBox();
 
         setTitle("Настройки пчелиного алгоритма");
 
@@ -265,6 +266,8 @@ public class SACSettings extends JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        fConstraints.setText("Использовать ограничения функции");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -272,6 +275,9 @@ public class SACSettings extends JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(fConstraints)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -291,6 +297,8 @@ public class SACSettings extends JFrame {
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(fConstraints)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnOk)
@@ -320,7 +328,8 @@ public class SACSettings extends JFrame {
             .gamma( real( gamma.getText() ) )
             .metric( intg( metric.getText() ) )
             .iterations( intg( iterations.getText() ) )
-            .accuracy( real( accuracy.getText() ) );
+            .accuracy( real( accuracy.getText() ) )
+            .constrained( fConstraints.isSelected() );
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -328,6 +337,7 @@ public class SACSettings extends JFrame {
     private javax.swing.JButton btnDefault;
     private javax.swing.JButton btnOk;
     private javax.swing.JTextField centre;
+    private javax.swing.JCheckBox fConstraints;
     private javax.swing.JTextField gamma;
     private javax.swing.JTextField iterations;
     private javax.swing.JLabel jLabel1;

@@ -33,7 +33,10 @@ import edu.sibfu.isit.nemeton.algorithms.sac.kernels.ParabolicKernel;
 import edu.sibfu.isit.nemeton.controllers.MainController;
 import edu.sibfu.isit.nemeton.controllers.providers.Functions;
 import edu.sibfu.isit.nemeton.lib.FunctionTextFormatter;
+import edu.sibfu.isit.nemeton.models.CalculatedPoint;
+import edu.sibfu.isit.nemeton.models.Pair;
 import edu.sibfu.isit.nemeton.models.functions.NFunction;
+import edu.sibfu.isit.nemeton.models.functions.RangeConstraint;
 import edu.sibfu.isit.nemeton.views.MainView;
 
 /** 
@@ -99,30 +102,123 @@ public class Nemeton {
     private static void registerFunctions() {
         // 2D Hypersphere
         new NFunction( ( x, y ) -> x*x + y*y )
-        .setTitle( "Гиперсфера" )
-        .setText( FunctionTextFormatter.toHTML(
-            "I(x_1, x_2) = x_1^2 + x_2^2", true
-        )).register();
+            .setTitle( "Гиперсфера" )
+            .setText( FunctionTextFormatter.toHTML(
+                "I(x_1, x_2) = x_1^2 + x_2^2", true
+            )).minima( new CalculatedPoint( 0, 0, 0 ) ).register();
            
         // Himmelblau function
         new NFunction( ( x, y ) 
             -> Math.pow( ( Math.pow( x, 2 ) + y - 11 ), 2 ) 
-                + Math.pow( ( Math.pow( y, 2 ) + x - 7 ), 2 )
-        ).setTitle( "Химмельблау" )
-        .setText( FunctionTextFormatter.toHTML(
-            "I(x_1, x_2) = (x_1^2 + x_2 - 11)^2 + (x_2^2 + x_1 - 7)^2", true
-        )).register();
+                + Math.pow( ( Math.pow( y, 2 ) + x - 7 ), 2 ) )
+            .setTitle( "Химмельблау" )
+            .setText( FunctionTextFormatter.toHTML(
+                "I(x_1, x_2) = (x_1^2 + x_2 - 11)^2 + (x_2^2 + x_1 - 7)^2", true
+            ))
+            .constraint( new RangeConstraint( new Pair<>( -6.0, 6.0 ), 2 ) )
+            .minima( new CalculatedPoint( 0, 3, 2 ) )
+            .minima( new CalculatedPoint( 0, -3.779, -3.283 ) )
+            .minima( new CalculatedPoint( 0, -2.805, 3.131 ) )
+            .minima( new CalculatedPoint( 0, 3.584, -1.848 ) )
+            .register();
     
-        // Goldstein-Price function
-        new NFunction( ( x, y )
-            -> ( 1 + Math.pow( x + y + 1, 2 ) * ( 19 - 14 * x + 3 * x * x - 14 * y + 6 * x * y + 3 * y * y )
-                * ( 30 + Math.pow( 2 * x - 3 * y, 2 ) * ( 18 - 32 * x + 12 * x * x + 48 * y -36 * x * y + 27 * y * y ) )
-            )
-        ).setTitle( "Гольдштейна-Прайса" )
-        .setText( FunctionTextFormatter.toHTML(
-            "[1 + (x_1 + x_2 + 1)^2 (19 - 14x_1 + 3x_1^2 + 6x_1 x_2 + 3x_2^2)] * "
-            + "[30 + (2x_1 - 3x_2)^2 (18 - 32x_1 + 12x_1^2 + 48x_2 - 36x_1 x_2 + 27x_2^2)]", true
-        )).register();
+        // Ackley function
+        new NFunction( 
+            ( x, y ) -> {
+                final double a = 20;
+                final double b = 0.2;
+                final double c = 2 * Math.PI;
+                final double d = 2; // dimensions
+                final double res = -a * Math.exp( -b * Math.sqrt( 1 / d * ( x * x + y * y ) ) )
+                    - Math.exp( 1 / d * ( Math.cos( c * x ) + Math.cos( c * y ) ) )
+                    + a + Math.exp( 1 );
+                return res;
+            }
+        )
+            .setTitle( "Ackley" )
+            .constraint( new RangeConstraint( new Pair<>( -32.0, 32.0 ), 2 ) )
+            .minima( new CalculatedPoint( 0, 0, 0 ) )
+            .register();
+        
+        // Adjiman function
+        new NFunction(
+            ( x, y ) -> {
+                final double res = Math.cos( x ) * Math.sin( y ) 
+                    - x / ( y * y + 1 );
+                return res;
+            }
+        )
+            .setTitle( "Adjiman" )
+            .constraint( new RangeConstraint( new Pair<>( -1.0, 2.0 ), new Pair<>( -1.0, 1.0 ) ) )
+            .minima( new CalculatedPoint( -2.02181, 2, 0.10578) )
+            .register();
+        
+        // Alpine 1 function
+        new NFunction( 
+            ( x, y ) -> {
+                final double d0 = Math.abs( x * Math.sin( x ) + 0.1 * x );
+                final double d1 = Math.abs( y * Math.sin( y ) + 0.1 * y );
+                return d0 + d1;
+            }
+        )
+            .constraint( new RangeConstraint( new Pair<>( -10.0, 10.0 ), 2 ) )
+            .setTitle( "Alpine 1" )
+            .minima( new CalculatedPoint( 0, 0, 0 ) )
+            .register();
+        
+        // Bartels-Conn function
+        new NFunction(
+            ( x, y ) -> {
+                final double fst = Math.abs( x * x + y * y + x * y );
+                final double snd = Math.abs( Math.sin( x ) );
+                final double trd = Math.abs( Math.cos( x ) );
+                return fst + snd + trd;
+            }
+        )
+            .constraint( new RangeConstraint( new Pair<>( -50.0, 50.0 ), 2 ) )
+            .setTitle( "Bartels-Conn" )
+            .minima( new CalculatedPoint( 1, 0, 0) )
+            .register();
+        
+        // Bird function
+        new NFunction(
+            ( x, y ) -> {
+                final double p0 = Math.pow( x - y, 2 );
+                final double p1 = Math.exp( Math.pow( 1 - Math.sin( x ), 2) ) * Math.cos( y );
+                final double p2 = Math.exp( Math.pow( 1 - Math.cos( y ), 2) ) * Math.sin( x );
+                return p0 + p1 + p2;
+            }
+        )
+            .setTitle( "Bird" )
+            .constraint( new RangeConstraint( new Pair<>( -Math.PI * 2, Math.PI * 2 ), 2 ) )
+            .minima( new CalculatedPoint( -106.76453, 4.70105575, 3.15294601 ) )
+            .minima( new CalculatedPoint( -106.76453, -1.58214217, -3.13024679 ) )
+            .register();
+        
+        new NFunction(
+            ( x, y ) -> {
+                final double p01 = Math.sin( Math.PI * ( x - 2 ) ) * Math.sin( Math.PI * ( y - 2 ) );
+                final double p02 = Math.pow( Math.PI, 2 ) * ( x - 2 ) * ( y - 2 );
+                final double p0 = 1 - Math.pow( Math.abs( p01 / p02 ), 5 );
+                final double p1 = 2 + Math.pow( x - 7, 2 ) + 2 * Math.pow( y - 7, 2 );
+                return p0 * p1;
+            }
+        )
+            .setTitle( "Damavandi" )
+            .constraint( new RangeConstraint( new Pair<>( 0.0, 14.0 ), 2 ) )
+            .minima( new CalculatedPoint( 0, 2, 2 ) )
+            .register();
+       
+//        // Goldstein-Price function
+//        new NFunction( ( x, y )
+//            -> ( 1 + Math.pow( x + y + 1, 2 ) * ( 19 - 14 * x + 3 * x * x - 14 * y + 6 * x * y + 3 * y * y )
+//                * ( 30 + Math.pow( 2 * x - 3 * y, 2 ) * ( 18 - 32 * x + 12 * x * x + 48 * y - 36 * x * y + 27 * y * y ) )
+//            )
+//        ).setTitle( "Гольдштейна-Прайса" )
+//        .setText( FunctionTextFormatter.toHTML(
+//            "[1 + (x_1 + x_2 + 1)^2 (19 - 14x_1 + 3x_1^2 + 6x_1 x_2 + 3x_2^2)] * "
+//            + "[30 + (2x_1 - 3x_2)^2 (18 - 32x_1 + 12x_1^2 + 48x_2 - 36x_1 x_2 + 27x_2^2)]", true
+//        )).register();
         
         // Branin function
         final double a = 1, b = ( 5.1 / 4.0 ) * Math.pow( 7.0 / 22.0, 2 );

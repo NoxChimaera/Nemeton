@@ -24,68 +24,82 @@
 package edu.sibfu.isit.nemeton.models.functions;
 
 import edu.sibfu.isit.nemeton.controllers.providers.Functions;
+import edu.sibfu.isit.nemeton.models.CalculatedPoint;
 import edu.sibfu.isit.nemeton.models.Point;
+import java.util.ArrayList;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import org.jzy3d.plot3d.builder.Mapper;
 
 /**
- * Represents function
+ * Represents function.
+ * 
  * @author Max Balushkin
  */
 public class NFunction {
-    protected Mapper mapper;
-    private boolean isMapped;
-    protected Function<Point, Double> f;
+    
+    protected final Mapper mapper;
+    protected final boolean isMapped;
+    protected final Function<Point, Double> f;
+    
+    protected final ArrayList<CalculatedPoint> minima;
+    protected final ArrayList<CalculatedPoint> maxima;
+    protected final ArrayList<Constraint> constraints;
     
     private String title;
     private String text;
     
     private int arity;
     
+    private boolean unsafe;
+    
     /**
-     * Creates new function with specified arity
+     * Creates new function with specified arity.
+     * 
      * @param aFunction Function of n variables
      * @param aArity Function arity
      * Can't be mapped with Jzy3D
      */
-    public NFunction(Function<Point, Double> aFunction, int aArity) {
+    public NFunction( Function<Point, Double> aFunction, int aArity ) {
         this.f = aFunction;
         arity = aArity;
-        
-        if (aArity == 2) {
+
+        if ( aArity == 2 ) {
             mapper = new Mapper() {
                 @Override
-                public double f(double x, double y) {
-                    return aFunction.apply(new Point(x, y));
+                public double f( double x, double y ) {
+                    return aFunction.apply( new Point( x, y ) );
                 }
             };
             isMapped = true;
+        } else {
+            mapper = null;
+            isMapped = false;
         }
+        
+        minima = new ArrayList<>();
+        maxima = new ArrayList<>();
+        constraints = new ArrayList<>();
+        
+        unsafe = false;
     }
-    
-    
+   
     /**
-     * Creates new function of 2 variables
+     * Creates new function of 2 variables.
+     * 
      * @param function Function of 2 variables
      */
-    public NFunction(BiFunction<Double, Double, Double> function) {
-        this((Point t) ->  function.apply(t.get(0), t.get(1)), 2);
-        mapper = new Mapper() {
-            @Override
-            public double f(double x, double y) {
-                return function.apply(x, y);
-            }
-        };
-        isMapped = true;
+    public NFunction( BiFunction<Double, Double, Double> function ) {
+        this( ( Point t ) ->  function.apply( t.get( 0 ), t.get( 1 ) ), 2 );
     }
     
     /**
-     * Sets function title
+     * Sets function title.
+     * 
      * @param title Title
      * @return Self
      */
-    public NFunction setTitle(String title) {
+    public NFunction setTitle( String title ) {
         this.title = title;
         return this;
     }
@@ -97,11 +111,12 @@ public class NFunction {
     }
     
     /**
-     * Sets function textual representation
+     * Sets function textual representation.
+     * 
      * @param text Textual representation
      * @return Self
      */
-    public NFunction setText(String text) {
+    public NFunction setText( String text ) {
         this.text = text;
         return this;
     }
@@ -110,6 +125,38 @@ public class NFunction {
      */
     public String getText() {
         return text;
+    }
+    
+    public NFunction minima( final CalculatedPoint aMinimum ) {
+        minima.add( aMinimum );
+        return this;
+    }
+    public ArrayList<CalculatedPoint> minima() {
+        return new ArrayList<>(minima);
+    }
+    
+    public NFunction maxima( final CalculatedPoint aMaximum ) {
+        maxima.add( aMaximum );
+        return this;
+    }
+    public ArrayList<CalculatedPoint> maxima() {
+        return new ArrayList<>(maxima);
+    }
+    
+    public NFunction constraint( final Constraint aConstraint ) {
+        constraints.add( aConstraint );
+        return this;
+    }
+    public ArrayList<Constraint> constraints() {
+        return constraints;
+    }
+    
+    public NFunction unsafe() {
+        unsafe = true;
+        return this;
+    }
+    public boolean isUnsafe() {
+        return unsafe;
     }
     
     /**
@@ -131,12 +178,13 @@ public class NFunction {
     }
     
     /**
-     * Returns value of function in point
+     * Returns value of function in point.
+     * 
      * @param x Point
      * @return Value of function
      */
-    public double eval(Point x) {
-        return f.apply(x);
+    public double eval( Point x ) {
+        return f.apply( x );
     }
 
     @Override
@@ -145,7 +193,8 @@ public class NFunction {
     }
     
     /**
-     * Registers function in function provider
+     * Registers function in function provider.
+     * 
      */
     public void register() {
         Functions.register( this );

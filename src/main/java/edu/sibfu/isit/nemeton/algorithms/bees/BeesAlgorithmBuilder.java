@@ -37,23 +37,24 @@ import edu.sibfu.isit.nemeton.algorithms.OptimizationAlgorithm;
  */
 public class BeesAlgorithmBuilder extends AlgorithmBuilder {
     
-    BeesSettings settingsView;
+    private BeesSettings settingsView;
+    
+    private Point hivePosition = Point.zero(2);
+    private int hiveSize = 50;
+    
+    private int scouts = 10;
+    
+    private int sources = 10;
+    private int sourceSize = 5;
+    private double gamma = 0.99;
+    private int eliteSources = 6;
+    
+    private int onElite = 6;
+    private int onOther = 4;
 
-    Point hivePosition = Point.zero(2);
-    int hiveSize = 255;
-    
-    int scouts = 10;
-    
-    int sources = 10;
-    int sourceSize = 10;
-    double gamma = 0.99;
-    int eliteSources = 6;
-    
-    int onElite = 6;
-    int onOther = 4;
-
-    int maxIteration = 100000;
-    double accuracy = 0.000001;
+    private int maxIteration = 100000;
+    private double accuracy = 0.000001;
+    private boolean constrained = true;
 
     public BeesAlgorithmBuilder() {
     }
@@ -149,6 +150,15 @@ public class BeesAlgorithmBuilder extends AlgorithmBuilder {
         return accuracy;
     }
     
+    public BeesAlgorithmBuilder constrained( final boolean aConstrained ) {
+        constrained = aConstrained;
+        return this;
+    }
+    @Override
+    public boolean isConstrained() {
+        return constrained;
+    }
+   
     // ??
     public void copy(final BeesAlgorithmBuilder aSrc) {
         scouts = aSrc.scouts;
@@ -163,7 +173,7 @@ public class BeesAlgorithmBuilder extends AlgorithmBuilder {
         maxIteration = aSrc.maxIteration;
         accuracy = aSrc.accuracy;
     }
-   
+
     @Override
     public JFrame show() {
         if (settingsView == null) {

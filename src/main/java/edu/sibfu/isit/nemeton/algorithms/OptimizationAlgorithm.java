@@ -25,7 +25,9 @@ package edu.sibfu.isit.nemeton.algorithms;
 
 import edu.sibfu.isit.nemeton.models.Point;
 import edu.sibfu.isit.nemeton.models.Result;
+import edu.sibfu.isit.nemeton.models.functions.Constraint;
 import edu.sibfu.isit.nemeton.models.functions.NFunction;
+import java.util.ArrayList;
 import java.util.Comparator;
 
 /**
@@ -36,9 +38,11 @@ import java.util.Comparator;
 public abstract class OptimizationAlgorithm {
     
     protected final NFunction f;
+    protected final ArrayList<Constraint> constraints;
     
     protected OptimizationAlgorithm(final NFunction aFunction) {
         f = aFunction;
+        constraints = new ArrayList<>();
     }
     
     /**
@@ -48,6 +52,14 @@ public abstract class OptimizationAlgorithm {
      * @return Result
      */
     public abstract Result run(Comparator<Point> comparator);
+    
+    public void constraint( final Constraint aConstraint ) {
+        constraints.add( aConstraint );
+    }
+    
+    public void constraint( final ArrayList<Constraint> aConstraints ) {
+        constraints.addAll( aConstraints );
+    }
     
     /**
      * Minimizes function.

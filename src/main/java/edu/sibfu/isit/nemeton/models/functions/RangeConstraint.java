@@ -21,37 +21,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package edu.sibfu.isit.nemeton.algorithms;
+package edu.sibfu.isit.nemeton.models.functions;
 
-import edu.sibfu.isit.nemeton.models.functions.Constraint;
-import edu.sibfu.isit.nemeton.models.functions.NFunction;
-import edu.sibfu.isit.nemeton.views.BeesSettings;
-import javax.swing.JFrame;
+import edu.sibfu.isit.nemeton.models.Pair;
+import edu.sibfu.isit.nemeton.models.Point;
 
 /**
- * Base class for algorithm builders.
- * Used in setting windows
- * @see BeesSettings
- * 
+ *
  * @author Max Balushkin
  */
-public abstract class AlgorithmBuilder {
-  
-    /**
-     * Creates new Optimizing Algorithm object with specified function.
-     * 
-     * @param aFunction Optimized function
-     * @return Algorithm object
-     */
-    public abstract OptimizationAlgorithm build( NFunction aFunction );
- 
-    public abstract boolean isConstrained();
+public class RangeConstraint implements Constraint {
+
+    private final Pair<Double, Double>[] range;
     
-    /**
-     * Show settings window.
-     * 
-     * @return Frame
-     */
-    public abstract JFrame show();
+    public RangeConstraint( final Pair<Double, Double> ... aRange ) {
+        final int n = aRange.length;
+        range = aRange;
+    }
+    
+    public RangeConstraint( final Pair<Double, Double> aRange, final int aArity ) {
+        range = new Pair[ aArity ];
+        for ( int i = 0; i < aArity; i++ ) {
+            range[ i ] = aRange;
+        }
+    }
+    
+    @Override
+    public boolean check( final Point aPoint ) {
+        int n = Math.min( aPoint.getArity(), range.length );
+        for ( int i = 0; i < n; i++ ) {
+            final double dim = aPoint.get(i);
+            final Pair<Double, Double> r = range[ i ];
+            if ( dim < r.left() ||  dim > r.right() ) {
+                return false;
+            }
+        }
+        return true;
+    }
     
 }

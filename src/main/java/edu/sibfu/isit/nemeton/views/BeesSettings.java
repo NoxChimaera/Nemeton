@@ -28,16 +28,14 @@ import edu.sibfu.isit.nemeton.lib.PointUtil;
 import static edu.sibfu.isit.nemeton.lib.Utils.intg;
 import static edu.sibfu.isit.nemeton.lib.Utils.real;
 import static edu.sibfu.isit.nemeton.lib.Utils.str;
-import static edu.sibfu.isit.nemeton.lib.Utils.str;
-import static edu.sibfu.isit.nemeton.lib.Utils.str;
-import static edu.sibfu.isit.nemeton.lib.Utils.str;
 
 /**
  *
  * @author Max Balushkin
  */
 public class BeesSettings extends javax.swing.JFrame {
-    private static BeesAlgorithmBuilder bldr;
+    
+    private BeesAlgorithmBuilder bldr;
     
     /**
      * Creates new form BeesSettings.
@@ -62,6 +60,8 @@ public class BeesSettings extends javax.swing.JFrame {
         gamma.setText( str( aBldr.gamma() ) );
         iterations.setText( str( aBldr.maxIteration() ) );
         accuracy.setText( str( aBldr.accuracy() ) );
+        
+        fConstraints.setSelected( aBldr.isConstrained() );
     }
 
     /**
@@ -101,6 +101,7 @@ public class BeesSettings extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         iterations = new javax.swing.JTextField();
         accuracy = new javax.swing.JTextField();
+        fConstraints = new javax.swing.JCheckBox();
 
         setTitle("Настройки пчелиного алгоритма");
 
@@ -308,22 +309,26 @@ public class BeesSettings extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        fConstraints.setText("Использовать ограничения функции");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnDefault)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnOk))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(fConstraints)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(btnDefault)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btnOk))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap(16, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -337,6 +342,8 @@ public class BeesSettings extends javax.swing.JFrame {
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(fConstraints)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnOk)
@@ -370,7 +377,8 @@ public class BeesSettings extends javax.swing.JFrame {
             .hiveSize( intg( hiveSize.getText() ) )
             .gamma( real( gamma.getText() ) )
             .maxIteration( intg( iterations.getText() ) )
-            .accuracy( real( accuracy.getText() ) );
+            .accuracy( real( accuracy.getText() ) )
+            .constrained( fConstraints.isSelected() );
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -378,6 +386,7 @@ public class BeesSettings extends javax.swing.JFrame {
     private javax.swing.JButton btnDefault;
     private javax.swing.JButton btnOk;
     private javax.swing.JTextField eliteSources;
+    private javax.swing.JCheckBox fConstraints;
     private javax.swing.JTextField gamma;
     private javax.swing.JTextField hivePosition;
     private javax.swing.JTextField hiveSize;

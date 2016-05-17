@@ -35,6 +35,9 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 import edu.sibfu.isit.nemeton.algorithms.OptimizationAlgorithm;
+import edu.sibfu.isit.nemeton.models.Pair;
+import edu.sibfu.isit.nemeton.models.functions.Constraint;
+import edu.sibfu.isit.nemeton.models.functions.RangeConstraint;
 
 /**
  *
@@ -45,7 +48,7 @@ public class BeesAlgorithm extends OptimizationAlgorithm {
     private final int scouts;
     private final Random rnd;
     
-    private final Point hivePosition;
+    private Point hivePosition;
     private final int hiveSize;
     private final int sites;
     private final double siteSize;
@@ -64,6 +67,8 @@ public class BeesAlgorithm extends OptimizationAlgorithm {
         super(aFunction);
         hivePosition = aParams.hivePosition;
         hiveSize = aParams.hiveSize;
+        constraints.add( new RangeConstraint( new Pair<>( (double) -hiveSize, (double) hiveSize ), hivePosition.getArity() ) );
+        
         scouts = aParams.scouts;
         
         sites = aParams.sites;
@@ -82,23 +87,42 @@ public class BeesAlgorithm extends OptimizationAlgorithm {
         evaluations = 0;
     }
     
+    private boolean isConstrained() {
+        return !constraints.isEmpty();
+    }
+    
+    private boolean check( final Point aPoint ) {
+        for ( Constraint c : constraints ) {
+            if ( !c.check( aPoint ) ) return false;
+        }
+        return true;
+    }
+
     private List<Point> scouting() {        
-        List<Point> points = new ArrayList<>(sites);            
+        List<Point> points = new ArrayList<>( sites );            
         final int arity = f.getArity();
 
-        for (int i = 0; i < scouts; i++) {
-            Point x = Point.zero(arity).add(hivePosition);
-            for (int v = 0; v < arity; v++) {
-                x = x.add(((rnd.nextDouble() * 2) - 1) * hiveSize, v);
+        for ( int i = 0; i < scouts; i++ ) {
+            Point x = Point.zero( arity ).add( hivePosition );
+            for ( int v = 0; v < arity; v++ ) {
+                x = x.add( ( ( rnd.nextDouble() * 2 ) - 1 ) * hiveSize, v );
             }
-            points.add(x);
+
+            if ( isConstrained() ) {
+                if ( !check( x ) ) { 
+                    i--;
+                    continue;
+                }
+            }
+
+            points.add( x );
         }
         evaluations += scouts;
         return points;
     }
     
     @Override
-    public Result run(Comparator<Point> comparator) {
+    public Result run( final Comparator<Point> aComparator ) {
         double sourceSize = this.siteSize;
         String endClause = "нет данных";
         
@@ -107,89 +131,102 @@ public class BeesAlgorithm extends OptimizationAlgorithm {
         // Init algorithm
         List<Point> points = scouting();
         evaluations += scouts;
-        points.sort(comparator);
-        points = points.stream().limit(sites).collect(Collectors.toList());
+        points.sort( aComparator );
+        points = points.stream().limit( sites ).collect( Collectors.toList() );
 
         int it = 0;
         final int arity = f.getArity();
         
-        for (it = 0; it < iterations && sourceSize > accuracy; it++) {
+        for ( it = 0; it < iterations && sourceSize > accuracy; it++ ) {
             // Harvest elite sites
-            for (int i = 0; i < eliteSites; i++) {
-                Point centre = points.get(i);
-                for (int j = 0; j < onElite; j++) {
-                    Point x = new Point(centre);
-                    for (int v = 0; v < arity; v++) {
-                        x = x.add(((rnd.nextDouble() * 2) - 1) * sourceSize, v);
+            for ( int i = 0; i < eliteSites; i++ ) {
+                Point centre = points.get( i );
+                for ( int j = 0; j < onElite; j++ ) {
+                    Point x = new Point( centre );
+                    for ( int v = 0; v < arity; v++ ) {
+                        x = x.add( ( ( rnd.nextDouble() * 2 ) - 1 ) * sourceSize, v );
                     }
-                    if (!x.equals(centre)) {
-                        points.add(x);
+                    
+                    if ( !check( x ) ) {
+                        j--;
+                        continue;
+                    }
+                    
+                    if ( !x.equals( centre ) ) {
+                        points.add( x );
                     }
                 }
             }
             // Harvest other sites
-            for (int i = eliteSites; i < sites; i++) {
-                Point centre = points.get(i);
-                for (int j = 0; j < onOther; j++) {
-                    Point x = new Point(centre);
-                    for (int v = 0; v < arity; v++) {
-                        x = x.add(((rnd.nextDouble() * 2) - 1) * sourceSize, v);
+            for ( int i = eliteSites; i < sites; i++ ) {
+                Point centre = points.get( i );
+                for ( int j = 0; j < onOther; j++ ) {
+                    Point x = new Point( centre );
+                    for ( int v = 0; v < arity; v++ ) {
+                        x = x.add( ( ( rnd.nextDouble() * 2 ) - 1 ) * sourceSize, v );
                     }
-                    if (!x.equals(centre))
-                        points.add(x);
+                    
+                    if ( !check( x ) ) {
+                        j--;
+                        continue;
+                    }
+                    
+                    if ( !x.equals( centre ) ) {
+                        points.add( x );
+                    }
                 }
             }
             // Scouts
-            points.addAll(scouting());
+            points.addAll( scouting() );
             evaluations += sites;
             sourceSize *= gamma;            
 
             try {
-                points.sort(comparator);
-            } catch (IllegalArgumentException ex) {
-                points = points.stream().limit(sites).collect(Collectors.toList());
+                points.sort( aComparator );
+            } catch ( IllegalArgumentException ex ) {
+                points = points.stream().limit( sites ).collect( Collectors.toList() );
                 endClause = "нарушение контракта сортировки";
                 break;
             }
-            points = points.stream().limit(sites).collect(Collectors.toList());
-            for (int i = 0; i < eliteSites; i++) {
-                Point p = points.get(i);
-                history.add(i, p, f.eval(p));
+            points = points.stream().limit( sites ).collect( Collectors.toList() );
+            for ( int i = 0; i < eliteSites; i++ ) {
+                Point p = points.get( i );
+                history.add( i, p, f.eval( p ) );
             }
             
             // End by accuracy
             double[] doubles = points
                 .stream()
-                .limit(eliteSites)
-                .mapToDouble((point) -> f.eval(point)).toArray();
+                .limit( eliteSites )
+                .mapToDouble( ( point ) -> f.eval( point ) ).toArray();
             
-            double avg = DoubleStream.of(doubles).average().getAsDouble();
+            double avg = DoubleStream.of( doubles ).average().getAsDouble();
             double stdDev = Math.sqrt(
-                    DoubleStream.of(doubles).reduce(0, (a, b) -> a + Math.pow(b - avg, 2)) / eliteSites
+                    DoubleStream.of( doubles ).reduce( 0, ( a, b ) -> a + Math.pow( b - avg, 2 ) ) / eliteSites
             );
             
-            if (stdDev <= accuracy) {
+            if ( stdDev <= accuracy ) {
                 endClause = "по точности";
                 break;
             }
         }
         
-        if (it == iterations) {
+        if ( it == iterations ) {
             endClause = "по итерациям";
-        } else if (sourceSize <= accuracy) {
+        } else if ( sourceSize <= accuracy ) {
             endClause = "по размеру области локального поиска";
         }
         
-        final CalculatedPoint[] solutions = new CalculatedPoint[points.size()];
+        final CalculatedPoint[] solutions = new CalculatedPoint[ points.size() ];
         final int n = points.size();
-        for (int i = 0; i < n; i++) {
-            Point x = points.get(i);
-            solutions[i] = new CalculatedPoint(x, f.eval(x));
+        for ( int i = 0; i < n; i++ ) {
+            Point x = points.get( i );
+            solutions[ i ] = new CalculatedPoint( x, f.eval( x ) );
         }
         
-        Result result = new Result(this, f, solutions, it, evaluations);
-        result.setEndClause(endClause);
-        result.setHistory(history);
+        Result result = new Result( this, f, solutions, it, evaluations );
+        result.setEndClause( endClause );
+        result.setHistory( history );
         return result;
     }
    

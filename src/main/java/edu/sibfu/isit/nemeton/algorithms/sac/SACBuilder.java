@@ -29,6 +29,7 @@ import edu.sibfu.isit.nemeton.algorithms.sac.kernels.SelectiveKernel;
 import edu.sibfu.isit.nemeton.models.functions.NFunction;
 import javax.swing.JFrame;
 import edu.sibfu.isit.nemeton.algorithms.OptimizationAlgorithm;
+import edu.sibfu.isit.nemeton.algorithms.bees.BeesAlgorithmBuilder;
 import edu.sibfu.isit.nemeton.models.Point;
 import edu.sibfu.isit.nemeton.views.SACSettings;
 
@@ -52,6 +53,7 @@ public class SACBuilder extends AlgorithmBuilder {
     
     private int iterations = 10000;
     private double accuracy = 0.00001;
+    private boolean constrained = true;
  
     public SACBuilder centre(final Point aCentre) {
         centre = aCentre;
@@ -125,6 +127,15 @@ public class SACBuilder extends AlgorithmBuilder {
         return accuracy;
     }
  
+    public SACBuilder constrained( final boolean aConstrained ) {
+        constrained = aConstrained;
+        return this;
+    }
+    @Override
+    public boolean isConstrained() {
+        return constrained;
+    }
+   
     @Override
     public OptimizationAlgorithm build(final NFunction aFunction) {
         final SACAlgorithmParameters params = new SACAlgorithmParameters(

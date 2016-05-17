@@ -276,11 +276,10 @@ public class MainView extends javax.swing.JFrame {
             : Goal.Maximize;
 
         final NFunction function = (NFunction) functionCombo.getSelectedItem();
-        final boolean showSurface = outShowSurface.isSelected();       
+        final boolean showSurface = outShowSurface.isSelected() && outShowSurface.isEnabled();       
         final boolean showHistory = outShowHistory.isSelected();
 
-        ctrl.runAlgorithms(goal, function, showSurface, showHistory);
-//        ctrl.runAlgorithms(goal, ctrl.getFunction(functionCombo.getSelectedIndex()));
+        ctrl.runAlgorithms( goal, function, showSurface, showHistory );
     }//GEN-LAST:event_goActionPerformed
 
     private void algorithmsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_algorithmsTableMouseClicked
@@ -303,11 +302,17 @@ public class MainView extends javax.swing.JFrame {
 
     private void functionComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_functionComboActionPerformed
         int selected = functionCombo.getSelectedIndex();
-        if (selected == -1) {
+        if ( selected == -1 ) {
             return;
         }
-        NFunction f = ctrl.getFunction(selected);
-        functionLabel.setText(f.getText());
+        NFunction f = ctrl.getFunction( selected );
+        functionLabel.setText( f.getText() );
+        
+        if ( !f.isMapped() ) {
+            outShowSurface.setEnabled( false );
+        } else {
+            outShowSurface.setEnabled( true );
+        }
     }//GEN-LAST:event_functionComboActionPerformed
 
     private void showBuilderForm(AlgorithmBuilder builder) {
