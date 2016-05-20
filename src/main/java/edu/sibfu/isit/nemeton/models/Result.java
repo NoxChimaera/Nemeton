@@ -25,11 +25,11 @@ package edu.sibfu.isit.nemeton.models;
 
 import edu.sibfu.isit.nemeton.algorithms.PointHistory;
 import edu.sibfu.isit.nemeton.models.functions.NFunction;
-import java.util.List;
 import edu.sibfu.isit.nemeton.algorithms.OptimizationAlgorithm;
 
 /**
- * Contains result of algorithm run
+ * Contains result of algorithm run.
+ * 
  * @author Max Balushkin
  */
 public class Result {
@@ -40,6 +40,7 @@ public class Result {
     
     private final int iterations;
     private final int evaluations;
+    private final double accuracy;
     
     private PointHistory history;
     private String endClause;
@@ -47,29 +48,50 @@ public class Result {
     public Result(
         final OptimizationAlgorithm aAlgorithm,
         final NFunction aFunction, final CalculatedPoint[] aValues,
-        final int aIterations, final int aEvaluations
+        final int aIterations, final int aEvaluations, final double aAccuracy
     ) {
         algorithm = aAlgorithm;
         function = aFunction;
         values = aValues;
         iterations = aIterations;
         evaluations = aEvaluations;
+        accuracy = aAccuracy;
         
         endClause = "нет данных";
     }
     
+    /**
+     * Returns function.
+     * 
+     * @return Function
+     */
     public NFunction getFunction() {
         return function;
     }
     
+    /**
+     * Returns problem solutions.
+     * 
+     * @return Solutions
+     */
     public CalculatedPoint[] getValues() {
         return values;
     }
     
+    /**
+     * Returns algorithm.
+     * 
+     * @return Algorithm
+     */
     public OptimizationAlgorithm getAlgorithm() {
         return algorithm;
     }
 
+    /**
+     * Returns search history.
+     * 
+     * @return Search history
+     */
     public PointHistory getHistory() {
         return history;
     }
@@ -82,15 +104,35 @@ public class Result {
         endClause = aEndClause;
     }
     
+    /**
+     * Returns end clause.
+     * 
+     * @return End clause
+     */
     public String getEndClause() {
         return endClause;
     }
     
+    /**
+     * Returns iterations.
+     * 
+     * @return Iterations
+     */
     public int getIterations() {
         return iterations;
     }
+    
+    /**
+     * Returns amount of function evaluations.
+     * 
+     * @return Evaluations
+     */
     public int getEvaluations() {
         return evaluations;
+    }
+    
+    public double getAccuracy() {
+        return accuracy;
     }
 
     @Override

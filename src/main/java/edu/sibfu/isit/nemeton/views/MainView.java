@@ -30,6 +30,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import edu.sibfu.isit.nemeton.controllers.MainController.Goal;
+import edu.sibfu.isit.nemeton.lib.Utils;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 
@@ -84,6 +85,12 @@ public class MainView extends javax.swing.JFrame {
         outShowSurface = new javax.swing.JCheckBox();
         outShowHistory = new javax.swing.JCheckBox();
         go = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        runsAmount = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        analysisAccuracy = new javax.swing.JTextField();
+        analyse = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Nemeton");
@@ -92,7 +99,7 @@ public class MainView extends javax.swing.JFrame {
         jPanel_Algorithms.setBorder(javax.swing.BorderFactory.createTitledBorder("Алгоритмы"));
 
         algorithmsTable.setAutoCreateRowSorter(true);
-        algorithmsTable.setModel(ctrl.getAlghotitmsTableModel());
+        algorithmsTable.setModel(ctrl.getAlghoritmsTableModel());
         algorithmsTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         algorithmsTable.getTableHeader().setReorderingAllowed(false);
         algorithmsTable.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -120,7 +127,7 @@ public class MainView extends javax.swing.JFrame {
             jPanel_AlgorithmsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel_AlgorithmsLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 405, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 568, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -238,6 +245,55 @@ public class MainView extends javax.swing.JFrame {
             }
         });
 
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Параметры анализа"));
+
+        jLabel4.setText("Количество запусков: ");
+
+        runsAmount.setText("100");
+
+        jLabel5.setText("Точность: ");
+
+        analysisAccuracy.setText("0.0001");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 133, Short.MAX_VALUE)
+                        .addComponent(runsAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(analysisAccuracy, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(runsAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(analysisAccuracy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        analyse.setFont(new java.awt.Font("Tahoma", 0, 72)); // NOI18N
+        analyse.setText("ANALYSE");
+        analyse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                analyseActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -249,7 +305,9 @@ public class MainView extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(go, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(analyse, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -263,19 +321,31 @@ public class MainView extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(go, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(go)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(analyse, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void goActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goActionPerformed
-        final Goal goal = goalMin.isSelected() 
+    public Goal getGoal() {
+        return goalMin.isSelected() 
             ? Goal.Minimize 
             : Goal.Maximize;
+    }
+    
+    public NFunction getFunction() {
+        return (NFunction) functionCombo.getSelectedItem();
+    }
+    
+    private void goActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goActionPerformed
+        final Goal goal = getGoal();
 
-        final NFunction function = (NFunction) functionCombo.getSelectedItem();
+        final NFunction function = getFunction();
         final boolean showSurface = outShowSurface.isSelected() && outShowSurface.isEnabled();       
         final boolean showHistory = outShowHistory.isSelected();
 
@@ -315,12 +385,23 @@ public class MainView extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_functionComboActionPerformed
 
+    private void analyseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analyseActionPerformed
+        Goal goal = getGoal();
+        NFunction function = getFunction();
+        int n = Utils.intg( runsAmount.getText() );
+        double accuracy = Utils.real( analysisAccuracy.getText() );
+        
+        ctrl.analyse( goal, function, n, accuracy );
+    }//GEN-LAST:event_analyseActionPerformed
+
     private void showBuilderForm(AlgorithmBuilder builder) {
         builder.show().setVisible(true);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable algorithmsTable;
+    private javax.swing.JButton analyse;
+    private javax.swing.JTextField analysisAccuracy;
     private javax.swing.JComboBox<String> functionCombo;
     private javax.swing.ButtonGroup functionGoalGroup;
     private javax.swing.JLabel functionLabel;
@@ -328,9 +409,13 @@ public class MainView extends javax.swing.JFrame {
     private javax.swing.JRadioButton goalMax;
     private javax.swing.JRadioButton goalMin;
     private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JCheckBox outShowHistory;
     private javax.swing.JCheckBox outShowSurface;
+    private javax.swing.JTextField runsAmount;
     // End of variables declaration//GEN-END:variables
 }

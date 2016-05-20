@@ -24,8 +24,9 @@
 package edu.sibfu.isit.nemeton.controllers;
 
 import edu.sibfu.isit.nemeton.algorithms.AlgorithmBuilder;
+import edu.sibfu.isit.nemeton.algorithms.OptimizationAlgorithm;
+import edu.sibfu.isit.nemeton.analysis.Analysis;
 import edu.sibfu.isit.nemeton.controllers.providers.Functions;
-import edu.sibfu.isit.nemeton.controllers.providers.FunctionProviderSubscriber;
 import edu.sibfu.isit.nemeton.jzy.JzyChart;
 import edu.sibfu.isit.nemeton.jzy.JzyContourPlot;
 import edu.sibfu.isit.nemeton.jzy.JzyLinePlot;
@@ -35,10 +36,12 @@ import edu.sibfu.isit.nemeton.lib.JzyHelper;
 import edu.sibfu.isit.nemeton.models.CalculatedPoint;
 import edu.sibfu.isit.nemeton.models.Result;
 import edu.sibfu.isit.nemeton.models.functions.NFunction;
+import edu.sibfu.isit.nemeton.views.AnalysisView;
 import edu.sibfu.isit.nemeton.views.HistoryView;
 import edu.sibfu.isit.nemeton.views.MainView;
 import edu.sibfu.isit.nemeton.views.ResultView;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -49,9 +52,7 @@ import org.jzy3d.colors.Color;
 import org.jzy3d.colors.colormaps.ColorMapRainbow;
 import org.jzy3d.maths.Range;
 import org.jzy3d.plot3d.rendering.canvas.Quality;
-import edu.sibfu.isit.nemeton.algorithms.OptimizationAlgorithm;
-import edu.sibfu.isit.nemeton.framework.Subscriber;
-
+import edu.sibfu.isit.nemeton.framework.Listener;
 
 /**
  *
@@ -59,14 +60,20 @@ import edu.sibfu.isit.nemeton.framework.Subscriber;
  */
 public class MainController {
     
-    public final Subscriber<NFunction> functionRegisterCallback = new Subscriber<NFunction>() {
+    /**
+     * Registers functions.
+     */
+    public final Listener<NFunction> functionRegisterCallback = new Listener<NFunction>() {
         @Override
         public void publish( final NFunction aFunc ) {
             functionsListModel.addElement( aFunc );
         }
     };
     
-    public final Subscriber<AlgorithmBuilder> builderRegisterCallback = new Subscriber<AlgorithmBuilder>() {
+    /**
+     * Registers algorithm builders.
+     */
+    public final Listener<AlgorithmBuilder> builderRegisterCallback = new Listener<AlgorithmBuilder>() {
         @Override
         public void publish( final AlgorithmBuilder aBldr ) {
             buildersTableModel.addRow( new Object[] { true, aBldr } );
@@ -74,15 +81,29 @@ public class MainController {
     };
     
     MainView view;
-    DefaultTableModel buildersTableModel;
-    DefaultComboBoxModel<NFunction> functionsListModel;
     
+    /**
+     * Table. 
+     * Rows:
+     *  0. Selection : boolean
+     *  1. Algorithm : AlgorithmBuilder
+     */
+    DefaultTableModel buildersTableModel;
+    
+    /**
+     * List of functions.
+     */
+    DefaultComboBoxModel<NFunction> functionsListModel;
+
+    /**
+     * Problem goal.
+     */
     public enum Goal {
         Minimize,
         Maximize
     }
     
-    public MainController(MainView view) {
+    public MainController( MainView view ) {
         this.view = view;
         buildersTableModel = 
             new DefaultTableModel( new Object[][] {}, new String[] { "", "Название" } ) {
@@ -92,26 +113,24 @@ public class MainController {
 
                 @Override
                 public Class getColumnClass( int columnIndex ) {
-                    return types [ columnIndex ];
+                    return types[ columnIndex ];
                 }
             };
         functionsListModel = new DefaultComboBoxModel<>();
     }
-    
-    public TableModel getAlghotitmsTableModel() {
-        return buildersTableModel;
+
+    public void analyse( Goal aGoal, NFunction aFunction, int aN, double aAccuracy ) {
+        List<OptimizationAlgorithm> algos = collectAlgorithms( aFunction );
+        Analysis foo = new Analysis();
+        
+        AnalysisView anView = new AnalysisView();
+        anView.setVisible(true);
+        
+        foo.analyse( anView, aFunction, algos, aN, aAccuracy );
     }
-    
-    public ComboBoxModel getFunctionListModel() {
-        return functionsListModel;
-    }
-   
-    public NFunction getFunction( int index ) {
-        return Functions.get(index);
-    }
-    
-    public void runAlgorithms( Goal aGoal, final NFunction aFunction, final boolean showSurface, final boolean showHistory ) {
-        final ArrayList<OptimizationAlgorithm> algorithms = new ArrayList<>();
+
+    public List<OptimizationAlgorithm> collectAlgorithms( final NFunction aFunction ) {
+        final ArrayList<OptimizationAlgorithm> algos = new ArrayList<>();
         for ( Object item : buildersTableModel.getDataVector().toArray() ) {
             final Vector vector = (Vector) item;
             if ( (Boolean) vector.get( 0 ) ) {
@@ -120,14 +139,52 @@ public class MainController {
                 if ( bldr.isConstrained() ) {
                     alg.constraint( aFunction.constraints() );
                 }
-                
-                algorithms.add( alg );
+                algos.add( alg );
             }
         }
- 
-        final ArrayList<Result> results = new ArrayList<>();
+        return algos;
+    }
+
+    public void error( String message ) {
+        JOptionPane.showMessageDialog( view, message );
+    }
+    
+    /**
+     * Returns algorithm table model.
+     * 
+     * @return Table model
+     */
+    public TableModel getAlghoritmsTableModel() {
+        return buildersTableModel;
+    }
+   
+    /**
+     * Returns function with specified index.
+     * @see Functions#get(int) 
+     * 
+     * @param index Function index
+     * @return Function or null
+     */
+    public NFunction getFunction( int index ) {
+        return Functions.get(index);
+    }
+
+    public ComboBoxModel getFunctionListModel() {
+        return functionsListModel;
+    }
+    
+    /**
+     * Runs selected algorithms. 
+     * 
+     * @param aGoal Problem goal
+     * @param aFunction Optimized function
+     * @param showSurface Show surface plot?
+     * @param showHistory Show point history?
+     */
+    public void runAlgorithms( Goal aGoal, NFunction aFunction, boolean showSurface, boolean showHistory ) {
+        List<OptimizationAlgorithm> algorithms = collectAlgorithms( aFunction );
+        ArrayList<Result> results = new ArrayList<>();
         for ( OptimizationAlgorithm al : algorithms ) {
-            
             switch ( aGoal ) {
                 case Maximize:
                     results.add( al.maximize() );
@@ -136,25 +193,31 @@ public class MainController {
                     results.add( al.minimize() );
             }
         }
-        
-        if ( showSurface ) show( aFunction, results );
-        
+     
         ResultView resultView = new ResultView( results );
         resultView.setVisible( true );
         
+        if ( showSurface ) showSurface( aFunction, results );
         if ( showHistory ) showHistory( results );
     }
     
-    public void error( String message ) {
-        JOptionPane.showMessageDialog( view, message );
-    }
-    
+    /**
+     * Shows algorithm results.
+     * 
+     * @param aResults Results
+     */
     public void showHistory( final ArrayList<Result> aResults ) {
         HistoryView history = new HistoryView( aResults );
         history.showAsFrame();
     }
     
-    public void show( final NFunction aFunction, final ArrayList<Result> aResults ) {
+    /**
+     * Shows surface plot.
+     * 
+     * @param aFunction Function
+     * @param aResults Algorithm results
+     */
+    public void showSurface( final NFunction aFunction, final ArrayList<Result> aResults ) {
         if ( !aFunction.isMapped() ) {
             error( "Specified function can not be mapped with Jzy3d" );
             return;
@@ -206,10 +269,11 @@ public class MainController {
             for ( int i = 0; i < n; i++ ) {
                 final ArrayList<CalculatedPoint> points = result.getHistory().get( i );
                 JzyLinePlot line = new JzyLinePlot( points );
-                chart.addPlot(line);
+                chart.addPlot( line );
             }
         }
         
         chart.show( "График функции и найденные точки" );
     }
+    
 }

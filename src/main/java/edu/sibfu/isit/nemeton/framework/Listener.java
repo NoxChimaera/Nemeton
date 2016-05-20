@@ -28,7 +28,7 @@ package edu.sibfu.isit.nemeton.framework;
  * @author Max Balushkin
  * @param <T>
  */
-public interface Subscriber<T> {
+public interface Listener<T> {
     
     void publish( T aObject );
     

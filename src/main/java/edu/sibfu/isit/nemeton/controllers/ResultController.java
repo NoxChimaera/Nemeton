@@ -71,14 +71,12 @@ public class ResultController {
         fillSolutionsTable(aResults.get(0));
     }
     
-    public void fillSolutionsTable(final Result aResult) {
+    public void fillSolutionsTable( final Result aResult ) {
         solutionsTableModel.setRowCount(0);
         NFunction f = aResult.getFunction();
         for (Point point : aResult.getValues()) {
             solutionsTableModel.addRow(new Object[] { point, f.eval(point) });
         }
-        
-        
     }
     
     public DefaultListModel<Result> getAlgorithmListModel() {

@@ -27,6 +27,7 @@ import edu.sibfu.isit.nemeton.controllers.providers.Functions;
 import edu.sibfu.isit.nemeton.models.CalculatedPoint;
 import edu.sibfu.isit.nemeton.models.Point;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import org.jzy3d.plot3d.builder.Mapper;
@@ -42,9 +43,9 @@ public class NFunction {
     protected final boolean isMapped;
     protected final Function<Point, Double> f;
     
-    protected final ArrayList<CalculatedPoint> minima;
-    protected final ArrayList<CalculatedPoint> maxima;
-    protected final ArrayList<Constraint> constraints;
+    protected final List<CalculatedPoint> minima;
+    protected final List<CalculatedPoint> maxima;
+    protected final List<Constraint> constraints;
     
     private String title;
     private String text;
@@ -139,7 +140,7 @@ public class NFunction {
         maxima.add( aMaximum );
         return this;
     }
-    public ArrayList<CalculatedPoint> maxima() {
+    public List<CalculatedPoint> maxima() {
         return new ArrayList<>(maxima);
     }
     
@@ -147,8 +148,8 @@ public class NFunction {
         constraints.add( aConstraint );
         return this;
     }
-    public ArrayList<Constraint> constraints() {
-        return constraints;
+    public List<Constraint> constraints() {
+        return new ArrayList<>(constraints);
     }
     
     public NFunction unsafe() {

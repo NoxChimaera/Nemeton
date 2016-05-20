@@ -23,9 +23,9 @@
  */
 package edu.sibfu.isit.nemeton.controllers.providers;
 
-import edu.sibfu.isit.nemeton.framework.Subscriber;
 import edu.sibfu.isit.nemeton.models.functions.NFunction;
 import java.util.ArrayList;
+import edu.sibfu.isit.nemeton.framework.Listener;
 
 /**
  * Provides functions.
@@ -35,14 +35,14 @@ import java.util.ArrayList;
 public class Functions {
     
     private static final ArrayList<NFunction> functions = new ArrayList<>();
-    private static final ArrayList<Subscriber<NFunction>> subscribers = new ArrayList<>();
+    private static final ArrayList<Listener<NFunction>> subscribers = new ArrayList<>();
     
-    public static void subscribe( final Subscriber<NFunction> aSubscriber ) {
+    public static void subscribe( final Listener<NFunction> aSubscriber ) {
         subscribers.add(aSubscriber);
     }
     
     private static void publish( final NFunction aFunction ) {
-        for ( final Subscriber<NFunction> subscriber : subscribers ) {
+        for ( final Listener<NFunction> subscriber : subscribers ) {
             subscriber.publish( aFunction );
         }
     }
@@ -74,7 +74,7 @@ public class Functions {
      * @return Function
      */
     public static NFunction get( final String aTitle ) {
-        return functions.stream().filter( (NFunction f) -> f.getTitle().equals( aTitle ) )
+        return functions.stream().filter( ( NFunction f ) -> f.getTitle().equals( aTitle ) )
             .findFirst().orElse( null );
     }
     

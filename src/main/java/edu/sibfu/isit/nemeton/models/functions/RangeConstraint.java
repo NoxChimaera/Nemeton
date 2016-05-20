@@ -59,4 +59,8 @@ public class RangeConstraint implements Constraint {
         return true;
     }
     
+    public Pair<Double, Double>[] getRange() {
+        return range;
+    }
+    
 }

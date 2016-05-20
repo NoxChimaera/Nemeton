@@ -30,7 +30,7 @@ package edu.sibfu.isit.nemeton.framework;
  */
 public interface Publisher<T> {
     
-    void subscribe( final Subscriber<T> aSubscriber );
+    void subscribe( final Listener<T> aSubscriber );
     void register( final T aObject );
     
 }

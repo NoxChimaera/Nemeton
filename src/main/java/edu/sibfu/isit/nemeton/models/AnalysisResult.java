@@ -21,16 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package edu.sibfu.isit.nemeton.controllers.providers;
+package edu.sibfu.isit.nemeton.models;
 
+import edu.sibfu.isit.nemeton.algorithms.OptimizationAlgorithm;
 import edu.sibfu.isit.nemeton.models.functions.NFunction;
 
 /**
  *
  * @author Max Balushkin
  */
-public interface FunctionProviderSubscriber {
+public class AnalysisResult {
     
-    void register(final NFunction aFunction);
+    public final OptimizationAlgorithm algorithm;
+    public final NFunction function;
+    
+    public final double success;
+    public final double meanIterations;
+    
+    public AnalysisResult(
+            OptimizationAlgorithm aAlgorithm, NFunction aFunction,
+            double aSuccess, double aMeanIterations
+    ) {
+        algorithm = aAlgorithm;
+        function = aFunction;
+        success = aSuccess;
+        meanIterations = aMeanIterations;
+    }
+
+    @Override
+    public String toString() {
+        return algorithm.toString();
+    }
     
 }

@@ -38,6 +38,10 @@ import edu.sibfu.isit.nemeton.algorithms.OptimizationAlgorithm;
 import edu.sibfu.isit.nemeton.models.Pair;
 import edu.sibfu.isit.nemeton.models.functions.Constraint;
 import edu.sibfu.isit.nemeton.models.functions.RangeConstraint;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
+import java.util.stream.Stream;
 
 /**
  *
@@ -49,7 +53,7 @@ public class BeesAlgorithm extends OptimizationAlgorithm {
     private final Random rnd;
     
     private Point hivePosition;
-    private final int hiveSize;
+    private int hiveSize;
     private final int sites;
     private final double siteSize;
     private final double gamma;
@@ -90,6 +94,20 @@ public class BeesAlgorithm extends OptimizationAlgorithm {
     private boolean isConstrained() {
         return !constraints.isEmpty();
     }
+
+    @Override
+    public void constraint(Constraint aConstraint) {
+        if ( aConstraint.getClass() == RangeConstraint.class ) {
+            RangeConstraint constr = (RangeConstraint) aConstraint;
+            
+            double constrSize = Stream.of(constr.getRange())
+                .map(( pair ) -> Math.max( pair.left(), pair.right() ) )
+                .reduce( (a, b) -> Math.max( a, b ) ).get();
+            
+            hiveSize = Math.min( hiveSize, new BigDecimal( Double.toString( constrSize ) ).setScale( 10, RoundingMode.HALF_UP ).intValue() );
+        }
+        super.constraint(aConstraint); 
+    }
     
     private boolean check( final Point aPoint ) {
         for ( Constraint c : constraints ) {
@@ -108,11 +126,9 @@ public class BeesAlgorithm extends OptimizationAlgorithm {
                 x = x.add( ( ( rnd.nextDouble() * 2 ) - 1 ) * hiveSize, v );
             }
 
-            if ( isConstrained() ) {
-                if ( !check( x ) ) { 
-                    i--;
-                    continue;
-                }
+            if ( isConstrained() && !check( x ) ) { 
+                i--;
+                continue;
             }
 
             points.add( x );
@@ -224,7 +240,7 @@ public class BeesAlgorithm extends OptimizationAlgorithm {
             solutions[ i ] = new CalculatedPoint( x, f.eval( x ) );
         }
         
-        Result result = new Result( this, f, solutions, it, evaluations );
+        Result result = new Result( this, f, solutions, it, evaluations, accuracy );
         result.setEndClause( endClause );
         result.setHistory( history );
         return result;

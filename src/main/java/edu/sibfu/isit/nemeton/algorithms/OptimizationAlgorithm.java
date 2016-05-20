@@ -29,6 +29,7 @@ import edu.sibfu.isit.nemeton.models.functions.Constraint;
 import edu.sibfu.isit.nemeton.models.functions.NFunction;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * Base class for optimizing algorithms.
@@ -38,7 +39,7 @@ import java.util.Comparator;
 public abstract class OptimizationAlgorithm {
     
     protected final NFunction f;
-    protected final ArrayList<Constraint> constraints;
+    protected final List<Constraint> constraints;
     
     protected OptimizationAlgorithm(final NFunction aFunction) {
         f = aFunction;
@@ -57,8 +58,8 @@ public abstract class OptimizationAlgorithm {
         constraints.add( aConstraint );
     }
     
-    public void constraint( final ArrayList<Constraint> aConstraints ) {
-        constraints.addAll( aConstraints );
+    public void constraint( final List<Constraint> aConstraints ) {
+        aConstraints.forEach((constr) -> constraint(constr));
     }
     
     /**

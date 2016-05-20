@@ -44,14 +44,14 @@ public class SACAlgorithm extends OptimizationAlgorithm {
 
     @FunctionalInterface
     private interface Function3<Value, Min, Max, R> {
-        public R apply(Value aValue, Min aMin, Max aMax);
+        R apply(Value aValue, Min aMin, Max aMax);
     }
    
     private final Random rnd;
     private Function3<Double, Double, Double, Double> transition;
     
-    private Point centre = Point.zero(2);
-    private Point delta = new Point(10, 10);
+    private final Point centre;
+    private final Point delta;
     
     private final SACAlgorithmParameters params;
     
@@ -183,6 +183,9 @@ public class SACAlgorithm extends OptimizationAlgorithm {
         final PointHistory history = new PointHistory();
         history.add(centre, f.eval(centre));
         
+        Point centre = new Point(this.centre);
+        Point delta = new Point(this.delta);
+        
         int it;
         for (it = 0; it < params.iterations; it++) {
             ArrayList<Pair<CalculatedPoint, Point>> points = generateSample(params.sampleSize, centre, delta);
@@ -204,7 +207,7 @@ public class SACAlgorithm extends OptimizationAlgorithm {
         Result result = new Result(
             this, f, 
             new CalculatedPoint[] { new CalculatedPoint(centre, f.eval(centre)) }, 
-            it, evaluations
+            it, evaluations, params.accuracy
         );
         result.setEndClause(endClause);
         result.setHistory(history);

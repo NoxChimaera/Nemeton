@@ -23,6 +23,9 @@
  */
 package edu.sibfu.isit.nemeton.lib;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 /**
  *
  * @author Max Balushkin
@@ -46,6 +49,10 @@ public class Utils {
      */
     public static String str(double num) {
         return Double.toString(num);
+    }
+    
+    public static double round( double aNum, int aDigitAfterComma ) {
+        return new BigDecimal( aNum ).setScale( aDigitAfterComma, RoundingMode.HALF_DOWN ).doubleValue();
     }
     
     /**

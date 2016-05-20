@@ -211,7 +211,7 @@ public class Point {
         for (int i = 0; i < n; i++) {
             res += Math.pow(get(i) - b.get(i), n);
         }
-        return Math.pow(res, 1 / n);
+        return Math.pow(res, 1.0 / n);
     }
     
     public Point abs() {

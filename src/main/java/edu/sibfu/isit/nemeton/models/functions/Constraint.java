@@ -32,6 +32,6 @@ import edu.sibfu.isit.nemeton.models.Point;
 @FunctionalInterface
 public interface Constraint {
 
-    public boolean check( final Point aPoint );
+    boolean check( final Point aPoint );
     
 }

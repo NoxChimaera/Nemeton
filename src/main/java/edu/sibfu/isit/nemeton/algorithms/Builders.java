@@ -23,8 +23,8 @@
  */
 package edu.sibfu.isit.nemeton.algorithms;
 
-import edu.sibfu.isit.nemeton.framework.Subscriber;
 import java.util.ArrayList;
+import edu.sibfu.isit.nemeton.framework.Listener;
 
 /**
  * Provides algorithm builders and notifies subscribers about them.
@@ -33,7 +33,7 @@ import java.util.ArrayList;
  */
 public class Builders {
 
-    private static final ArrayList<Subscriber<AlgorithmBuilder>> subscribers;
+    private static final ArrayList<Listener<AlgorithmBuilder>> subscribers;
     private static final ArrayList<AlgorithmBuilder> builders;
     
     static {
@@ -41,13 +41,13 @@ public class Builders {
        builders = new ArrayList<>();
     }
     
-    public static void subscribe( final Subscriber<AlgorithmBuilder> aSubscriber ) {
+    public static void subscribe( final Listener<AlgorithmBuilder> aSubscriber ) {
         subscribers.add(aSubscriber);
     }
     
     public static void register( final AlgorithmBuilder aBldr ) {
         builders.add( aBldr );
-        for ( Subscriber<AlgorithmBuilder> subscriber : subscribers ) {
+        for ( Listener<AlgorithmBuilder> subscriber : subscribers ) {
             subscriber.publish(aBldr);
         }
     }
