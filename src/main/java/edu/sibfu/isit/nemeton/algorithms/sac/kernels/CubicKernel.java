@@ -23,7 +23,12 @@
  */
 package edu.sibfu.isit.nemeton.algorithms.sac.kernels;
 
-
+/**
+ * Cubic selective kernel.
+ * p( g ) = ( 1 - g ^ 3 ) ^ s
+ * 
+ * @author Max Balushkin
+ */
 public class CubicKernel extends SelectiveKernel {
 
     @Override

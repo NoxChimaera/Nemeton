@@ -37,6 +37,7 @@ import org.jzy3d.plot3d.primitives.Shape;
 
 /**
  * Wrapper for Jzy3d surface plot.
+ * 
  * @author Max Balushkin
  */
 public class JzySurface extends JzyPlot {
@@ -49,26 +50,28 @@ public class JzySurface extends JzyPlot {
   
     /**
      * Creates new surface plot.
+     * 
      * @param aFunction 3D function
-     * @param aRange Range
+     * @param aRange range
      */
-    public JzySurface(final NFunction aFunction, final Range aRange) {
-        this(aFunction, aRange, 80);
+    public JzySurface( NFunction aFunction, Range aRange ) {
+        this( aFunction, aRange, 80 );
     }
     
     /**
      * Creates new surface plot.
+     * 
      * @param aFunction 3D function
-     * @param aRange Range
-     * @param aSteps Amount of steps
+     * @param aRange range
+     * @param aSteps amount of steps
      */
-    public JzySurface(final NFunction aFunction, final Range aRange, final int aSteps) {
-        if (!aFunction.isMapped()) {
-            throw new IllegalArgumentException("Specified function can not be mapped with Jzy3d");
+    public JzySurface( NFunction aFunction, Range aRange, int aSteps ) {
+        if ( !aFunction.isMapped() ) {
+            throw new IllegalArgumentException( "Specified function can not be mapped with Jzy3d" );
         }
         
         surface = Builder.buildOrthonormal(
-            new OrthonormalGrid(aRange, aSteps), 
+            new OrthonormalGrid( aRange, aSteps ), 
             aFunction.getMapper()
         );
         
@@ -78,32 +81,34 @@ public class JzySurface extends JzyPlot {
     
     /**
      * Colourizes surface plot with rainbow colours.
-     * @return Self
+     * 
+     * @return self
      */
     public JzySurface colourize() {
-        return colourize(new ColorMapRainbow(), 0.25f);
+        return colourize( new ColorMapRainbow(), 0.25f );
     }
     
     /**
      * Colourizes surface plot with specified parameters.
-     * @param aColourMap Colour map
-     * @param aTransparency Transparency (1 - invisible, 0 - no transparency)
-     * @return Self
+     * 
+     * @param aColourMap colour map
+     * @param aTransparency transparency (1 - invisible, 0 - no transparency)
+     * @return self
      */
-    public JzySurface colourize(final IColorMap aColourMap, final float aTransparency) {
-        if (Math.abs(aTransparency) > 1) {
-            throw new IllegalArgumentException("Transparency must be in [-1; 1]");
+    public JzySurface colourize( IColorMap aColourMap, float aTransparency ) {
+        if ( Math.abs( aTransparency ) > 1 ) {
+            throw new IllegalArgumentException( "Transparency must be in [-1; 1]" );
         }
         
         ColorMapper mapper = new ColorMapper(
             aColourMap, 
             surface.getBounds().getZmin(),
             surface.getBounds().getZmax(),
-            new Color(1, 1, 1, 1 - aTransparency)
+            new Color( 1, 1, 1, 1 - aTransparency )
         );
-        surface.setColorMapper(mapper);
-        surface.setWireframeColor(mapper.getColor(0));
-        surface.setWireframeDisplayed(true);
+        surface.setColorMapper( mapper );
+        surface.setWireframeColor( mapper.getColor( 0 ) );
+        surface.setWireframeDisplayed( true );
         
         colourMapper = mapper;
         return this;
@@ -111,7 +116,8 @@ public class JzySurface extends JzyPlot {
     
     /**
      * Returns colour mapper.
-     * @return Colour mapper
+     * 
+     * @return colour mapper
      * @deprecated 
      */
     public ColorMapper getColourMapper() {
@@ -120,6 +126,7 @@ public class JzySurface extends JzyPlot {
     
     /**
      * Returns surface function.
+     * 
      * @return 3D function
      */
     public NFunction getFunction() {
@@ -128,7 +135,8 @@ public class JzySurface extends JzyPlot {
     
     /**
      * Returns surface plot range.
-     * @return Range
+     * 
+     * @return range
      */
     public Range getRange() {
         return range;
@@ -140,8 +148,8 @@ public class JzySurface extends JzyPlot {
     }
 
     @Override
-    public void append(Chart chart) {
-        chart.getScene().getGraph().add(surface);
+    public void append( Chart aChart ) {
+        aChart.getScene().getGraph().add( surface );
     }
     
 }

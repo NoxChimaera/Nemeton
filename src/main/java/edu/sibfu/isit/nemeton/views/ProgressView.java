@@ -23,7 +23,6 @@
  */
 package edu.sibfu.isit.nemeton.views;
 
-import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 import edu.sibfu.isit.nemeton.framework.Listener;
 
@@ -33,15 +32,14 @@ import edu.sibfu.isit.nemeton.framework.Listener;
  */
 public class ProgressView extends javax.swing.JFrame {
 
-    public final Listener<Integer> progressListener = new Listener<Integer>() {
-        @Override
-        public void publish( Integer aObject ) {
-            setValue( aObject );  
-        }
-    };
+    /**
+     * Updates progress view.
+     */
+    public final Listener<Integer> progressListener = this::setValue;
     
     /**
-     * Creates new form ProgressView
+     * Creates new form ProgressView.
+     * 
      * @param aTitle Window title
      */
     public ProgressView( final String aTitle ) {
@@ -49,14 +47,30 @@ public class ProgressView extends javax.swing.JFrame {
         setTitle(aTitle);
     }
 
+    /**
+     * Sets minimum value of progress bar.
+     * 
+     * @param aMin Minimum value;
+     */
     public void setMin( int aMin ) {
         progress.setMinimum( aMin );
     }
 
+    /**
+     * Sets maximum value of progress bar.
+     * Window cloces when current value equals maximum
+     * 
+     * @param aMax Maximum value
+     */
     public void setMax( int aMax ) {
         progress.setMaximum( aMax );
     }
     
+    /**
+     * Sets value of progress bar.
+     * 
+     * @param aValue Current progress
+     */
     public void setValue( final int aValue ) {
         progress.setValue( aValue ); 
         

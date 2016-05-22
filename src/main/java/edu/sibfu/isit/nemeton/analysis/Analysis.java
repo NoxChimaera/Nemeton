@@ -24,7 +24,6 @@
 package edu.sibfu.isit.nemeton.analysis;
 
 import edu.sibfu.isit.nemeton.algorithms.AlgorithmBuilder;
-import edu.sibfu.isit.nemeton.algorithms.OptimizationAlgorithm;
 import edu.sibfu.isit.nemeton.models.AnalysisResult;
 import edu.sibfu.isit.nemeton.models.CalculatedPoint;
 import edu.sibfu.isit.nemeton.models.Result;
@@ -36,12 +35,16 @@ import javax.swing.SwingUtilities;
 import edu.sibfu.isit.nemeton.framework.Listener;
 
 /**
- *
+ * Algorithm analyzer.
+ * 
  * @author Max Balushkin
  */
 public class Analysis {
     
-    private class Analyser implements Runnable {
+    /**
+     * Analyzer routine.
+     */
+    private class AnalyserRoutine implements Runnable {
 
         private Listener<Integer> listener;
         private Listener<AnalysisResult> analysisResult;
@@ -50,7 +53,17 @@ public class Analysis {
         private int n;
         private double accuracy;
         
-        public Analyser( 
+        /**
+         * Creates new analyser routine. 
+         * 
+         * @param aListener progress listener (notifies current algorithm run)
+         * @param aAnalysisListener result listener (notifies analyse result)
+         * @param aFunction optimized function
+         * @param aAlgo analysed algorithm builder
+         * @param aN amount of algorithm runs
+         * @param aAccuracy analyse accuracy
+         */
+        public AnalyserRoutine( 
             Listener<Integer> aListener, Listener<AnalysisResult> aAnalysisListener, 
             NFunction aFunction, AlgorithmBuilder aAlgo, 
             int aN, double aAccuracy 
@@ -104,7 +117,16 @@ public class Analysis {
         
     }
     
-    public void analyse(  AnalysisView aView, NFunction aFunction, List<AlgorithmBuilder> aBuilders, int aN, double aAccuracy ) {
+    /**
+     * Analyses algorithms.
+     * 
+     * @param aView analyser view
+     * @param aFunction optimized function
+     * @param aBuilders algorithm builders
+     * @param aN amount of runs
+     * @param aAccuracy analyse accuracy
+     */
+    public void analyse( AnalysisView aView, NFunction aFunction, List<AlgorithmBuilder> aBuilders, int aN, double aAccuracy ) {
         for ( AlgorithmBuilder bldr : aBuilders ) {
             ProgressView panel = new ProgressView( bldr.toString() );
             panel.setMin( 0 );
@@ -112,7 +134,7 @@ public class Analysis {
             panel.setValue( 0 );
             panel.setVisible( true );
             new Thread(
-                new Analyser( panel.progressListener, aView.listener, aFunction, bldr, aN, aAccuracy )
+                new AnalyserRoutine( panel.progressListener, aView.listener, aFunction, bldr, aN, aAccuracy )
             ).start();
         }
     }

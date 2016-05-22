@@ -45,7 +45,7 @@ public class Builders {
      * Subscribes listener.
      * Messages are sent when registering new algorithm builder
      * 
-     * @param aListener Listener
+     * @param aListener listener
      */
     public static void subscribe( final Listener<AlgorithmBuilder> aListener ) {
         subscribers.add(aListener);
@@ -54,7 +54,7 @@ public class Builders {
     /**
      * Registers new algorithm builder.
      * 
-     * @param aBldr Builder
+     * @param aBldr builder
      */
     public static void register( final AlgorithmBuilder aBldr ) {
         builders.add( aBldr );

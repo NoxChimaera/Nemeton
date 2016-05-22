@@ -25,7 +25,6 @@ package edu.sibfu.isit.nemeton.controllers;
 
 import de.erichseifert.gral.data.DataSeries;
 import de.erichseifert.gral.data.DataTable;
-import de.erichseifert.gral.data.Row;
 import de.erichseifert.gral.plots.XYPlot;
 import de.erichseifert.gral.plots.lines.DefaultLineRenderer2D;
 import de.erichseifert.gral.plots.lines.LineRenderer;
@@ -33,18 +32,19 @@ import de.erichseifert.gral.plots.points.DefaultPointRenderer2D;
 import de.erichseifert.gral.plots.points.PointRenderer;
 import edu.sibfu.isit.nemeton.models.PointHistory;
 import edu.sibfu.isit.nemeton.models.CalculatedPoint;
-import edu.sibfu.isit.nemeton.models.Pair;
+import edu.sibfu.isit.nemeton.framework.Pair;
 import edu.sibfu.isit.nemeton.models.Point;
 import edu.sibfu.isit.nemeton.models.Result;
 import edu.sibfu.isit.nemeton.views.HistoryView;
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 /**
- *
+ * HistoryView controller.
+ * @see HistoryView
+ * 
  * @author Max Balushkin
  */
 public class HistoryController {
@@ -55,20 +55,27 @@ public class HistoryController {
     private final XYPlot plot;
     private List<Pair<String, XYPlot>> coordinates;
     
+    /**
+     * Creates new history view controller.
+     * 
+     * @param aView view
+     * @param aResults algorithm results
+     * @param showCoordinates show coordinate plots?
+     */
     public HistoryController( HistoryView aView, List<Result> aResults, boolean showCoordinates ) {
         view = aView;
         results = aResults;
         coordinates = new ArrayList<>();
         
-        final List<DataSeries> data = generateDataSeries(aResults);
+        List<DataSeries> data = generateDataSeries(aResults);
         plot = new XYPlot();
         
-        final Random rnd = new Random();
+        Random rnd = new Random();
         for (DataSeries series : data) {
-            final Color colour = new Color(rnd.nextFloat(), rnd.nextFloat(), rnd.nextFloat());
-            final LineRenderer lines = new DefaultLineRenderer2D();
+            Color colour = new Color(rnd.nextFloat(), rnd.nextFloat(), rnd.nextFloat());
+            LineRenderer lines = new DefaultLineRenderer2D();
             lines.setColor(colour);
-            final PointRenderer points = new DefaultPointRenderer2D();
+            PointRenderer points = new DefaultPointRenderer2D();
             points.setColor(colour);
             
             plot.add(series);
@@ -82,10 +89,10 @@ public class HistoryController {
         for ( Pair<String, List<DataSeries>> algo : coords ) {
             XYPlot coordPlot = new XYPlot();
             for ( DataSeries c : algo.right() ) {
-                final Color colour = new Color(rnd.nextFloat(), rnd.nextFloat(), rnd.nextFloat());
-                final LineRenderer lines = new DefaultLineRenderer2D();
+                Color colour = new Color(rnd.nextFloat(), rnd.nextFloat(), rnd.nextFloat());
+                LineRenderer lines = new DefaultLineRenderer2D();
                 lines.setColor(colour);
-                final PointRenderer points = new DefaultPointRenderer2D();
+                PointRenderer points = new DefaultPointRenderer2D();
                 points.setColor(colour);
 
                 coordPlot.add( c );
@@ -97,6 +104,12 @@ public class HistoryController {
         }
     }
     
+    /**
+     * Generates values plot data.
+     * 
+     * @param aResults algorithm results
+     * @return values plot data
+     */
     private List<DataSeries> generateDataSeries( List<Result> aResults ) {
         ArrayList<DataSeries> dataSeries = new ArrayList<>();
         final int n = aResults.size();
@@ -125,6 +138,12 @@ public class HistoryController {
         return dataSeries;
     }
     
+    /**
+     * Generates parameters plot data.
+     * 
+     * @param aResults algorithm results
+     * @return parameters plot data
+     */
     private List<Pair<String, List<DataSeries>>> generateParametersSeries( List<Result> aResults ) {
         List<Pair<String, List<DataSeries>>> dataSeries = new ArrayList<>();
         for ( Result result : aResults ) {
@@ -134,11 +153,16 @@ public class HistoryController {
         return dataSeries;
     }
     
+    /**
+     * Generates parameter plot data.
+     * 
+     * @param aResult algorithm results
+     * @return parameter plot data
+     */
     private List<DataSeries> generateParameterSeries( Result aResult ) {
         List<DataSeries> dataSeries = new ArrayList<>();
         PointHistory history = aResult.getHistory();
-        final int m = history.size();
-//        final int m = history.size() > 0 ? 1 : 0;
+        final int m = history.size() > 0 ? 1 : 0;
         for ( int i = 0; i < m; i++ ) {
             List<CalculatedPoint> points = history.get( i );
             final int o = points.size();
@@ -168,10 +192,20 @@ public class HistoryController {
         return dataSeries;
     }
     
+    /**
+     * Returns values plot.
+     * 
+     * @return values plot
+     */
     public XYPlot getPlot() {
         return plot;
     }
     
+    /**
+     * Returns parameters plot.
+     * 
+     * @return parameters plot.
+     */
     public List<Pair<String, XYPlot>> getCoordinatePlots() {
         return coordinates;
     }

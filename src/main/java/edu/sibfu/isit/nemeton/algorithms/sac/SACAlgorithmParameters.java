@@ -27,7 +27,9 @@ import edu.sibfu.isit.nemeton.algorithms.sac.kernels.SelectiveKernel;
 import edu.sibfu.isit.nemeton.models.Point;
 
 /**
- *
+ * Parameters of SAC algorithm.
+ * @see SACAlgorithm
+ * 
  * @author Max Balushkin
  */
 public class SACAlgorithmParameters {
@@ -72,22 +74,22 @@ public class SACAlgorithmParameters {
     public final double accuracy;
     
     /**
-     * @param aCentre Centre of search area, x^0
-     * @param aSearchRange Search range, delta x
-     * @param aSampleSize Amount of points in sample, n
-     * @param aGamma Shrink coefficient, gamma
-     * @param aMetric Metric, q
-     * @param aKernel Selective kernel, p(...)
-     * @param aSelectiveness Kernel selectiveness, s
-     * @param aIterations Maximum iterations
-     * @param aAccuracy Search accuracy, eps
+     * @param aCentre centre of search area, x^0
+     * @param aSearchRange search range, delta x
+     * @param aSampleSize amount of points in sample, n
+     * @param aGamma shrink coefficient, gamma
+     * @param aMetric metric, q
+     * @param aKernel selective kernel, p(...)
+     * @param aSelectiveness kernel selectiveness, s
+     * @param aIterations maximum iterations
+     * @param aAccuracy search accuracy, eps
      */
     public SACAlgorithmParameters(
-        final Point aCentre, final double aSearchRange,
-        final int aSampleSize, final double aGamma,
-        final int aMetric, 
-        final SelectiveKernel aKernel, final int aSelectiveness,
-        final int aIterations, final double aAccuracy
+        Point aCentre, double aSearchRange,
+        int aSampleSize, double aGamma,
+        int aMetric, 
+        SelectiveKernel aKernel, int aSelectiveness,
+        int aIterations, double aAccuracy
     ) {
         centre = aCentre;
         searchRange = aSearchRange;

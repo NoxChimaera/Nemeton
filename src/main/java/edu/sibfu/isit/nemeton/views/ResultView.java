@@ -67,7 +67,10 @@ public class ResultView extends javax.swing.JFrame {
         functionText.setText( aResults.get( 0 ).getFunction().getText() );
     }
     
-    
+    /**
+     * Returns result view controller
+     * @return Controller
+     */
     public ResultController getController() {
         return ctrl;
     }

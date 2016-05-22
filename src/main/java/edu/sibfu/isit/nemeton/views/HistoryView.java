@@ -26,13 +26,12 @@ package edu.sibfu.isit.nemeton.views;
 import de.erichseifert.gral.plots.XYPlot;
 import de.erichseifert.gral.ui.InteractivePanel;
 import edu.sibfu.isit.nemeton.controllers.HistoryController;
-import edu.sibfu.isit.nemeton.models.Pair;
+import edu.sibfu.isit.nemeton.framework.Pair;
 import edu.sibfu.isit.nemeton.models.Result;
 import java.awt.BorderLayout;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
-import javax.swing.border.TitledBorder;
 
 /**
  *
@@ -43,7 +42,10 @@ public class HistoryView extends javax.swing.JFrame {
     private final HistoryController ctrl;
     
     /**
-     * Creates new form NewJFrame
+     * Creates new history view form.
+     * 
+     * @param aResults List of algorithm results
+     * @param showParams Show parameter plots?
      */
     public HistoryView( List<Result> aResults, boolean showParams ) {
         initComponents();

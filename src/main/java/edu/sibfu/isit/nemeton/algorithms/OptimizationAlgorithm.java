@@ -50,7 +50,7 @@ public abstract class OptimizationAlgorithm {
     /**
      * Creates new optimization algorithm. 
      * 
-     * @param aFunction Optimized function
+     * @param aFunction optimized function
      */
     protected OptimizationAlgorithm(final NFunction aFunction) {
         f = aFunction;
@@ -60,15 +60,15 @@ public abstract class OptimizationAlgorithm {
     /**
      * Runs algorithm with custom comparator.
      * 
-     * @param comparator Custom comparator for points
-     * @return Result
+     * @param comparator custom comparator for points
+     * @return result
      */
     public abstract Result run(Comparator<Point> comparator);
     
     /**
      * Adds new constraint to algorithm.
      * 
-     * @param aConstraint Constraint
+     * @param aConstraint constraint
      */
     public void constraint( final Constraint aConstraint ) {
         constraints.add( aConstraint );
@@ -77,7 +77,7 @@ public abstract class OptimizationAlgorithm {
     /**
      * Adds new constraints to algorithm.
      * 
-     * @param aConstraints Constraints
+     * @param aConstraints constraints
      */
     public void constraint( final List<Constraint> aConstraints ) {
         aConstraints.forEach((constr) -> constraint(constr));
@@ -86,7 +86,7 @@ public abstract class OptimizationAlgorithm {
     /**
      * Minimizes function.
      * 
-     * @return Result
+     * @return result
      */
     public Result minimize() {
         return run((Point a, Point b) -> {
@@ -97,7 +97,7 @@ public abstract class OptimizationAlgorithm {
     /**
      * Maximizes function.
      * 
-     * @return Result
+     * @return result
      */
     public Result maximize() {
         return run((Point a, Point b) -> {

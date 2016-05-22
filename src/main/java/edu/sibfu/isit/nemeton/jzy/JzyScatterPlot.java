@@ -34,29 +34,43 @@ import org.jzy3d.plot3d.primitives.AbstractDrawable;
 import org.jzy3d.plot3d.primitives.Scatter;
 
 /**
- *
+ * Scatter plot.
+ * 
  * @author Max Balushkin
  */
 public class JzyScatterPlot extends JzyPlot {
 
     private final Scatter plot;
     
-    public JzyScatterPlot(final CalculatedPoint[] aPoints, final Color aColour) {
+    /**
+     * Creates new scatter plot.
+     * 
+     * @param aPoints points
+     * @param aColour colour of points
+     */
+    public JzyScatterPlot( CalculatedPoint[] aPoints, Color aColour ) {
         int n = aPoints.length;
-        Coord3d[] coords = new Coord3d[n];
-        for (int i = 0; i < n; i++) {
-            coords[i] = JzyHelper.toCoord3d(aPoints[i]);
+        Coord3d[] coords = new Coord3d[ n ];
+        for ( int i = 0; i < n; i++ ) {
+            coords[ i ] = JzyHelper.toCoord3d( aPoints[ i ] );
         }
-        plot = new Scatter(coords, aColour, 5);
+        plot = new Scatter( coords, aColour, 5 );
     }
     
-    public JzyScatterPlot(final Point[] aPoints, final NFunction aFunction, final Color aColour) {
+    /**
+     * Creates new scatter plot.
+     * 
+     * @param aPoints points
+     * @param aFunction function
+     * @param aColour colour of points
+     */
+    public JzyScatterPlot( Point[] aPoints, NFunction aFunction, Color aColour ) {
         int n = aPoints.length;
-        Coord3d[] coords = new Coord3d[n];
-        for (int i = 0; i < n; i++) {
-            coords[i] = JzyHelper.toCoord3d(aFunction, aPoints[i]);
+        Coord3d[] coords = new Coord3d[ n ];
+        for ( int i = 0; i < n; i++ ) {
+            coords[ i ] = JzyHelper.toCoord3d( aFunction, aPoints[ i ] );
         }
-        plot = new Scatter(coords, aColour, 5);
+        plot = new Scatter( coords, aColour, 5 );
     }
     
     @Override
@@ -65,8 +79,8 @@ public class JzyScatterPlot extends JzyPlot {
     }
 
     @Override
-    public void append(Chart chart) {
-        chart.getScene().add(plot);
+    public void append( Chart aChart ) {
+        aChart.getScene().add( plot );
     }
     
 }

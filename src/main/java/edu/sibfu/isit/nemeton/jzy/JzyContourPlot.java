@@ -43,18 +43,19 @@ public class JzyContourPlot {
     
     /**
      * Creates new contour plot.
-     * @param aSurface Surface
-     * @param aColourMap Contour plot colour map
-     * @param aTransparency Transparency (1 - invisible, 0 - no transparency) 
-     * @param aLevels Count of contour lines
-     * @param aBounds Chart bounds
+     * 
+     * @param aSurface surface
+     * @param aColourMap contour plot colour map
+     * @param aTransparency transparency (1 - invisible, 0 - no transparency) 
+     * @param aLevels count of contour lines
+     * @param aBounds chart bounds
      */
     public JzyContourPlot(
-        final JzySurface aSurface,
-        final IColorMap aColourMap,
-        final float aTransparency,
-        final int aLevels,
-        final BoundingBox3d aBounds
+        JzySurface aSurface, 
+        IColorMap aColourMap,
+        float aTransparency,
+        int aLevels,
+        BoundingBox3d aBounds
     ) {
         MapperContourPictureGenerator contour = 
             new MapperContourPictureGenerator(
@@ -67,13 +68,13 @@ public class JzyContourPlot {
             aColourMap, 
             aSurface.getDrawable().getBounds().getZmin(),
             aSurface.getDrawable().getBounds().getZmax(),
-            new Color(1, 1, 1, 1 - aTransparency)
+            new Color( 1, 1, 1, 1 - aTransparency )
         );
         
         axe = new ContourAxeBox(aBounds);
         axe.setContourImg(
             contour.getContourImage(
-                new DefaultContourColoringPolicy(mapper), 
+                new DefaultContourColoringPolicy( mapper ), 
                 1000, 
                 1000, 
                 aLevels
@@ -85,10 +86,11 @@ public class JzyContourPlot {
  
     /**
      * Appends contour plot to chart axis.
-     * @param aChart Chart
+     * 
+     * @param aChart chart
      */
-    public void append(final Chart aChart) {
-        aChart.getView().setAxe(axe);
+    public void append( Chart aChart ) {
+        aChart.getView().setAxe( axe );
     }
     
 }

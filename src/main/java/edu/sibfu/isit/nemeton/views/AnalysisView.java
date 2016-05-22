@@ -38,8 +38,14 @@ public class AnalysisView extends javax.swing.JFrame {
     
     private final DefaultListModel<AnalysisResult> results;
 
+    /**
+     * Listens for analysis results and adds them to list.
+     */
     public final Listener<AnalysisResult> listener = this::addResult;
     
+    /**
+     * Creates new analysis view.
+     */
     public AnalysisView() {
         initComponents();
         
@@ -57,7 +63,7 @@ public class AnalysisView extends javax.swing.JFrame {
         evals.setText( Utils.str( aResult.meanIterations ) );
     }
     
-    public void addResult( AnalysisResult aResult ) {
+    private void addResult( AnalysisResult aResult ) {
         if ( results.isEmpty() ) {
             functionTitle.setText( aResult.function.getTitle());
             functionText.setText( aResult.function.getText() );

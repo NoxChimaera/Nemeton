@@ -23,11 +23,14 @@
  */
 package edu.sibfu.isit.nemeton.algorithms.sac.kernels;
 
+import edu.sibfu.isit.nemeton.algorithms.sac.SACAlgorithm;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 
 /**
- *
+ * Provides selective kernels.
+ * @see SACAlgorithm
+ * 
  * @author Max Balushkin
  */
 public class Kernels {
@@ -40,11 +43,21 @@ public class Kernels {
         comboboxModel = new DefaultComboBoxModel<>();
     }
     
+    /**
+     * Registers selective kernel.
+     * 
+     * @param aKernel kernel
+     */
     public static void register(final SelectiveKernel aKernel) {
         kernels.add(aKernel);
         comboboxModel.addElement(aKernel);
     }
     
+    /**
+     * Returns combobox model containing all kernels.
+     * 
+     * @return model
+     */
     public static DefaultComboBoxModel<SelectiveKernel> model() {
         return comboboxModel;
     }

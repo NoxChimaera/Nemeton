@@ -23,25 +23,42 @@
  */
 package edu.sibfu.isit.nemeton.models;
 
-import java.util.Arrays;
-
 /**
- *
+ * Point with calculated value.
+ * 
  * @author Max Balushkin
  */
 public class CalculatedPoint extends Point {
+    
     private final double value;
     
-    public CalculatedPoint(final double aValue, final double ... aParams) {
-        super(aParams);
+    /**
+     * Creates new calculated point.
+     * 
+     * @param aValue value
+     * @param aParams point coordinates
+     */
+    public CalculatedPoint( double aValue, double ... aParams ) {
+        super( aParams );
         value = aValue;
     }
     
-    public CalculatedPoint(final Point src, final double aValue) {
-        super(src);
+    /**
+     * Creates new calculated point.
+     * 
+     * @param aValue value
+     * @param aSrc point
+     */
+    public CalculatedPoint( double aValue, Point aSrc ) {
+        super( aSrc );
         value = aValue;
     }    
     
+    /**
+     * Returns point value.
+     * 
+     * @return value
+     */
     public double getValue() {
         return value;
     }

@@ -24,7 +24,9 @@
 package edu.sibfu.isit.nemeton.algorithms.sac.kernels;
 
 /**
- *
+ * Parabolic selective kernel.
+ * p( g ) = ( 1 - g ^ 2 ) ^ s
+ * 
  * @author Max Balushkin
  */
 public class ParabolicKernel extends SelectiveKernel {

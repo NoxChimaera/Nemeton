@@ -24,7 +24,9 @@
 package edu.sibfu.isit.nemeton.algorithms.sac.kernels;
 
 /**
- *
+ * Linear selective kernel.
+ * p( g ) = ( 1 - g ) ^ s
+ * 
  * @author Max Balushkin
  */
 public class LinearKernel extends SelectiveKernel {

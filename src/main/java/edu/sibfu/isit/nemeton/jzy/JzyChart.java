@@ -39,43 +39,48 @@ public class JzyChart {
     
     /**
      * Creates new chart with specified quality.
-     * @param aQuality Chart quality
+     * 
+     * @param aQuality chart quality
      */
-    public JzyChart(final Quality aQuality) {
-        chart = new Chart(aQuality);
+    public JzyChart( Quality aQuality ) {
+        chart = new Chart( aQuality );
     }
     
     /**
      * Adds plot. 
-     * @param aPlot Plot
-     * @return Self
+     * 
+     * @param aPlot plot
+     * @return self
      */
-    public JzyChart addPlot(final JzyPlot aPlot) {
-        aPlot.append(chart);
+    public JzyChart addPlot( JzyPlot aPlot ) {
+        aPlot.append( chart );
         return this;
     }
     
     /**
      * Adds contour plot on chart axis.
-     * @param aContourPlot Contour plot
-     * @return Self
+     * 
+     * @param aContourPlot contour plot
+     * @return self
      */
-    public JzyChart addContourPlot(final JzyContourPlot aContourPlot) {
-        aContourPlot.append(chart);
+    public JzyChart addContourPlot( JzyContourPlot aContourPlot ) {
+        aContourPlot.append( chart );
         return this;
     }
     
     /**
-     * Shows chart window
-     * @param title Window title
+     * Shows chart window.
+     * 
+     * @param title window title
      */
-    public void show(final String title) {
-        ChartLauncher.openChart(chart, title);
+    public void show( String title ) {
+        ChartLauncher.openChart( chart, title );
     }
     
     /**
-     * Returns chart bounds
-     * @return Bounding box
+     * Returns chart bounds.
+     * 
+     * @return bounding box
      */
     public BoundingBox3d getBounds() {
         return chart.getView().getBounds();

@@ -33,238 +33,282 @@ import java.util.Arrays;
  * @author Max Balushkin
  */
 public class Point {
+    
     private final int arity;
     private final double[] params;
     
     /**
-     * Creates point from list of coordinates
-     * @param params Coordinates
+     * Creates point from list of coordinates.
+     * 
+     * @param aParams coordinates
      */
-    public Point(double ... params) {
-        this.arity = params.length;
-        this.params = params;
+    public Point( double ... aParams ) {
+        this.arity = aParams.length;
+        this.params = aParams;
     }
     
     /**
-     * Copying constructor
-     * @param src Other point
+     * Copying constructor.
+     * 
+     * @param aSrc copied point
      */
-    public Point(Point src) {
-        arity = src.getArity();
-        params = Arrays.copyOf(src.params, arity);
+    public Point( Point aSrc ) {
+        arity = aSrc.getArity();
+        params = Arrays.copyOf( aSrc.params, arity );
     }
     
-    public Point(final int aArity, double aValue) {
+    /**
+     * Creates new point.
+     * point = ( value ... value )
+     * 
+     * @param aArity point arity
+     * @param aValue coordinate
+     */
+    public Point( int aArity, double aValue ) {
         arity = aArity;
-        params = new double[aArity];
-        Arrays.fill(params, aValue);
+        params = new double[ aArity ];
+        Arrays.fill( params, aValue );
     }
     
     /**
-     * Returns zero in N-dimensions
-     * @param dim Point dimension
-     * @return Zero
+     * Returns zero in N-dimensions.
+     * 
+     * @param aDim point dimension
+     * @return zero
      */
-    public static Point zero(int dim) {
-        return new Point(new double[dim]);
+    public static Point zero( int aDim ) {
+        return new Point( new double[ aDim ] );
     }
     
     /**
-     * @return Point arity
+     * Returns point arity.
+     * 
+     * @return arity
      */
     public int getArity() {
         return arity;
     }
     
     /**
-     * Returns coordinate by specified dimension
-     * @param i Dimension
-     * @return Coordinate
+     * Returns coordinate by specified dimension.
+     * 
+     * @param aDim dimension
+     * @return coordinate
      */
-    public double get(int i) {
-        if (i >= arity) {
+    public double get( int aDim ) {
+        if ( aDim >= arity ) {
             return 0;
         } else {
-            return params[i];
+            return params[ aDim ];
         }
     }
     
+    /**
+     * Returns coordinates.
+     * 
+     * @return coordinates
+     */
     public double[] get() {
         return params;
     }
     
     /**
-     * Adds point to point
-     * @param b Other point
-     * @return New point
+     * Adds point to point.
+     * 
+     * @param aB other point
+     * @return new point
      */
-    public Point add(Point b) {
-        int n = Math.max(arity, b.getArity());
-        double[] points = new double[n];
-        for (int i = 0; i < n; i++) {
-            points[i] = get(i) + b.get(i);
+    public Point add( Point aB ) {
+        int n = Math.max( arity, aB.getArity() );
+        double[] points = new double[ n ];
+        for ( int i = 0; i < n; i++ ) {
+            points[ i ] = get( i ) + aB.get( i );
         }
-        return new Point(points);
+        return new Point( points );
     }
     
     /**
-     * Adds constant to every coordinate of point
-     * @param c Constant
-     * @return New point
+     * Adds constant to every coordinate of point.
+     * 
+     * @param aC constant
+     * @return new point
      */
-    public Point add(double c) {
+    public Point add( double aC ) {
         int n = getArity();
-        double[] points = new double[n];
-        for (int i = 0; i < n; i++) {
-            points[i] = get(i) + c;
+        double[] points = new double[ n ];
+        for ( int i = 0; i < n; i++ ) {
+            points[ i ] = get( i ) + aC;
         }
-        return new Point(points);
+        return new Point( points );
     }
     
     /**
-     * Adds constant to specified coordinate
-     * @param c Constant
-     * @param dim Dimension
-     * @return New point
+     * Adds constant to specified coordinate/
+     * 
+     * @param aC constant
+     * @param aDim dimension
+     * @return new point
      */
-    public Point add(double c, int dim) {
-        double[] p = Arrays.copyOf(params, arity);
-        if (dim < getArity()) {
-            p[dim] = params[dim] + c;
+    public Point add( double aC, int aDim ) {
+        double[] p = Arrays.copyOf( params, arity );
+        if ( aDim < getArity() ) {
+            p[ aDim ] = params[ aDim ] + aC;
         }
-        return new Point(p);
+        return new Point( p );
     }
     
     /**
-     * Subtracts point from point
-     * @param b Other poiny
-     * @return New point
+     * Subtracts point from point.
+     * 
+     * @param aB other point
+     * @return new point
      */
-    public Point sub(Point b) {
-        int n = Math.max(arity, b.getArity());
-        double[] points = new double[n];
-        for (int i = 0; i < n; i++) {
-            points[i] = get(i) - b.get(i);
+    public Point sub( Point aB ) {
+        int n = Math.max( arity, aB.getArity() );
+        double[] points = new double[ n ];
+        for ( int i = 0; i < n; i++ ) {
+            points[ i ] = get( i ) - aB.get( i );
         }
-        return new Point(points);
+        return new Point( points );
     }
     
     /**
-     * Subtracts constant from every dimension
-     * @param c Constant
-     * @return New point
+     * Subtracts constant from every dimension.
+     * 
+     * @param aC constant
+     * @return new point
      */
-    public Point sub(double c) {
+    public Point sub( double aC ) {
         int n = getArity();
-        double[] points = new double[n];
-        for (int i = 0; i < n; i++) {
-            points[i] = get(i) - c;
+        double[] points = new double[ n ];
+        for ( int i = 0; i < n; i++ ) {
+            points[ i ] = get( i ) - aC;
         }
-        return new Point(points);
-    }
-    
-    public Point mul(final Point b) {
-        int n = Math.max(arity, b.getArity());
-        double[] points = new double[n];
-        for (int i = 0; i < n; i++) {
-            points[i] = get(i) * b.get(i);
-        }
-        return new Point(points);
+        return new Point( points );
     }
     
     /**
-     * Multiplies point on constant
-     * @param c Constant
-     * @return New point
+     * Multiplies points. 
+     * 
+     * @param aB other point
+     * @return new point
      */
-    public Point mul(double c) {
-        int n = getArity();
-        double[] points = new double[n];
-        for (int i = 0; i < n; i++) {
-            points[i] = get(i) * c;
+    public Point mul( Point aB ) {
+        int n = Math.max( arity, aB.getArity() );
+        double[] points = new double[ n ];
+        for ( int i = 0; i < n; i++ ) {
+            points[ i ] = get( i ) * aB.get( i );
         }
-        return new Point(points);
+        return new Point( points );
     }
     
     /**
-     * Divides point on constant
-     * @param c Constant
-     * @return New point
+     * Multiplies point on constant.
+     * 
+     * @param aC constant
+     * @return new point
      */
-    public Point div(double c) {
+    public Point mul( double aC ) {
         int n = getArity();
-        double[] points = new double[n];
-        for (int i = 0; i < n; i++) {
-            points[i] = get(i) / c;
+        double[] points = new double[ n ];
+        for ( int i = 0; i < n; i++ ) {
+            points[ i ] = get( i ) * aC;
         }
-        return new Point(points);
+        return new Point( points );
+    }
+    
+    /**
+     * Divides point on constant.
+     * 
+     * @param aC constant
+     * @return new point
+     */
+    public Point div( double aC ) {
+        int n = getArity();
+        double[] points = new double[ n ];
+        for ( int i = 0; i < n; i++ ) {
+            points[ i ] = get( i ) / aC;
+        }
+        return new Point( points );
     }
 
     /**
-     * Calculates distance between point
-     * @param b Other point
-     * @return Distance
+     * Calculates distance between point.
+     * 
+     * @param b other point
+     * @return distance
      */
-    public double distance(Point b) {
+    public double distance( Point b ) {
         double res = 0;
-        int n = Math.max(getArity(), b.getArity());
-        for (int i = 0; i < n; i++) {
-            res += Math.pow(get(i) - b.get(i), n);
+        int n = Math.max( getArity(), b.getArity() );
+        for ( int i = 0; i < n; i++ ) {
+            res += Math.pow( get( i ) - b.get( i ), n );
         }
-        return Math.pow(res, 1.0 / n);
+        return Math.pow( res, 1.0 / n );
     }
     
+    /**
+     * Applies `abs` function to point coordinates.
+     * 
+     * @return new point
+     */
     public Point abs() {
         int n = getArity();
-        double[] points = new double[n];
-        for (int i = 0; i < n; i++) {
-            points[i] = Math.abs(get(i));
+        double[] points = new double[ n ];
+        for ( int i = 0; i < n; i++ ) {
+            points[ i ] = Math.abs( get( i ) );
         }
-        return new Point(points);
+        return new Point( points );
     }
     
-    public Point pow(double power) {
+    /**
+     * Point exponentiation.
+     * 
+     * @param aPower exponent
+     * @return new point
+     */
+    public Point pow( double aPower ) {
         int n = getArity();
-        double[] points = new double[n];
-        for (int i = 0; i < n; i++) {
-            points[i] = Math.pow(get(i), power);
+        double[] points = new double[ n ];
+        for ( int i = 0; i < n; i++ ) {
+            points[ i ] = Math.pow( get( i ), aPower );
         }
-        return new Point(points);
+        return new Point( points );
     }
 
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 53 * hash + Arrays.hashCode(this.params);
+        hash = 53 * hash + Arrays.hashCode( params );
         return hash;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
+    public boolean equals( Object aObj ) {
+        if ( this == aObj ) {
             return true;
         }
-        if (obj == null) {
+        if ( aObj == null ) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
+        if ( getClass() != aObj.getClass() ) {
             return false;
         }
-        final Point other = (Point) obj;
-        if (this.arity != other.arity) {
+        Point other = (Point) aObj;
+        if ( this.arity != other.arity ) {
             return false;
         }
-        return Arrays.equals(this.params, other.params);
+        return Arrays.equals( this.params, other.params );
     }
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder("(");
-        for (double d : params) {
-//            builder.append(d).append(", ");
-            builder.append(new BigDecimal(d).setScale(4, RoundingMode.HALF_DOWN).doubleValue()).append(", ");
+        StringBuilder builder = new StringBuilder( "(" );
+        for ( double d : params ) {
+            builder.append( new BigDecimal( d ).setScale( 4, RoundingMode.HALF_DOWN ).doubleValue())
+                .append( ", " );
         }
-        builder.replace(builder.lastIndexOf(","), builder.length(), ")");
+        builder.replace( builder.lastIndexOf( "," ), builder.length(), ")" );
         return builder.toString();
     }
 }

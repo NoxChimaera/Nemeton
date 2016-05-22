@@ -37,12 +37,22 @@ public class Functions {
     private static final ArrayList<NFunction> functions = new ArrayList<>();
     private static final ArrayList<Listener<NFunction>> subscribers = new ArrayList<>();
     
-    public static void subscribe( final Listener<NFunction> aSubscriber ) {
+    /**
+     * Subscribes listener to function provider.
+     * 
+     * @param aSubscriber listener
+     */
+    public static void subscribe( Listener<NFunction> aSubscriber ) {
         subscribers.add(aSubscriber);
     }
     
-    private static void publish( final NFunction aFunction ) {
-        for ( final Listener<NFunction> subscriber : subscribers ) {
+    /**
+     * Notifes listeners with function.
+     * 
+     * @param aFunction function
+     */
+    private static void publish( NFunction aFunction ) {
+        for ( Listener<NFunction> subscriber : subscribers ) {
             subscriber.publish( aFunction );
         }
     }
@@ -50,9 +60,9 @@ public class Functions {
     /**
      * Registers function.
      * 
-     * @param aFunction Function
+     * @param aFunction function
      */
-    public static void register( final NFunction aFunction ) {
+    public static void register( NFunction aFunction ) {
         functions.add( aFunction );
         publish( aFunction );
     }
@@ -60,26 +70,26 @@ public class Functions {
     /**
      * Provides function by index.
      * 
-     * @param aIndex Index of function
-     * @return Function
+     * @param aIndex index of function
+     * @return function
      */
-    public static NFunction get( final int aIndex ) {
+    public static NFunction get( int aIndex ) {
         return functions.get( aIndex );
     }
     
     /**
      * Provides function by title.
      * 
-     * @param aTitle Function title
-     * @return Function
+     * @param aTitle function title
+     * @return function
      */
-    public static NFunction get( final String aTitle ) {
+    public static NFunction get( String aTitle ) {
         return functions.stream().filter( ( NFunction f ) -> f.getTitle().equals( aTitle ) )
             .findFirst().orElse( null );
     }
     
     /**
-     * @return List of functions
+     * @return list of functions
      */
     public static ArrayList<NFunction> get() {
         return functions;

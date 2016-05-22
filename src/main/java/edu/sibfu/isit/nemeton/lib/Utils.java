@@ -27,7 +27,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 /**
- *
+ * Miscellaneous utils.
+ * 
  * @author Max Balushkin
  */
 public class Utils {
@@ -35,42 +36,38 @@ public class Utils {
     /**
      * Converts integer to string.
      * 
-     * @param num Number
-     * @return String
+     * @param aNum number
+     * @return string
      */
-    public static String str(int num) {
-        return Integer.toString(num);
+    public static String str( int aNum ) {
+        return Integer.toString( aNum );
     }
     /**
      * Converts double to string.
      * 
-     * @param num Number
-     * @return String
+     * @param aNum number
+     * @return string
      */
-    public static String str(double num) {
-        return Double.toString(num);
-    }
-    
-    public static double round( double aNum, int aDigitAfterComma ) {
-        return new BigDecimal( aNum ).setScale( aDigitAfterComma, RoundingMode.HALF_DOWN ).doubleValue();
+    public static String str( double aNum ) {
+        return Double.toString( aNum );
     }
     
     /**
      * Converts string to integer.
      * 
-     * @param str String
-     * @return Integer
+     * @param aStr string
+     * @return integer
      */
-    public static int intg(String str) {
-        return Integer.parseInt(str);
+    public static int intg( String aStr ) {
+        return Integer.parseInt( aStr );
     }
     /**
      * Converts string to double.
      * 
-     * @param str Stirng
-     * @return Double
+     * @param aStr string
+     * @return double
      */
-    public static double real(String str) {
-        return Double.parseDouble(str);
+    public static double real( String aStr ) {
+        return Double.parseDouble( aStr );
     }
 }

@@ -26,7 +26,9 @@ package edu.sibfu.isit.nemeton.algorithms.bees;
 import edu.sibfu.isit.nemeton.models.Point;
 
 /**
- *
+ * Parameters of bees algorithm.
+ * @see BeesAlgorithm
+ * 
  * @author Max Balushkin
  */
 public class BeesAlgorithmParameters {
@@ -93,11 +95,11 @@ public class BeesAlgorithmParameters {
      * @param aAccuracy Search accuracy
      */
     public BeesAlgorithmParameters(
-        final Point aHivePosition, final int aHiveSize, final int aScouts, 
-        final int aSites, final int aEliteSites, 
-        final double aSiteSize, final double aGamma, 
-        final int aOnElite, final int aOnOther, 
-        final int aIterations, final double aAccuracy
+        Point aHivePosition, int aHiveSize, int aScouts, 
+        int aSites, int aEliteSites, 
+        double aSiteSize, double aGamma, 
+        int aOnElite, int aOnOther, 
+        int aIterations, double aAccuracy
     ) {
         hivePosition = aHivePosition;
         hiveSize = aHiveSize;

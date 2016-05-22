@@ -35,16 +35,20 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 import edu.sibfu.isit.nemeton.algorithms.OptimizationAlgorithm;
-import edu.sibfu.isit.nemeton.models.Pair;
+import edu.sibfu.isit.nemeton.framework.Pair;
 import edu.sibfu.isit.nemeton.models.functions.Constraint;
 import edu.sibfu.isit.nemeton.models.functions.RangeConstraint;
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.stream.Stream;
 
 /**
- *
+ * Modified Bees Algorithm.
+ * Basic BA: D. T. Pham, A. Ghanbarzadeh, E. Koc, S. Otri, S. Rahim, M. Zaidi
+ *  - The Bees Algorithm, A Novel Tool for Complex Optimisation Problems;
+ *  Manufacturing Engineering Centre, Cardiff University, Cardiff CF24 3AA, UK
+ * Modification: shrinking local search area
+ * 
  * @author Max Balushkin
  */
 public class BeesAlgorithm extends OptimizationAlgorithm {
@@ -70,10 +74,10 @@ public class BeesAlgorithm extends OptimizationAlgorithm {
     /**
      * Creates new Bees Algorithm object.
      * 
-     * @param aFunction Optimized function
-     * @param aParams Algorithm parameters
+     * @param aFunction optimized function
+     * @param aParams algorithm parameters
      */
-    public BeesAlgorithm(final NFunction aFunction, final BeesAlgorithmParameters aParams) {
+    public BeesAlgorithm( NFunction aFunction, BeesAlgorithmParameters aParams ) {
         super(aFunction);
         hivePosition = aParams.hivePosition;
         hiveSize = aParams.hiveSize;
@@ -97,12 +101,17 @@ public class BeesAlgorithm extends OptimizationAlgorithm {
         evaluations = 0;
     }
     
+    /**
+     * Is algorithm constrained?
+     * 
+     * @return true if constrained, else false
+     */
     private boolean isConstrained() {
         return !constraints.isEmpty();
     }
 
     @Override
-    public void constraint(Constraint aConstraint) {
+    public void constraint( Constraint aConstraint ) {
         if ( aConstraint.getClass() == RangeConstraint.class ) {
             RangeConstraint constr = (RangeConstraint) aConstraint;
             
@@ -115,13 +124,24 @@ public class BeesAlgorithm extends OptimizationAlgorithm {
         super.constraint(aConstraint); 
     }
     
-    private boolean check( final Point aPoint ) {
+    /**
+     * Checks is point in specified constraints.
+     * 
+     * @param aPoint point
+     * @return true if in constraints, else false
+     */
+    private boolean check( Point aPoint ) {
         for ( Constraint c : constraints ) {
             if ( !c.check( aPoint ) ) return false;
         }
         return true;
     }
 
+    /**
+     * Scouting phase.
+     * 
+     * @return random point in global search area
+     */
     private List<Point> scouting() {        
         List<Point> points = new ArrayList<>( sites );            
         final int arity = f.getArity();
@@ -243,7 +263,7 @@ public class BeesAlgorithm extends OptimizationAlgorithm {
         final int n = points.size();
         for ( int i = 0; i < n; i++ ) {
             Point x = points.get( i );
-            solutions[ i ] = new CalculatedPoint( x, f.eval( x ) );
+            solutions[ i ] = new CalculatedPoint( f.eval( x ), x );
         }
         
         Result result = new Result( this, f, solutions, it, evaluations, accuracy );

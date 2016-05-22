@@ -23,26 +23,48 @@
  */
 package edu.sibfu.isit.nemeton.models.functions;
 
-import edu.sibfu.isit.nemeton.models.Pair;
+import edu.sibfu.isit.nemeton.framework.Pair;
 import edu.sibfu.isit.nemeton.models.Point;
 
 /**
- *
+ * Range constraint.
+ * 
  * @author Max Balushkin
  */
 public class RangeConstraint implements Constraint {
 
     private final Pair<Double, Double>[] range;
-    
+
+    /**
+     * Creates new range constraint.
+     * constraint = ( ( min, max ) ... ( min, max ) )
+     * 
+     * @param aMin lower range bound
+     * @param aMax upper range bound
+     * @param aArity range arity
+     * @return range constraint
+     */
     public static RangeConstraint create( double aMin, double aMax, int aArity ) {
         return new RangeConstraint( new Pair<>(aMin, aMax) , aArity );
     }
     
-    public RangeConstraint( final Pair<Double, Double> ... aRange ) {
-        final int n = aRange.length;
+    /**
+     * Creates new range constraint.
+     * constraint = ( ( min0, max0 ) ... ( minN, maxN ) )
+     * 
+     * @param aRange ranges
+     */
+    public RangeConstraint( Pair<Double, Double> ... aRange ) {
         range = aRange;
     }
     
+    /**
+     * Creates new range constraint.
+     * constraint = ( ( min, max ) ... ( min, max ) )
+     * 
+     * @param aRange range
+     * @param aArity arity
+     */
     public RangeConstraint( final Pair<Double, Double> aRange, final int aArity ) {
         range = new Pair[ aArity ];
         for ( int i = 0; i < aArity; i++ ) {
@@ -63,6 +85,11 @@ public class RangeConstraint implements Constraint {
         return true;
     }
     
+    /**
+     * Returns ranges.
+     * 
+     * @return ranges
+     */
     public Pair<Double, Double>[] getRange() {
         return range;
     }

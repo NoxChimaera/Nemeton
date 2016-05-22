@@ -42,8 +42,8 @@ public abstract class JzyPlot {
     
     /**
      * 
-     * @param chart 
+     * @param aChart 
      */
-    public abstract void append(Chart chart);
+    public abstract void append( Chart aChart );
     
 }

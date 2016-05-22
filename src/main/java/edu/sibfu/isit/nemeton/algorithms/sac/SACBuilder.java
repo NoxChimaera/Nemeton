@@ -33,7 +33,18 @@ import edu.sibfu.isit.nemeton.models.Point;
 import edu.sibfu.isit.nemeton.views.SACSettings;
 
 /**
- *
+ * SAC Algorithm builder.
+ * Default parameters:
+ *      Start point: (0, 0)
+ *      Search range, delta x: (5, 5)
+ *      Sample size, n: 50
+ *      Metriq q: 2
+ *      Kernel: parabolic kernel
+ *      Kernel selectiveness, s: 10
+ * 
+ *      Maximum iterations: 100000
+ *      Accuracy (epsilon): 1E-5
+ * 
  * @author Max Balushkin
  */
 public class SACBuilder extends AlgorithmBuilder {
@@ -50,83 +61,189 @@ public class SACBuilder extends AlgorithmBuilder {
     private SelectiveKernel kernel = new ParabolicKernel();
     private double selectiveness = 10;
     
-    private int iterations = 10000;
-    private double accuracy = 0.00001;
+    private int iterations = 100000;
+    private double accuracy = 1E-5;
     private boolean constrained = true;
  
-    public SACBuilder centre(final Point aCentre) {
+    /**
+     * Sets centre of search area, start point.
+     * 
+     * @param aCentre start point
+     * @return self
+     */
+    public SACBuilder centre( Point aCentre ) {
         centre = aCentre;
         return this;
     } 
+    /**
+     * Returns start point, centre of search area.
+     * 
+     * @return Start point
+     */
     public Point centre() {
         return centre;
     }
     
-    public SACBuilder searchRange(final double aRange) {
+    /**
+     * Sets search range, delta x.
+     * delta x = ( value ... value )
+     * 
+     * @param aRange search range
+     * @return self
+     */
+    public SACBuilder searchRange( double aRange ) {
         searchRange = aRange;
         return this;
     }
+    /**
+     * Returns search range, delta x.
+     * 
+     * @return search range
+     */
     public double searchRange() {
         return searchRange;
     }
 
-    public SACBuilder sampleSize(final int aSampleSize) {
+    /**
+     * Sets sample size, n.
+     * 
+     * @param aSampleSize sample size
+     * @return self
+     */
+    public SACBuilder sampleSize( int aSampleSize ) {
         sampleSize = aSampleSize;
         return this;
     }
+    /**
+     * Returns sample size, n.
+     * 
+     * @return sample size
+     */
     public int sampleSize() {
         return sampleSize;
     }
 
-    public SACBuilder gamma(final double aGamma) {
+    /**
+     * Sets gamma coefficient.
+     * 
+     * @param aGamma gamma
+     * @return self
+     */
+    public SACBuilder gamma( double aGamma ) {
         gamma = aGamma;
         return this;
     }
+    /**
+     * Returns gamma coefficient.
+     * 
+     * @return gamma
+     */
     public double gamma() {
         return gamma;
     }
 
-    public SACBuilder metric(final int aMetric) {
+    /**
+     * Sets metric, q.
+     * 
+     * @param aMetric metric, q
+     * @return self
+     */
+    public SACBuilder metric( int aMetric ) {
         metric = aMetric;
         return this;
     }
+    /**
+     * Returns metric, q.
+     * 
+     * @return metric, q
+     */
     public int metric() {
         return metric;
     }
 
-    public SACBuilder kernel(final SelectiveKernel aKernel) {
+    /**
+     * Sets selective kernel.
+     * 
+     * @param aKernel kernel
+     * @return self
+     */
+    public SACBuilder kernel( SelectiveKernel aKernel ) {
         kernel = aKernel;
         return this;
     }
+    /**
+     * Returns selective kernel.
+     * 
+     * @return kernel
+     */
     public SelectiveKernel kernel() {
         return kernel;
     }
 
-    public SACBuilder selectiveness(final double aSelectiveness) {
+    /**
+     * Sets kernel selectiveness, s.
+     * 
+     * @param aSelectiveness kernel selectiveness, s
+     * @return self
+     */
+    public SACBuilder selectiveness( double aSelectiveness ) {
         selectiveness = aSelectiveness;
         return this;
     }
+    /**
+     * Returns kernel selectiveness, s.
+     * 
+     * @return selectiveness,s
+     */
     public double selectiveness() {
         return selectiveness;
     }
     
-    public SACBuilder iterations(final int aIterations) {
+    /**
+     * Sets maximum iterations.
+     * 
+     * @param aIterations maximum iterations
+     * @return self
+     */
+    public SACBuilder iterations( int aIterations ) {
         iterations = aIterations;
         return this;
     }
+    /**
+     * Returns maximum iterations.
+     * 
+     * @return maximum iterations
+     */
     public int iterations() {
         return iterations;
     }
     
-    public SACBuilder accuracy(final double aAccuracy) {
+    /**
+     * Sets search accuracy, epsilon.
+     * 
+     * @param aAccuracy accuracy
+     * @return self
+     */
+    public SACBuilder accuracy( double aAccuracy ) {
         accuracy = aAccuracy;
         return this;
     }
+    /**
+     * Returns accuracy, epsilon.
+     * 
+     * @return accuracy
+     */
     public double accuracy() {
         return accuracy;
     }
  
-    public SACBuilder constrained( final boolean aConstrained ) {
+    /**
+     * Sets function constraint mode.
+     * 
+     * @param aConstrained if true add function constraints
+     * @return self
+     */
+    public SACBuilder constrained( boolean aConstrained ) {
         constrained = aConstrained;
         return this;
     }
@@ -136,12 +253,12 @@ public class SACBuilder extends AlgorithmBuilder {
     }
    
     @Override
-    public OptimizationAlgorithm build(final NFunction aFunction) {
+    public OptimizationAlgorithm build( NFunction aFunction ) {
         final SACAlgorithmParameters params = new SACAlgorithmParameters(
             centre, searchRange, sampleSize, gamma, metric, kernel, sampleSize,
             iterations, accuracy
         );
-        SACAlgorithm alg = new SACAlgorithm(aFunction, params);
+        SACAlgorithm alg = new SACAlgorithm( aFunction, params );
         alg.constraint( constraints );
         return alg;
     }
@@ -153,8 +270,8 @@ public class SACBuilder extends AlgorithmBuilder {
 
     @Override
     public JFrame show() {
-        if (view == null) {
-            view = new SACSettings(this);
+        if ( view == null ) {
+            view = new SACSettings( this );
         }
         return view;
     }

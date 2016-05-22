@@ -133,7 +133,7 @@ public class PointHistory {
      * @param aValue Function value
      */
     public void add( int aIdx, Point aPoint, double aValue) {
-        add( aIdx, new CalculatedPoint( aPoint, aValue ) );
+        add(aIdx, new CalculatedPoint( aValue, aPoint ) );
     }
     
     /**
@@ -151,7 +151,7 @@ public class PointHistory {
      * @param aValue Function value
      */
     public void add( Point aPoint, double aValue ) {
-        add( new CalculatedPoint( aPoint, aValue ) );
+        add(new CalculatedPoint( aValue, aPoint ) );
     }
     
     /**

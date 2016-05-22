@@ -55,7 +55,9 @@ import edu.sibfu.isit.nemeton.framework.Listener;
 import edu.sibfu.isit.nemeton.views.HistoryView;
 
 /**
- *
+ * MainView controller.
+ * @see MainView
+ * 
  * @author Max Balushkin
  */
 public class MainController {
@@ -99,10 +101,21 @@ public class MainController {
      * Problem goal.
      */
     public enum Goal {
+        /**
+         * Search for minima.
+         */
         Minimize,
+        /**
+         * Search for maxima.
+         */
         Maximize
     }
     
+    /**
+     * Creates new controller.
+     * 
+     * @param view view
+     */
     public MainController( MainView view ) {
         this.view = view;
         buildersTableModel = 
@@ -119,16 +132,30 @@ public class MainController {
         functionsListModel = new DefaultComboBoxModel<>();
     }
 
+    /**
+     * Runs analysing procedure.
+     * 
+     * @param aGoal problem
+     * @param aFunction optimized function
+     * @param aN amount of runs
+     * @param aAccuracy analyse accuracy
+     */
     public void analyse( Goal aGoal, NFunction aFunction, int aN, double aAccuracy ) {
         List<AlgorithmBuilder> algos = collectBuilders(aFunction );
-        Analysis foo = new Analysis();
+        Analysis analyser = new Analysis();
         
         AnalysisView anView = new AnalysisView();
         anView.setVisible(true);
         
-        foo.analyse( anView, aFunction, algos, aN, aAccuracy );
+        analyser.analyse( anView, aFunction, algos, aN, aAccuracy );
     }
 
+    /**
+     * Collects algorithm builders from builders table.
+     * 
+     * @param aFunction optimized function
+     * @return builders
+     */
     private List<AlgorithmBuilder> collectBuilders( NFunction aFunction ) {
         List<AlgorithmBuilder> builders = new ArrayList<>();
         for ( Object item : buildersTableModel.getDataVector().toArray() ) {
@@ -144,6 +171,12 @@ public class MainController {
         return builders;
     }
     
+    /**
+     * Collects builder from table and builds algorithms with them.
+     * 
+     * @param aFunction optimized function
+     * @return algorithms
+     */
     public List<OptimizationAlgorithm> collectAlgorithms( NFunction aFunction ) {
         List<AlgorithmBuilder> builders = collectBuilders( aFunction );
         List<OptimizationAlgorithm> algos = new ArrayList<>();
@@ -153,6 +186,11 @@ public class MainController {
         return algos;
     }
 
+    /**
+     * Shows error message.
+     * 
+     * @param message error message
+     */
     public void error( String message ) {
         JOptionPane.showMessageDialog( view, message );
     }
@@ -160,7 +198,7 @@ public class MainController {
     /**
      * Returns algorithm table model.
      * 
-     * @return Table model
+     * @return table model
      */
     public TableModel getAlghoritmsTableModel() {
         return buildersTableModel;
@@ -170,13 +208,18 @@ public class MainController {
      * Returns function with specified index.
      * @see Functions#get(int) 
      * 
-     * @param index Function index
-     * @return Function or null
+     * @param index function index
+     * @return function or null
      */
     public NFunction getFunction( int index ) {
         return Functions.get(index);
     }
 
+    /**
+     * Returns function list model.
+     * 
+     * @return model
+     */
     public ComboBoxModel getFunctionListModel() {
         return functionsListModel;
     }
@@ -184,10 +227,10 @@ public class MainController {
     /**
      * Runs selected algorithms. 
      * 
-     * @param aGoal Problem goal
-     * @param aFunction Optimized function
-     * @param showSurface Show surface plot?
-     * @param showHistory Show point history?
+     * @param aGoal problem
+     * @param aFunction optimized function
+     * @param showSurface show surface plot?
+     * @param showHistory show point history?
      */
     public void runAlgorithms( Goal aGoal, NFunction aFunction, boolean showSurface, boolean showHistory ) {
         List<OptimizationAlgorithm> algorithms = collectAlgorithms( aFunction );
@@ -214,20 +257,17 @@ public class MainController {
      * 
      * @param aResults Results
      */
-    public void showHistory( final ArrayList<Result> aResults ) {
+    public void showHistory( ArrayList<Result> aResults ) {
         new HistoryView( (List<Result>) aResults, true ).setVisible(true);
-        
-//        HistoryView history = new HistoryView( aResults, true );
-//        history.showAsFrame();
     }
     
     /**
      * Shows surface plot.
      * 
-     * @param aFunction Function
-     * @param aResults Algorithm results
+     * @param aFunction function
+     * @param aResults algorithm results
      */
-    public void showSurface( final NFunction aFunction, final ArrayList<Result> aResults ) {
+    public void showSurface( NFunction aFunction, ArrayList<Result> aResults ) {
         if ( !aFunction.isMapped() ) {
             error( "Specified function can not be mapped with Jzy3d" );
             return;
@@ -268,8 +308,8 @@ public class MainController {
         
         for ( Result result : aResults ) {
             // Scatter plot. Solutions
-            final CalculatedPoint[] solution = result.getValues();
-            final Color colour = Color.random();
+            CalculatedPoint[] solution = result.getValues();
+            Color colour = Color.random();
             JzyScatterPlot scatterPlot = new JzyScatterPlot( solution, colour );
             chart.addPlot( scatterPlot );
             

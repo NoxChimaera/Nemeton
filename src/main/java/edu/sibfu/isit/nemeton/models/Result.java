@@ -44,10 +44,23 @@ public class Result {
     private PointHistory history;
     private String endClause;
     
+    /**
+     * Creates new algorithm result.
+     * 
+     * @param aAlgorithm algorithm
+     * @param aFunction optimised function
+     * @param aValues solutions
+     * @param aIterations iterations
+     * @param aEvaluations function evaluations
+     * @param aAccuracy accuracy
+     */
     public Result(
-        final OptimizationAlgorithm aAlgorithm,
-        final NFunction aFunction, final CalculatedPoint[] aValues,
-        final int aIterations, final int aEvaluations, final double aAccuracy
+        OptimizationAlgorithm aAlgorithm,
+        NFunction aFunction, 
+        CalculatedPoint[] aValues,
+        int aIterations, 
+        int aEvaluations, 
+        double aAccuracy
     ) {
         algorithm = aAlgorithm;
         function = aFunction;
@@ -62,7 +75,7 @@ public class Result {
     /**
      * Returns function.
      * 
-     * @return Function
+     * @return function
      */
     public NFunction getFunction() {
         return function;
@@ -71,7 +84,7 @@ public class Result {
     /**
      * Returns problem solutions.
      * 
-     * @return Solutions
+     * @return solutions
      */
     public CalculatedPoint[] getValues() {
         return values;
@@ -80,7 +93,7 @@ public class Result {
     /**
      * Returns algorithm.
      * 
-     * @return Algorithm
+     * @return algorithm
      */
     public OptimizationAlgorithm getAlgorithm() {
         return algorithm;
@@ -89,17 +102,27 @@ public class Result {
     /**
      * Returns search history.
      * 
-     * @return Search history
+     * @return search history
      */
     public PointHistory getHistory() {
         return history;
     }
 
-    public void setHistory(PointHistory aHistory) {
+    /**
+     * Sets search history.
+     * 
+     * @param aHistory search history
+     */
+    public void setHistory( PointHistory aHistory ) {
         history = aHistory;
     }
     
-    public void setEndClause(String aEndClause) {
+    /**
+     * Sets algorithm end clause.
+     * 
+     * @param aEndClause end clause
+     */
+    public void setEndClause( String aEndClause ) {
         endClause = aEndClause;
     }
     
@@ -130,6 +153,11 @@ public class Result {
         return evaluations;
     }
     
+    /**
+     * Returns agorithm accuracy.
+     * 
+     * @return accuracy
+     */
     public double getAccuracy() {
         return accuracy;
     }

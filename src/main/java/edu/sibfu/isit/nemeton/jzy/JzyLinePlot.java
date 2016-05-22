@@ -34,30 +34,41 @@ import org.jzy3d.plot3d.primitives.AbstractDrawable;
 import org.jzy3d.plot3d.primitives.LineStrip;
 
 /**
- *
+ * Line plot.
+ * 
  * @author Max Balushkin
  */
 public class JzyLinePlot extends JzyPlot {
 
     private final ArrayList<LineStrip> line;
     
-    public JzyLinePlot(final List<CalculatedPoint> aPoint) {
-        this(aPoint.toArray(new CalculatedPoint[] {}));
+    /**
+     * Creates new line plot from list of points.
+     * 
+     * @param aPoint points
+     */
+    public JzyLinePlot( List<CalculatedPoint> aPoint ) {
+        this( aPoint.toArray( new CalculatedPoint[] {} ) );
     }
     
-    public JzyLinePlot(final CalculatedPoint[] aPoints) {
+    /**
+     * Creates new line plor from array of points.
+     * 
+     * @param aPoints points
+     */
+    public JzyLinePlot( CalculatedPoint[] aPoints ) {
         line = new ArrayList<>();
         
         int n = aPoints.length;
         Color colour = Color.random();
-        for (int i = 0, j = 1; j < n; i++, j++)  {
+        for ( int i = 0, j = 1; j < n; i++, j++ )  {
             ArrayList<Coord3d> segment = new ArrayList<>();
-            segment.add(JzyHelper.toCoord3d(aPoints[i]));
-            segment.add(JzyHelper.toCoord3d(aPoints[j]));
-            LineStrip ls = new LineStrip(segment);
-            ls.setWireframeColor(colour);
+            segment.add( JzyHelper.toCoord3d( aPoints[ i ] ) );
+            segment.add( JzyHelper.toCoord3d( aPoints[ j ] ) );
+            LineStrip ls = new LineStrip( segment);
+            ls.setWireframeColor( colour);
             
-            line.add(ls);
+            line.add( ls );
         }   
     }
     

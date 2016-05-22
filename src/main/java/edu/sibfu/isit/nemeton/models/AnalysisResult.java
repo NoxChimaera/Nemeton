@@ -27,17 +27,38 @@ import edu.sibfu.isit.nemeton.algorithms.OptimizationAlgorithm;
 import edu.sibfu.isit.nemeton.models.functions.NFunction;
 
 /**
- *
+ * Represents results of algorithm analysis.
+ * 
  * @author Max Balushkin
  */
 public class AnalysisResult {
     
+    /**
+     * Analysed algorithm.
+     */
     public final OptimizationAlgorithm algorithm;
+    /**
+     * Optimised function.
+     */
     public final NFunction function;
     
+    /**
+     * Probability of success.
+     */
     public final double success;
+    /**
+     * Mean value of optimised function evaluations.
+     */
     public final double meanIterations;
     
+    /**
+     * Creates new analysis result.
+     * 
+     * @param aAlgorithm analysed algorithm
+     * @param aFunction optimised function
+     * @param aSuccess success probability
+     * @param aMeanIterations evaluations mean value
+     */
     public AnalysisResult(
             OptimizationAlgorithm aAlgorithm, NFunction aFunction,
             double aSuccess, double aMeanIterations

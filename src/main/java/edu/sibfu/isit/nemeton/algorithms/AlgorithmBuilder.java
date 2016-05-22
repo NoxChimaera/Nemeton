@@ -32,15 +32,21 @@ import javax.swing.JFrame;
 
 /**
  * Base class for algorithm builders.
- * Used in setting windows
  * @see BeesSettings
  * 
  * @author Max Balushkin
  */
 public abstract class AlgorithmBuilder {
-  
+
+    /**
+     * Function constraints.
+     */
     protected final List<Constraint> constraints;
     
+    /**
+     * Default constructor.
+     * Instantises empty constraint list
+     */
     protected AlgorithmBuilder() {
         constraints = new ArrayList<>();
     }
@@ -48,21 +54,32 @@ public abstract class AlgorithmBuilder {
     /**
      * Creates new Optimizing Algorithm object with specified function.
      * 
-     * @param aFunction Optimized function
-     * @return Algorithm object
+     * @param aFunction optimized function
+     * @return algorithm object
      */
     public abstract OptimizationAlgorithm build( NFunction aFunction );
  
     /**
      * Is algorithm constrained?
+     * 
      * @return true if has constrains else false
      */
     public abstract boolean isConstrained();
     
+    /**
+     * Adds constraint to algorithm.
+     * 
+     * @param aConstraint constraint
+     */
     public void constraint( Constraint aConstraint ) {
         constraints.add( aConstraint );
     }
     
+    /**
+     * Adds several constraints to algorithm.
+     * 
+     * @param aConstraints constraints
+     */
     public void constraint( final List<Constraint> aConstraints ) {
         aConstraints.forEach((constr) -> constraint(constr));
     }
@@ -70,7 +87,7 @@ public abstract class AlgorithmBuilder {
     /**
      * Show settings window.
      * 
-     * @return Frame
+     * @return frame
      */
     public abstract JFrame show();
     

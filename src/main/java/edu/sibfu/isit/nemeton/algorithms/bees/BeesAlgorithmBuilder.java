@@ -32,6 +32,19 @@ import edu.sibfu.isit.nemeton.algorithms.OptimizationAlgorithm;
 
 /**
  * Bees Algorithm builder.
+ * Default parameters:
+ *      Centre of search area: (0, 0)
+ *      Range of search area: 50
+ *      Scouts: 10
+ *      Sites: 10
+ *      Elite sites: 6
+ *      Range of local search area (site size): 5
+ *      Gamma coefficient (local area shrink coef.): 0.99
+ *      Workers on elite sites: 6
+ *      Workers on non-elite sites: 4
+ * 
+ *      Maximum iterations: 100000
+ *      Accuracy (epsilon): 1E-5
  * 
  * @author Max Balushkin
  */
@@ -39,7 +52,7 @@ public class BeesAlgorithmBuilder extends AlgorithmBuilder {
     
     private BeesSettings settingsView;
     
-    private Point hivePosition = Point.zero(2);
+    private Point hivePosition = Point.zero( 2 );
     private int hiveSize = 50;
     
     private int scouts = 10;
@@ -53,7 +66,7 @@ public class BeesAlgorithmBuilder extends AlgorithmBuilder {
     private int onOther = 4;
 
     private int maxIteration = 100000;
-    private double accuracy = 0.000001;
+    private double accuracy = 1E-5;
     private boolean constrained = true;
 
     /**
@@ -65,26 +78,26 @@ public class BeesAlgorithmBuilder extends AlgorithmBuilder {
     /**
      * Creates new builder with parameters of another builder.
      * 
-     * @param aSrc Copied builder
+     * @param aSrc copied builder
      */
-    public BeesAlgorithmBuilder(final BeesAlgorithmBuilder aSrc) {
+    public BeesAlgorithmBuilder( BeesAlgorithmBuilder aSrc ) {
         copy(aSrc);
     }
 
     /**
      * Sets hive position (centre of search area).
      * 
-     * @param aPosition Hive position
-     * @return Self
+     * @param aPosition hive position
+     * @return self
      */
-    public BeesAlgorithmBuilder hivePosition(final Point aPosition) {
+    public BeesAlgorithmBuilder hivePosition( Point aPosition ) {
         hivePosition = aPosition;
         return this;
     }
     /**
      * Returns hive position (centre of search area).
      * 
-     * @return Hive position
+     * @return hive position
      */
     public Point hivePosition() {
         return hivePosition;
@@ -93,17 +106,17 @@ public class BeesAlgorithmBuilder extends AlgorithmBuilder {
     /**
      * Sets hive size (search range).
      * 
-     * @param aHiveSize Hive size
-     * @return Self
+     * @param aHiveSize hive size
+     * @return self
      */
-    public BeesAlgorithmBuilder hiveSize(final int aHiveSize) {
+    public BeesAlgorithmBuilder hiveSize( int aHiveSize ) {
         hiveSize = aHiveSize;
         return this;
     }
     /**
      * Returns hive size (search range).
      * 
-     * @return Hive size
+     * @return hive size
      */
     public int hiveSize() {
         return hiveSize;
@@ -112,17 +125,17 @@ public class BeesAlgorithmBuilder extends AlgorithmBuilder {
     /**
      * Sets amount of scouts.
      * 
-     * @param aScouts Amount of scouts
-     * @return Self
+     * @param aScouts amount of scouts
+     * @return self
      */    
-    public BeesAlgorithmBuilder scouts(final int aScouts) {
+    public BeesAlgorithmBuilder scouts( int aScouts ) {
         scouts = aScouts;
         return this;
     }
     /**
      * Returns amount of scouts.
      * 
-     * @return Amount of scouts.
+     * @return amount of scouts.
      */
     public int scouts() {
         return scouts;
@@ -131,17 +144,17 @@ public class BeesAlgorithmBuilder extends AlgorithmBuilder {
     /**
      * Sets amount of selected sources.
      * 
-     * @param aSources Selected sources
-     * @return Self
+     * @param aSources selected sources
+     * @return self
      */
-    public BeesAlgorithmBuilder sources(final int aSources) {
+    public BeesAlgorithmBuilder sources( int aSources ) {
         sources = aSources;
         return this;
     }
     /**
      * Returns amount of sources.
      * 
-     * @return Amount of sorces
+     * @return amount of sorces
      */
     public int sources() {
         return sources;
@@ -150,17 +163,17 @@ public class BeesAlgorithmBuilder extends AlgorithmBuilder {
     /**
      * Sets source size (local search area range).
      * 
-     * @param aSize Source size
-     * @return Self
+     * @param aSize source size
+     * @return self
      */
-    public BeesAlgorithmBuilder sourceSize(final int aSize) {
+    public BeesAlgorithmBuilder sourceSize( int aSize ) {
         sourceSize = aSize;
         return this;
     }
     /**
      * Returns source size (local search area range).
      * 
-     * @return Source size
+     * @return source size
      */
     public int sourceSize() {
         return sourceSize;
@@ -169,17 +182,17 @@ public class BeesAlgorithmBuilder extends AlgorithmBuilder {
     /**
      * Sets gamma (shrink coefficient).
      * 
-     * @param aGamma Gamma
-     * @return Self
+     * @param aGamma gamma
+     * @return self
      */
-    public BeesAlgorithmBuilder gamma(final double aGamma) {
+    public BeesAlgorithmBuilder gamma( double aGamma ) {
         gamma = aGamma;
         return this;
     }
     /**
      * Returns gamma (shrink coefficient).
      * 
-     * @return Gamma
+     * @return gamma
      */
     public double gamma() {
         return gamma;
@@ -188,17 +201,17 @@ public class BeesAlgorithmBuilder extends AlgorithmBuilder {
     /**
      * Sets amount of elite sources.
      * 
-     * @param aBest Amount of elite sources
-     * @return Self
+     * @param aBest amount of elite sources
+     * @return self
      */
-    public BeesAlgorithmBuilder eliteSources(final int aBest) {
+    public BeesAlgorithmBuilder eliteSources( int aBest ) {
         eliteSources = aBest;
         return this;
     }
     /**
      * Returns amount of elite sources.
      * 
-     * @return Amount of elite sources
+     * @return amount of elite sources
      */
     public int eliteSources() {
         return eliteSources;
@@ -207,17 +220,17 @@ public class BeesAlgorithmBuilder extends AlgorithmBuilder {
     /**
      * Sets amount of workers on elite sources.
      * 
-     * @param aOnElite Amount of workers on elite sources
-     * @return Self
+     * @param aOnElite amount of workers on elite sources
+     * @return self
      */
-    public BeesAlgorithmBuilder onElite(final int aOnElite) {
+    public BeesAlgorithmBuilder onElite( int aOnElite ) {
         onElite = aOnElite;
         return this;
     }
     /**
      * Returns amount of workers on elite sources.
      * 
-     * @return Amount of workers on elite sources
+     * @return amount of workers on elite sources
      */
     public int onElite() {
         return onElite;
@@ -226,17 +239,17 @@ public class BeesAlgorithmBuilder extends AlgorithmBuilder {
     /**
      * Sets amount of workers on another sources (total sources - elite sources).
      * 
-     * @param aOnNonBest Amount of workers on non-best sources
-     * @return Self
+     * @param aOnNonBest amount of workers on non-best sources
+     * @return self
      */
-    public BeesAlgorithmBuilder onOther(final int aOnNonBest) {
+    public BeesAlgorithmBuilder onOther( int aOnNonBest ) {
         onOther = aOnNonBest;
         return this;
     }
     /**
      * Returns amount of workers on non-best sources (total sources - elite sources).
      * 
-     * @return Amount of workers on non-best sources
+     * @return amount of workers on non-best sources
      */
     public int onOther() {
         return onOther;
@@ -245,17 +258,17 @@ public class BeesAlgorithmBuilder extends AlgorithmBuilder {
     /**
      * Sets maximum iterations.
      * 
-     * @param aMax Maximum iterations
-     * @return Self
+     * @param aMax maximum iterations
+     * @return self
      */
-    public BeesAlgorithmBuilder maxIteration(final int aMax) {
+    public BeesAlgorithmBuilder maxIteration( int aMax ) {
         maxIteration = aMax;
         return this;
     }
     /**
      * Returns maximum iterations.
      * 
-     * @return Maximum iterations
+     * @return maximum iterations
      */
     public int maxIteration() {
         return maxIteration;
@@ -264,17 +277,17 @@ public class BeesAlgorithmBuilder extends AlgorithmBuilder {
     /**
      * Sets accuracy.
      * 
-     * @param aAccuracy Accuracy
-     * @return Self
+     * @param aAccuracy accuracy
+     * @return self
      */
-    public BeesAlgorithmBuilder accuracy(final double aAccuracy) {
+    public BeesAlgorithmBuilder accuracy( double aAccuracy ) {
         accuracy = aAccuracy;
         return this;
     }
     /**
      * Returns accuracy.
      * 
-     * @return Accuracy
+     * @return accuracy
      */
     public double accuracy() {
         return accuracy;
@@ -283,10 +296,10 @@ public class BeesAlgorithmBuilder extends AlgorithmBuilder {
     /**
      * Sets function constraint mode.
      * 
-     * @param aConstrained If true add function constraints
-     * @return Self
+     * @param aConstrained if true add function constraints
+     * @return self
      */
-    public BeesAlgorithmBuilder constrained( final boolean aConstrained ) {
+    public BeesAlgorithmBuilder constrained( boolean aConstrained ) {
         constrained = aConstrained;
         return this;
     }
@@ -299,15 +312,15 @@ public class BeesAlgorithmBuilder extends AlgorithmBuilder {
     /**
      * Copies parameters from another builder.
      * 
-     * @param aSrc Copied builder
+     * @param aSrc copied builder
      */
-    public void copy(final BeesAlgorithmBuilder aSrc) {
+    public void copy( BeesAlgorithmBuilder aSrc ) {
         scouts = aSrc.scouts;
         sources = aSrc.sources;
         eliteSources = aSrc.eliteSources;
         onElite = aSrc.onElite;
         onOther = aSrc.onOther;
-        hivePosition = new Point(aSrc.hivePosition);
+        hivePosition = new Point( aSrc.hivePosition );
         sourceSize = aSrc.sourceSize;
         hiveSize = aSrc.hiveSize;
         gamma = aSrc.gamma;
@@ -318,16 +331,16 @@ public class BeesAlgorithmBuilder extends AlgorithmBuilder {
     @Override
     public JFrame show() {
         if (settingsView == null) {
-            settingsView = new BeesSettings(this);
+            settingsView = new BeesSettings( this );
         }
         return settingsView;
     }
     
     @Override
-    public OptimizationAlgorithm build(final NFunction aFunction) {
+    public OptimizationAlgorithm build( NFunction aFunction ) {
         BeesAlgorithmParameters params = new BeesAlgorithmParameters(
-                hivePosition, hiveSize, sources, scouts, eliteSources, 
-                sourceSize, gamma, onElite, onOther, maxIteration, accuracy
+            hivePosition, hiveSize, sources, scouts, eliteSources, 
+            sourceSize, gamma, onElite, onOther, maxIteration, accuracy
         );
         BeesAlgorithm alg = new BeesAlgorithm( aFunction, params );
         alg.constraint( constraints );

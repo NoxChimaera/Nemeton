@@ -50,10 +50,20 @@ public class MainView extends javax.swing.JFrame {
         algorithmsTable.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
     }
     
+    /**
+     * Returns main view controller.
+     * 
+     * @return controller
+     */
     public MainController getController() {
         return ctrl;
     }
     
+    /**
+     * Registers new algorithm builder.
+     * 
+     * @param bldr algorithm builder
+     */
     public void addAlgorithmBuilder(AlgorithmBuilder bldr) {
         DefaultTableModel m = (DefaultTableModel) algorithmsTable.getModel();
         m.addRow(new Object[] { true, bldr });
@@ -343,12 +353,22 @@ public class MainView extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Returns selected problem goal.
+     * 
+     * @return goal
+     */
     public Goal getGoal() {
         return goalMin.isSelected() 
             ? Goal.Minimize 
             : Goal.Maximize;
     }
     
+    /**
+     * Returns selected function.
+     * 
+     * @return function
+     */
     public NFunction getFunction() {
         return (NFunction) functionCombo.getSelectedItem();
     }
@@ -409,6 +429,11 @@ public class MainView extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_goalMinActionPerformed
 
+    /**
+     * Shows specified algorithm builder form.
+     * 
+     * @param builder algorithm builder
+     */
     private void showBuilderForm(AlgorithmBuilder builder) {
         builder.show().setVisible(true);
     }

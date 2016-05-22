@@ -24,7 +24,8 @@
 package edu.sibfu.isit.nemeton.algorithms.sac.kernels;
 
 /**
- *
+ * Base class for selective kernels.
+ * 
  * @author Max Balushkin
  */
 public abstract class SelectiveKernel {
@@ -32,9 +33,9 @@ public abstract class SelectiveKernel {
     /**
      * Calculates kernel value.
      * 
-     * @param s Selectiveness
-     * @param g Dimensionless quantity
-     * @return Kernel value
+     * @param s selectiveness
+     * @param g dimensionless quantity
+     * @return kernel value
      */
     public abstract double eval(double s, double g);
 

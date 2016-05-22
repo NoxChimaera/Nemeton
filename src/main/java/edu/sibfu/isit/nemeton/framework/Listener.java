@@ -24,12 +24,18 @@
 package edu.sibfu.isit.nemeton.framework;
 
 /**
- *
+ * Listener interface.
+ * 
  * @author Max Balushkin
- * @param <T>
+ * @param <T> type of listening messages
  */
 public interface Listener<T> {
     
+    /**
+     * Notifies listener with message.
+     * 
+     * @param aObject message
+     */
     void publish( T aObject );
     
 }

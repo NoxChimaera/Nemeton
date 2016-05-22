@@ -32,7 +32,9 @@ import javax.swing.DefaultListModel;
 import javax.swing.table.DefaultTableModel;
 
 /**
- *
+ * ResultView controller.
+ * @see ResultView
+ * 
  * @author Max Balushkin
  */
 public class ResultController {
@@ -43,7 +45,13 @@ public class ResultController {
     final private DefaultListModel<Result> algorithmListModel;
     final private DefaultTableModel solutionsTableModel;
     
-    public ResultController(final ResultView aView, final ArrayList<Result> aResults) {
+    /**
+     * Creates new controller.
+     * 
+     * @param aView view
+     * @param aResults algorithm results
+     */
+    public ResultController( ResultView aView, ArrayList<Result> aResults ) {
         view = aView;
         results = aResults;
         
@@ -57,32 +65,47 @@ public class ResultController {
             };
             
             @Override
-            public Class getColumnClass(int columnIndex) {
+            public Class getColumnClass( int columnIndex ) {
                 return types[columnIndex];
             }
         };
         
-        for (Result result : aResults) {
-            algorithmListModel.addElement(result);
+        for ( Result result : aResults ) {
+            algorithmListModel.addElement( result );
         }
         
-        if (aResults.isEmpty()) return;
+        if ( aResults.isEmpty() ) return;
         
-        fillSolutionsTable(aResults.get(0));
+        fillSolutionsTable( aResults.get(0) );
     }
     
-    public void fillSolutionsTable( final Result aResult ) {
-        solutionsTableModel.setRowCount(0);
+    /**
+     * Fills solution table with values.
+     * 
+     * @param aResult algorithm result
+     */
+    public void fillSolutionsTable( Result aResult ) {
+        solutionsTableModel.setRowCount( 0 );
         NFunction f = aResult.getFunction();
-        for (Point point : aResult.getValues()) {
-            solutionsTableModel.addRow(new Object[] { point, f.eval(point) });
+        for ( Point point : aResult.getValues() ) {
+            solutionsTableModel.addRow( new Object[] { point, f.eval( point ) } );
         }
     }
     
+    /**
+     * Returns algorithm list model.
+     * 
+     * @return algorithm list
+     */
     public DefaultListModel<Result> getAlgorithmListModel() {
         return algorithmListModel;
     }
 
+    /**
+     * Returns solutions table model.
+     * 
+     * @return solutions table
+     */
     public DefaultTableModel getSolutionsTableModel() {
         return solutionsTableModel;
     }

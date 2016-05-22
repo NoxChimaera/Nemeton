@@ -31,48 +31,75 @@ import org.jzy3d.maths.Coord3d;
 import org.jzy3d.maths.Range;
 
 /**
- *
+ * Helper methods for Jzy3Dю
+ * 
  * @author Max Balushkin
  */
 public class JzyHelper {
     
-    public static Range range(final List<? extends Point> aPoints, final double aMargin) {
+    /**
+     * Creates range from points.
+     * 
+     * @param aPoints points
+     * @param aMargin range margin: range = ( min - margin, max + margin )
+     * @return range
+     */
+    public static Range range( List<? extends Point> aPoints, double aMargin ) {
+        return range( aPoints.toArray( new Point[] { } ), aMargin );
+    }
+    
+    /**
+     * Creates range from points.
+     * 
+     * @param aPoints points
+     * @param aMargin range margin: range = ( min - margin, max + margin )
+     * @return range
+     */
+    public static Range range( Point[] aPoints, double aMargin ) {
         double min = Double.MAX_VALUE, max = Double.MIN_VALUE;
-        for (Point point : aPoints) {
-            double x = point.get(0);
-            double y = point.get(1);
+        for ( Point point : aPoints ) {
+            double x = point.get( 0 );
+            double y = point.get( 1 );
             
-            min = Math.min(Math.min(x, y), min);
-            max = Math.max(Math.max(x, y), max);
+            min = Math.min( Math.min( x, y ), min );
+            max = Math.max( Math.max( x, y ), max );
         }
         
-        return new Range(min - aMargin, max + aMargin);
+        return new Range( min - aMargin, max + aMargin );
     }
     
-    public static Range range(final Point[] aPoints, final double aMargin) {
-        double min = Double.MAX_VALUE, max = Double.MIN_VALUE;
-        for (Point point : aPoints) {
-            double x = point.get(0);
-            double y = point.get(1);
-            
-            min = Math.min(Math.min(x, y), min);
-            max = Math.max(Math.max(x, y), max);
-        }
-        
-        return new Range(min - aMargin, max + aMargin);
+    /**
+     * Combines ranges.
+     * range = ( min( a.min, b.min ), max( a.max, b.max ) )
+     * 
+     * @param a range A
+     * @param b range B
+     * @return combined range
+     */
+    public static Range union( Range a, Range b ) {
+        double min = Math.min( a.getMin(), b.getMin() );
+        double max = Math.max( a.getMax(), b.getMax() );
+        return new Range( min, max );
     }
     
-    public static Range union(final Range a, final Range b) {
-        double min = Math.min(a.getMin(), b.getMin());
-        double max = Math.max(a.getMax(), b.getMax());
-        return new Range(min, max);
+    /**
+     * Converts point to Jzy-specific.
+     * 
+     * @param aFunction function
+     * @param aPoint point
+     * @return Jzy-specific point
+     */
+    public static Coord3d toCoord3d( NFunction aFunction, Point aPoint ) {
+        return new Coord3d( aPoint.get( 0 ), aPoint.get( 1 ), aFunction.eval( aPoint ) );
     }
     
-    public static Coord3d toCoord3d(final NFunction aFunction, final Point aPoint) {
-        return new Coord3d(aPoint.get(0), aPoint.get(1), aFunction.eval(aPoint));
-    }
-    
-    public static Coord3d toCoord3d(final CalculatedPoint aPoint) {
-        return new Coord3d(aPoint.get(0), aPoint.get(1), aPoint.getValue());
+    /**
+     * Converts point to Jzy-specific.
+     * 
+     * @param aPoint point
+     * @return Jzy-specific point
+     */
+    public static Coord3d toCoord3d( CalculatedPoint aPoint ) {
+        return new Coord3d( aPoint.get( 0 ), aPoint.get( 1 ), aPoint.getValue() );
     }
 }

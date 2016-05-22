@@ -27,16 +27,40 @@ import edu.sibfu.isit.nemeton.models.functions.NFunction;
 import java.util.Stack;
 
 /**
- * Converts TeX-based format to HTML
+ * Function text utils.
+ * 
  * @author Max Balushkin
  */
 public class FunctionTextFormatter {
+    
+    /**
+     * Loads PNG-image from `resources/functions/`
+     * 
+     * @param aName file name
+     * @return HTML Img tag
+     */
+    public static String image( String aName ) {
+        ClassLoader cl = NFunction.class.getClassLoader();
+        return "<html><img src=" + cl.getResource( "functions/" + aName + ".png" ) + "></html>";
+    }
+    
+    /**
+     *  TinyTeX parser state.
+     */
     enum State {
         DEFAULT,
         SUB,
         SUP
     }
     
+    /**
+     * Lookup string.
+     * 
+     * @param pattern lookup pattern
+     * @param src source string
+     * @param offset pattern offset
+     * @return true if pattern was found, else false
+     */
     private static boolean isNext(String pattern, String src, int offset) {
         int n = src.length();
         int pn = pattern.length();
@@ -52,18 +76,10 @@ public class FunctionTextFormatter {
     
     private static int idx;
     
-    public static String image( String aName ) {
-        ClassLoader cl = NFunction.class.getClassLoader();
-        return "<html><img src=" + cl.getResource( "functions/" + aName + ".png" ) + "></html>";
-    }
-    
-    public static String toHTML( String aSrc ) {
-        return toHTML(aSrc, true);
-    }
-    
     /**
-     * Converts TeX-based formatted string to HTML
+     * Converts Tiny TeX string to HTML.
      * 
+     * {@code
      * x -> x
      * x^2 -> x<sup>2<sup>
      * x_1 -> x<sub>1</sub>
@@ -73,17 +89,35 @@ public class FunctionTextFormatter {
      * x^(2 + y) -> x<sup>2 + y</sup>
      * x + (y - 10) -> x + (y - 10)
      * \\sigma -> Σ
+     * }
      * 
-     * @param src Source text
-     * @param placeHtmlTags Surround with `html` tag
-     * @return HTML formatted text
+     * @param aSrc source string
+     * @return HTML
+     */
+    public static String toHTML( String aSrc ) {
+        return toHTML(aSrc, true);
+    }
+    
+    /**
+     * Converts Tiny TeX string to HTML.
+     * 
+     * @param src source string
+     * @param placeHtmlTags surround with `html` tag
+     * @return HTML
      */
     public static String toHTML(String src, boolean placeHtmlTags) {
         return placeHtmlTags ? "<html>" + toHTML(src, 0) + "</html>"
             : toHTML(src, 0);
     }
     
-    protected static String toHTML(String src, int index) {
+    /**
+     * Tiny TeX-2-HTML parser.
+     * 
+     * @param src source string
+     * @param index offset
+     * @return HTML
+     */
+    private static String toHTML(String src, int index) {
         StringBuilder bldr = new StringBuilder();
         int n = src.length();
         

@@ -34,7 +34,7 @@ import edu.sibfu.isit.nemeton.controllers.MainController;
 import edu.sibfu.isit.nemeton.controllers.providers.Functions;
 import edu.sibfu.isit.nemeton.lib.FunctionTextFormatter;
 import edu.sibfu.isit.nemeton.models.CalculatedPoint;
-import edu.sibfu.isit.nemeton.models.Pair;
+import edu.sibfu.isit.nemeton.framework.Pair;
 import edu.sibfu.isit.nemeton.models.Point;
 import edu.sibfu.isit.nemeton.models.functions.NFunction;
 import edu.sibfu.isit.nemeton.models.functions.RangeConstraint;
@@ -50,7 +50,7 @@ public class Nemeton {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
+        /* Set the Windows look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
@@ -77,20 +77,26 @@ public class Nemeton {
         view.setVisible( true );
         MainController ctrl = view.getController();
         
-        Builders.subscribe(ctrl.builderRegisterCallback );
+        Builders.subscribe( ctrl.builderRegisterCallback );
         registerBuilders();
         
-        Functions.subscribe(ctrl.functionRegisterCallback );
+        Functions.subscribe( ctrl.functionRegisterCallback );
         registerFunctions();
         
         registerKernels();
     }
     
+    /**
+     * Registers algorithm builders.
+     */
     private static void registerBuilders() {
         Builders.register( new BeesAlgorithmBuilder() );
         Builders.register( new SACBuilder() );
     }
     
+    /**
+     * Registers selective kernels for SAC algorithm.
+     */
     private static void registerKernels() {
         Kernels.register( new LinearKernel() );
         Kernels.register( new ParabolicKernel() );
@@ -98,13 +104,11 @@ public class Nemeton {
     }
     
     /**
-     * Registers function.
+     * Registers functions.
      */
     private static void registerFunctions() {        
-        ClassLoader cl = NFunction.class.getClassLoader();
-
         // 2D Hypersphere
-        new NFunction( ( x, y ) -> x*x + y*y )
+        new NFunction( ( x, y ) -> x * x + y * y )
             .setTitle( "Гиперсфера" )
             .setText( "I(x_1, x_2) = x_1^2 + x_2^2", FunctionTextFormatter::toHTML )
             .minima( new CalculatedPoint( 0, 0, 0 ) )
@@ -227,7 +231,7 @@ public class Nemeton {
             ( x, y ) -> {
                 double sum = x * x + y * y;
                 double prod = Math.cos( x / 1 ) * Math.cos( y / Math.sqrt( 2 ) );
-                return 1.0/4000.0 * sum - prod + 1;
+                return 1.0 / 4000.0 * sum - prod + 1;
             }
         )
             .setTitle( "Griewank 3D" )
@@ -255,7 +259,7 @@ public class Nemeton {
             .setTitle( "Griewank 11D" )
             .setText( "griewank", FunctionTextFormatter::image )
             .constraint( RangeConstraint.create( -600, 600, 10 ) )
-            .minima( new CalculatedPoint( new Point( 10, 0) , 0 ) )
+            .minima(new CalculatedPoint( 0, new Point( 10, 0) ) )
             .register();
        
         // Himmelblau function
@@ -336,7 +340,10 @@ public class Nemeton {
 
                 return minValue;
             }
-        ).setTitle("Многоэсктремальная").register();
-      
+        )
+            .setTitle("Многоэсктремальная")
+            .minima( new CalculatedPoint( 0, 0, 0 ) )
+            .register();
     }
+    
 }

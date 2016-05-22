@@ -26,7 +26,8 @@ package edu.sibfu.isit.nemeton.lib;
 import edu.sibfu.isit.nemeton.models.Point;
 
 /**
- *
+ * Utilities for points.
+ * 
  * @author Max Balushkin
  */
 public class PointUtil {
@@ -36,11 +37,11 @@ public class PointUtil {
     /**
      * Converts point to string.
      * 
-     * @param aPoint Point
-     * @return Doubles delimited with `, `: ( [param] ", " )* [param]
+     * @param aPoint point
+     * @return doubles delimited with `, `: ( [param] ", " )* [param]
      */
-    public static String str( final Point aPoint ) {
-        final StringBuilder bldr = new StringBuilder();
+    public static String str( Point aPoint ) {
+        StringBuilder bldr = new StringBuilder();
         for ( double param : aPoint.get() ) {
             bldr.append( numberToString( param ) ).append( ", " );
         }
@@ -51,7 +52,13 @@ public class PointUtil {
         }
     }
     
-    private static String numberToString( final double aNum ) {
+    /**
+     * Converts number to string.
+     * 
+     * @param aNum number
+     * @return string representation of number
+     */
+    private static String numberToString( double aNum ) {
         if ( aNum % 1 == 0 ) {
             return Integer.toString( (int) aNum );
         } else {
@@ -62,10 +69,10 @@ public class PointUtil {
     /**
      * Parses point from string.
      * 
-     * @param aSrc String
-     * @return Point
+     * @param aSrc string
+     * @return point
      */
-    public static Point parse( final String aSrc ) {
+    public static Point parse( String aSrc ) {
         final String[] parts = aSrc.split( DELIMITER_RE );
         final int n = parts.length;
         final double[] params = new double[ n ];
@@ -81,9 +88,9 @@ public class PointUtil {
      *  In: "42", 3
      *  Out: { 42, 42, 42 }
      * 
-     * @param aSrc String
-     * @param aArity Point arity
-     * @return Point
+     * @param aSrc string
+     * @param aArity point arity
+     * @return point
      */
     public static Point parse( final String aSrc, final int aArity ) {
         final String[] parts = aSrc.split( DELIMITER_RE );

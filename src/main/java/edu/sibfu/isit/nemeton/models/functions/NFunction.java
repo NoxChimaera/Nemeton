@@ -24,6 +24,7 @@
 package edu.sibfu.isit.nemeton.models.functions;
 
 import edu.sibfu.isit.nemeton.controllers.providers.Functions;
+import edu.sibfu.isit.nemeton.lib.FunctionTextFormatter;
 import edu.sibfu.isit.nemeton.models.CalculatedPoint;
 import edu.sibfu.isit.nemeton.models.Point;
 import java.util.ArrayList;
@@ -39,12 +40,30 @@ import org.jzy3d.plot3d.builder.Mapper;
  */
 public class NFunction {
     
+    /**
+     * Jzy mapper.
+     */
     protected final Mapper mapper;
+    /**
+     * True if has jzy mapper, else false.
+     */
     protected final boolean isMapped;
+    /**
+     * Function.
+     */
     protected final Function<Point, Double> f;
     
+    /**
+     * Function minima.
+     */
     protected final List<CalculatedPoint> minima;
+    /**
+     * Function maxima.
+     */
     protected final List<CalculatedPoint> maxima;
+    /**
+     * Function constraints.
+     */
     protected final List<Constraint> constraints;
     
     private String title;
@@ -57,8 +76,8 @@ public class NFunction {
     /**
      * Creates new function with specified arity.
      * 
-     * @param aFunction Function of n variables
-     * @param aArity Function arity
+     * @param aFunction function of n variables
+     * @param aArity function arity
      * Can't be mapped with Jzy3D
      */
     public NFunction( Function<Point, Double> aFunction, int aArity ) {
@@ -88,7 +107,7 @@ public class NFunction {
     /**
      * Creates new function of 2 variables.
      * 
-     * @param function Function of 2 variables
+     * @param function function of 2 variables
      */
     public NFunction( BiFunction<Double, Double, Double> function ) {
         this( ( Point t ) ->  function.apply( t.get( 0 ), t.get( 1 ) ), 2 );
@@ -97,15 +116,18 @@ public class NFunction {
     /**
      * Sets function title.
      * 
-     * @param title Title
-     * @return Self
+     * @param title title
+     * @return self
      */
     public NFunction setTitle( String title ) {
         this.title = title;
         return this;
     }
+    
     /**
-     * @return Function title
+     * Returns function title.
+     * 
+     * @return function title
      */
     public String getTitle() {
         return title;
@@ -114,72 +136,136 @@ public class NFunction {
     /**
      * Sets function textual representation.
      * 
-     * @param text Textual representation
-     * @return Self
+     * @param text textual representation
+     * @return self
      */
     public NFunction setText( String text ) {
         this.text = text;
         return this;
     }
     
+    /**
+     * Sets function representation.
+     * @see FunctionTextFormatter#toHTML(java.lang.String) HTML formatter
+     * @see FunctionTextFormatter#image(java.lang.String) image from resourcesS
+     * 
+     * @param aText formatted string
+     * @param aFormatter formatter
+     * @return self
+     */
     public NFunction setText( String aText, Function<String, String> aFormatter ) {
         text = aFormatter.apply( aText );
         return this;
     }
     
     /**
-     * @return Function textual representation
+     * Returns function representation.
+     * 
+     * @return function textual representation
      */
     public String getText() {
         return text;
     }
     
-    public NFunction minima( final CalculatedPoint aMinimum ) {
+    /**
+     * Adds minimum.
+     * 
+     * @param aMinimum minimum
+     * @return self
+     */
+    public NFunction minima( CalculatedPoint aMinimum ) {
         minima.add( aMinimum );
         return this;
     }
-    public ArrayList<CalculatedPoint> minima() {
-        return new ArrayList<>(minima);
+    /**
+     * Returns function minima.
+     * 
+     * @return minima
+     */
+    public List<CalculatedPoint> minima() {
+        return new ArrayList<>( minima );
     }
     
-    public NFunction maxima( final CalculatedPoint aMaximum ) {
+    /**
+     * Adds maximum.
+     * 
+     * @param aMaximum maximum
+     * @return self
+     */
+    public NFunction maxima( CalculatedPoint aMaximum ) {
         maxima.add( aMaximum );
         return this;
     }
+    /**
+     * Returns function maxima.
+     * 
+     * @return maxima
+     */
     public List<CalculatedPoint> maxima() {
-        return new ArrayList<>(maxima);
+        return new ArrayList<>( maxima );
     }
     
-    public NFunction constraint( final Constraint aConstraint ) {
+    /**
+     * Adds constraint.
+     * 
+     * @param aConstraint constraint
+     * @return self
+     */
+    public NFunction constraint( Constraint aConstraint ) {
         constraints.add( aConstraint );
         return this;
     }
+    /**
+     * Returns function constraints.
+     * 
+     * @return constraints
+     */
     public List<Constraint> constraints() {
         return new ArrayList<>(constraints);
     }
     
+    /**
+     * Marks function as unsafe.
+     * @deprecated 
+     * 
+     * @return self
+     */
     public NFunction unsafe() {
         unsafe = true;
         return this;
     }
+    /**
+     * Is funcation unsafe?
+     * 
+     * @return true if unsafe, else false
+     */
     public boolean isUnsafe() {
         return unsafe;
     }
     
     /**
-     * @return Function arity
+     * Returns function arity.
+     * 
+     * @return arity
      */
     public int getArity() {
         return arity;
     }
     
     /**
-     * @return True if function can be mapped with Jzy3D, else False
+     * Is function mapped with Jzy?
+     * 
+     * @return true if function can be mapped with Jzy3D, else False
      */
     public boolean isMapped() {
         return isMapped;
     }
     
+    /**
+     * Returns Jzy mapper.
+     * 
+     * @return Jzy mapper
+     */
     public Mapper getMapper() {
         return mapper;
     }
@@ -187,8 +273,8 @@ public class NFunction {
     /**
      * Returns value of function in point.
      * 
-     * @param x Point
-     * @return Value of function
+     * @param x point
+     * @return value of function
      */
     public double eval( Point x ) {
         return f.apply( x );
@@ -201,7 +287,6 @@ public class NFunction {
     
     /**
      * Registers function in function provider.
-     * 
      */
     public void register() {
         Functions.register( this );

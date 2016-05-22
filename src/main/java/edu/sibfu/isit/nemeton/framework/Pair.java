@@ -21,28 +21,45 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package edu.sibfu.isit.nemeton.models;
+package edu.sibfu.isit.nemeton.framework;
 
 /**
- *
+ * Container for two values.
+ * 
  * @author Max Balushkin
- * @param <L>
- * @param <R>
+ * @param <L> type of first (left) element
+ * @param <R> type of second (right) element
  */
 public class Pair<L, R> {
     
     private final L left;
     private final R right;
     
-    public Pair(final L aLeft, final R aRight) {
+    /**
+     * Creates new pair.
+     * 
+     * @param aLeft left element
+     * @param aRight right element
+     */
+    public Pair( L aLeft, R aRight ) {
         left = aLeft;
         right = aRight;
     }
     
+    /**
+     * Return left (first) element.
+     * 
+     * @return pair element
+     */
     public L left() {
         return left;
     }
     
+    /**
+     * Returns right (second) element.
+     * 
+     * @return pair element
+     */
     public R right() {
         return right;
     }

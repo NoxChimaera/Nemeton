@@ -26,12 +26,19 @@ package edu.sibfu.isit.nemeton.models.functions;
 import edu.sibfu.isit.nemeton.models.Point;
 
 /**
- *
+ * Function constraint.
+ * 
  * @author Max Balushkin
  */
 @FunctionalInterface
 public interface Constraint {
 
-    boolean check( final Point aPoint );
+    /**
+     * Checks if point in constraints.
+     * 
+     * @param aPoint point
+     * @return true if in constraints, else false
+     */
+    boolean check( Point aPoint );
     
 }
