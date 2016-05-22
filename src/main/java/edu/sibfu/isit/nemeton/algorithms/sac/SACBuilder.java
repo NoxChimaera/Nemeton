@@ -29,7 +29,6 @@ import edu.sibfu.isit.nemeton.algorithms.sac.kernels.SelectiveKernel;
 import edu.sibfu.isit.nemeton.models.functions.NFunction;
 import javax.swing.JFrame;
 import edu.sibfu.isit.nemeton.algorithms.OptimizationAlgorithm;
-import edu.sibfu.isit.nemeton.algorithms.bees.BeesAlgorithmBuilder;
 import edu.sibfu.isit.nemeton.models.Point;
 import edu.sibfu.isit.nemeton.views.SACSettings;
 
@@ -142,7 +141,9 @@ public class SACBuilder extends AlgorithmBuilder {
             centre, searchRange, sampleSize, gamma, metric, kernel, sampleSize,
             iterations, accuracy
         );
-        return new SACAlgorithm(aFunction, params);
+        SACAlgorithm alg = new SACAlgorithm(aFunction, params);
+        alg.constraint( constraints );
+        return alg;
     }
 
     @Override

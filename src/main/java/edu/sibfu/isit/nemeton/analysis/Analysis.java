@@ -23,6 +23,7 @@
  */
 package edu.sibfu.isit.nemeton.analysis;
 
+import edu.sibfu.isit.nemeton.algorithms.AlgorithmBuilder;
 import edu.sibfu.isit.nemeton.algorithms.OptimizationAlgorithm;
 import edu.sibfu.isit.nemeton.models.AnalysisResult;
 import edu.sibfu.isit.nemeton.models.CalculatedPoint;
@@ -45,13 +46,13 @@ public class Analysis {
         private Listener<Integer> listener;
         private Listener<AnalysisResult> analysisResult;
         private NFunction function;
-        private OptimizationAlgorithm algo;
+        private AlgorithmBuilder algo;
         private int n;
         private double accuracy;
         
         public Analyser( 
             Listener<Integer> aListener, Listener<AnalysisResult> aAnalysisListener, 
-            NFunction aFunction, OptimizationAlgorithm aAlgo, 
+            NFunction aFunction, AlgorithmBuilder aAlgo, 
             int aN, double aAccuracy 
         ) {
             listener = aListener;
@@ -70,7 +71,7 @@ public class Analysis {
             int total = 0;
             int evaluations = 0;
             for ( int i = 0; i < n; i++ ) {
-                Result result = algo.minimize();
+                Result result = algo.build( function ).minimize();
                 CalculatedPoint[] solutions = result.getValues();
 
                 final int ipp = i + 1;
@@ -97,21 +98,21 @@ public class Analysis {
             double prob = total != 0 ? (double) success / total : 0;
             double mean = total != 0 ? (double) evaluations / total : Double.NaN;
             
-            AnalysisResult res = new AnalysisResult(algo, function, prob, mean);
+            AnalysisResult res = new AnalysisResult(algo.build( function ), function, prob, mean);
             SwingUtilities.invokeLater( () -> analysisResult.publish( res ) );
         }
         
     }
     
-    public void analyse(  AnalysisView aView, NFunction aFunction, List<OptimizationAlgorithm> aAlgorithms, int aN, double aAccuracy ) {
-        for ( OptimizationAlgorithm algorithm : aAlgorithms ) {
-            ProgressView panel = new ProgressView( algorithm.toString() );
+    public void analyse(  AnalysisView aView, NFunction aFunction, List<AlgorithmBuilder> aBuilders, int aN, double aAccuracy ) {
+        for ( AlgorithmBuilder bldr : aBuilders ) {
+            ProgressView panel = new ProgressView( bldr.toString() );
             panel.setMin( 0 );
             panel.setMax( aN );
             panel.setValue( 0 );
             panel.setVisible( true );
             new Thread(
-                new Analyser( panel.progressListener, aView.listener, aFunction, algorithm, aN, aAccuracy )
+                new Analyser( panel.progressListener, aView.listener, aFunction, bldr, aN, aAccuracy )
             ).start();
         }
     }

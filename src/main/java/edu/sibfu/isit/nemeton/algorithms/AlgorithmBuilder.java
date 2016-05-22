@@ -23,8 +23,11 @@
  */
 package edu.sibfu.isit.nemeton.algorithms;
 
+import edu.sibfu.isit.nemeton.models.functions.Constraint;
 import edu.sibfu.isit.nemeton.models.functions.NFunction;
 import edu.sibfu.isit.nemeton.views.BeesSettings;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JFrame;
 
 /**
@@ -36,6 +39,12 @@ import javax.swing.JFrame;
  */
 public abstract class AlgorithmBuilder {
   
+    protected final List<Constraint> constraints;
+    
+    protected AlgorithmBuilder() {
+        constraints = new ArrayList<>();
+    }
+    
     /**
      * Creates new Optimizing Algorithm object with specified function.
      * 
@@ -50,6 +59,14 @@ public abstract class AlgorithmBuilder {
      */
     public abstract boolean isConstrained();
     
+    public void constraint( Constraint aConstraint ) {
+        constraints.add( aConstraint );
+    }
+    
+    public void constraint( final List<Constraint> aConstraints ) {
+        aConstraints.forEach((constr) -> constraint(constr));
+    }
+
     /**
      * Show settings window.
      * 

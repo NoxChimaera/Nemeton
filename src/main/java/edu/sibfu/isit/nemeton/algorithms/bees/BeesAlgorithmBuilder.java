@@ -329,7 +329,9 @@ public class BeesAlgorithmBuilder extends AlgorithmBuilder {
                 hivePosition, hiveSize, sources, scouts, eliteSources, 
                 sourceSize, gamma, onElite, onOther, maxIteration, accuracy
         );
-        return new BeesAlgorithm(aFunction, params);
+        BeesAlgorithm alg = new BeesAlgorithm( aFunction, params );
+        alg.constraint( constraints );
+        return alg;
     }
 
     @Override

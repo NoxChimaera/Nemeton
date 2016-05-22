@@ -120,7 +120,7 @@ public class MainController {
     }
 
     public void analyse( Goal aGoal, NFunction aFunction, int aN, double aAccuracy ) {
-        List<OptimizationAlgorithm> algos = collectAlgorithms( aFunction );
+        List<AlgorithmBuilder> algos = collectBuilders(aFunction );
         Analysis foo = new Analysis();
         
         AnalysisView anView = new AnalysisView();
@@ -129,19 +129,27 @@ public class MainController {
         foo.analyse( anView, aFunction, algos, aN, aAccuracy );
     }
 
-    public List<OptimizationAlgorithm> collectAlgorithms( final NFunction aFunction ) {
-        final ArrayList<OptimizationAlgorithm> algos = new ArrayList<>();
+    private List<AlgorithmBuilder> collectBuilders( NFunction aFunction ) {
+        List<AlgorithmBuilder> builders = new ArrayList<>();
         for ( Object item : buildersTableModel.getDataVector().toArray() ) {
             final Vector vector = (Vector) item;
-            if ( (Boolean) vector.get( 0 ) ) {
+            if ( (boolean) vector.get( 0 ) ) {
                 AlgorithmBuilder bldr = (AlgorithmBuilder) vector.get( 1 );
-                OptimizationAlgorithm alg = bldr.build( aFunction );
                 if ( bldr.isConstrained() ) {
-                    alg.constraint( aFunction.constraints() );
+                    bldr.constraint( aFunction.constraints() );
                 }
-                algos.add( alg );
+                builders.add( bldr );
             }
         }
+        return builders;
+    }
+    
+    public List<OptimizationAlgorithm> collectAlgorithms( NFunction aFunction ) {
+        List<AlgorithmBuilder> builders = collectBuilders( aFunction );
+        List<OptimizationAlgorithm> algos = new ArrayList<>();
+        builders.forEach( 
+            ( bldr ) -> algos.add( bldr.build( aFunction ) )
+        );
         return algos;
     }
 
