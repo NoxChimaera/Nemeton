@@ -26,12 +26,10 @@ package edu.sibfu.isit.nemeton.analysis;
 import edu.sibfu.isit.nemeton.algorithms.OptimizationAlgorithm;
 import edu.sibfu.isit.nemeton.models.AnalysisResult;
 import edu.sibfu.isit.nemeton.models.CalculatedPoint;
-import edu.sibfu.isit.nemeton.models.Pair;
 import edu.sibfu.isit.nemeton.models.Result;
 import edu.sibfu.isit.nemeton.models.functions.NFunction;
 import edu.sibfu.isit.nemeton.views.AnalysisView;
 import edu.sibfu.isit.nemeton.views.ProgressView;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.SwingUtilities;
 import edu.sibfu.isit.nemeton.framework.Listener;
@@ -70,7 +68,7 @@ public class Analysis {
             List<CalculatedPoint> minima = function.minima();
             int success = 0;
             int total = 0;
-            double evaluations = 0;
+            int evaluations = 0;
             for ( int i = 0; i < n; i++ ) {
                 Result result = algo.minimize();
                 CalculatedPoint[] solutions = result.getValues();
@@ -97,7 +95,7 @@ public class Analysis {
             }
             
             double prob = total != 0 ? (double) success / total : 0;
-            double mean = total != 0 ? evaluations / total : Double.NaN;
+            double mean = total != 0 ? (double) evaluations / total : Double.NaN;
             
             AnalysisResult res = new AnalysisResult(algo, function, prob, mean);
             SwingUtilities.invokeLater( () -> analysisResult.publish( res ) );

@@ -23,7 +23,6 @@
  */
 package edu.sibfu.isit.nemeton.algorithms;
 
-import edu.sibfu.isit.nemeton.models.functions.Constraint;
 import edu.sibfu.isit.nemeton.models.functions.NFunction;
 import edu.sibfu.isit.nemeton.views.BeesSettings;
 import javax.swing.JFrame;
@@ -45,6 +44,10 @@ public abstract class AlgorithmBuilder {
      */
     public abstract OptimizationAlgorithm build( NFunction aFunction );
  
+    /**
+     * Is algorithm constrained?
+     * @return true if has constrains else false
+     */
     public abstract boolean isConstrained();
     
     /**

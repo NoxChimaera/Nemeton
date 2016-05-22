@@ -23,6 +23,7 @@
  */
 package edu.sibfu.isit.nemeton.lib;
 
+import edu.sibfu.isit.nemeton.models.functions.NFunction;
 import java.util.Stack;
 
 /**
@@ -50,6 +51,16 @@ public class FunctionTextFormatter {
     }
     
     private static int idx;
+    
+    public static String image( String aName ) {
+        ClassLoader cl = NFunction.class.getClassLoader();
+        return "<html><img src=" + cl.getResource( "functions/" + aName + ".png" ) + "></html>";
+    }
+    
+    public static String toHTML( String aSrc ) {
+        return toHTML(aSrc, true);
+    }
+    
     /**
      * Converts TeX-based formatted string to HTML
      * 
@@ -71,6 +82,7 @@ public class FunctionTextFormatter {
         return placeHtmlTags ? "<html>" + toHTML(src, 0) + "</html>"
             : toHTML(src, 0);
     }
+    
     protected static String toHTML(String src, int index) {
         StringBuilder bldr = new StringBuilder();
         int n = src.length();

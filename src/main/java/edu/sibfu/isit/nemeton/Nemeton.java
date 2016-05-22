@@ -35,6 +35,7 @@ import edu.sibfu.isit.nemeton.controllers.providers.Functions;
 import edu.sibfu.isit.nemeton.lib.FunctionTextFormatter;
 import edu.sibfu.isit.nemeton.models.CalculatedPoint;
 import edu.sibfu.isit.nemeton.models.Pair;
+import edu.sibfu.isit.nemeton.models.Point;
 import edu.sibfu.isit.nemeton.models.functions.NFunction;
 import edu.sibfu.isit.nemeton.models.functions.RangeConstraint;
 import edu.sibfu.isit.nemeton.views.MainView;
@@ -99,29 +100,16 @@ public class Nemeton {
     /**
      * Registers function.
      */
-    private static void registerFunctions() {
+    private static void registerFunctions() {        
+        ClassLoader cl = NFunction.class.getClassLoader();
+
         // 2D Hypersphere
         new NFunction( ( x, y ) -> x*x + y*y )
             .setTitle( "Гиперсфера" )
-            .setText( FunctionTextFormatter.toHTML(
-                "I(x_1, x_2) = x_1^2 + x_2^2", true
-            )).minima( new CalculatedPoint( 0, 0, 0 ) ).register();
-           
-        // Himmelblau function
-        new NFunction( ( x, y ) 
-            -> Math.pow( ( Math.pow( x, 2 ) + y - 11 ), 2 ) 
-                + Math.pow( ( Math.pow( y, 2 ) + x - 7 ), 2 ) )
-            .setTitle( "Химмельблау" )
-            .setText( FunctionTextFormatter.toHTML(
-                "I(x_1, x_2) = (x_1^2 + x_2 - 11)^2 + (x_2^2 + x_1 - 7)^2", true
-            ))
-            .constraint( new RangeConstraint( new Pair<>( -6.0, 6.0 ), 2 ) )
-            .minima( new CalculatedPoint( 0, 3, 2 ) )
-            .minima( new CalculatedPoint( 0, -3.779, -3.283 ) )
-            .minima( new CalculatedPoint( 0, -2.805, 3.131 ) )
-            .minima( new CalculatedPoint( 0, 3.584, -1.848 ) )
+            .setText( "I(x_1, x_2) = x_1^2 + x_2^2", FunctionTextFormatter::toHTML )
+            .minima( new CalculatedPoint( 0, 0, 0 ) )
             .register();
-    
+       
         // Ackley function
         new NFunction( 
             ( x, y ) -> {
@@ -136,7 +124,8 @@ public class Nemeton {
             }
         )
             .setTitle( "Ackley" )
-            .constraint( new RangeConstraint( new Pair<>( -32.0, 32.0 ), 2 ) )
+            .setText( "ackley", FunctionTextFormatter::image )
+            .constraint( RangeConstraint.create( -32.0, 32.0, 2 ) )
             .minima( new CalculatedPoint( 0, 0, 0 ) )
             .register();
         
@@ -148,7 +137,8 @@ public class Nemeton {
                 return res;
             }
         )
-            .setTitle( "Adjiman" )
+            .setTitle( "Adjiman" )   
+            .setText( "adjiman", FunctionTextFormatter::image )
             .constraint( new RangeConstraint( new Pair<>( -1.0, 2.0 ), new Pair<>( -1.0, 1.0 ) ) )
             .minima( new CalculatedPoint( -2.02181, 2, 0.10578) )
             .register();
@@ -161,23 +151,10 @@ public class Nemeton {
                 return d0 + d1;
             }
         )
-            .constraint( new RangeConstraint( new Pair<>( -10.0, 10.0 ), 2 ) )
             .setTitle( "Alpine 1" )
+            .setText( "alpine1", FunctionTextFormatter::image )
+            .constraint( RangeConstraint.create( -10.0, 10.0, 2 ) )
             .minima( new CalculatedPoint( 0, 0, 0 ) )
-            .register();
-        
-        // Bartels-Conn function
-        new NFunction(
-            ( x, y ) -> {
-                final double fst = Math.abs( x * x + y * y + x * y );
-                final double snd = Math.abs( Math.sin( x ) );
-                final double trd = Math.abs( Math.cos( x ) );
-                return fst + snd + trd;
-            }
-        )
-            .constraint( new RangeConstraint( new Pair<>( -50.0, 50.0 ), 2 ) )
-            .setTitle( "Bartels-Conn" )
-            .minima( new CalculatedPoint( 1, 0, 0) )
             .register();
         
         // Bird function
@@ -190,11 +167,30 @@ public class Nemeton {
             }
         )
             .setTitle( "Bird" )
+            .setText( "bird", FunctionTextFormatter::image )
             .constraint( new RangeConstraint( new Pair<>( -Math.PI * 2, Math.PI * 2 ), 2 ) )
+            .constraint( RangeConstraint.create( -Math.PI * 2, Math.PI * 2, 2 ) )
             .minima( new CalculatedPoint( -106.76453, 4.70105575, 3.15294601 ) )
             .minima( new CalculatedPoint( -106.76453, -1.58214217, -3.13024679 ) )
             .register();
         
+        // Branin
+        new NFunction(
+            ( x, y ) -> {
+                double a = Math.pow( -1.275 * ( x * x ) / Math.pow( Math.PI, 2 ) + 5 * x / Math.PI + y - 6, 2 );
+                double b =( 10 - 5.0 / ( 4 * Math.PI ) ) * Math.cos( x );
+                return a + b + 10;
+            }
+        )
+            .setTitle( "Branin" )
+            .setText( "branin", FunctionTextFormatter::image )
+            .constraint( new RangeConstraint( new Pair<>( -5.0, 10.0 ), new Pair<>( 0.0, 15.0 ) ) )
+            .minima( new CalculatedPoint( 0.3978873577, -Math.PI, 12.275 ) )
+            .minima( new CalculatedPoint( 0.3978873577, Math.PI, 2.275 ) )
+            .minima( new CalculatedPoint( 0.3978873577, 9.42478, 2.475 ) )
+            .register();
+        
+        // Damavandi function
         new NFunction(
             ( x, y ) -> {
                 final double p01 = Math.sin( Math.PI * ( x - 2 ) ) * Math.sin( Math.PI * ( y - 2 ) );
@@ -205,48 +201,88 @@ public class Nemeton {
             }
         )
             .setTitle( "Damavandi" )
+            .setText( "damavandi", FunctionTextFormatter::image )
             .constraint( new RangeConstraint( new Pair<>( 0.0, 14.0 ), 2 ) )
+            .constraint( RangeConstraint.create( 0.0, 14.0, 2 ) )
             .minima( new CalculatedPoint( 0, 2, 2 ) )
             .register();
        
-//        // Goldstein-Price function
-//        new NFunction( ( x, y )
-//            -> ( 1 + Math.pow( x + y + 1, 2 ) * ( 19 - 14 * x + 3 * x * x - 14 * y + 6 * x * y + 3 * y * y )
-//                * ( 30 + Math.pow( 2 * x - 3 * y, 2 ) * ( 18 - 32 * x + 12 * x * x + 48 * y - 36 * x * y + 27 * y * y ) )
-//            )
-//        ).setTitle( "Гольдштейна-Прайса" )
-//        .setText( FunctionTextFormatter.toHTML(
-//            "[1 + (x_1 + x_2 + 1)^2 (19 - 14x_1 + 3x_1^2 + 6x_1 x_2 + 3x_2^2)] * "
-//            + "[30 + (2x_1 - 3x_2)^2 (18 - 32x_1 + 12x_1^2 + 48x_2 - 36x_1 x_2 + 27x_2^2)]", true
-//        )).register();
+        // Dropwave
+        new NFunction(
+            ( x, y ) -> {
+                double num = 1 + Math.cos( 12 * Math.sqrt( x * x + y * y ) );
+                double denum = 2 + 0.5 * ( x * x + y * y );
+                return -num / denum;
+            }
+        )
+            .setTitle( "DropWave ")
+            .setText( "dropwave", FunctionTextFormatter::image )
+            .constraint( new RangeConstraint( new Pair<>( -5.12, 5.12 ), 2 ) )
+            .constraint( RangeConstraint.create( -5.12, 5.12, 2 ) )
+            .minima( new CalculatedPoint( -1, 0, 0 ) )
+            .register();
         
-        // Branin function
-        final double a = 1, b = ( 5.1 / 4.0 ) * Math.pow( 7.0 / 22.0, 2 );
-        final double c = 7.0 * ( 5.0 / 22.0 ), d = 6.0;
-        final double e = 10.0, f = ( 1.0 / 8.0 ) * ( 7.0 / 22.0 );
-        new NFunction( ( x, y )
-            -> a * Math.pow( y - b * x * x + c * x - d, 2 )
-                + e * ( 1 - f ) * Math.cos( x ) + e
-        ).setTitle( "Брейнина" )
-        .setText( FunctionTextFormatter.toHTML(
-            "a(x_2 - bx_1^2 + cx_1 - d)^2 + e(1 - f)cos(x_1) + e", true
-        )).register();
-        
-        // Martin-Gaddy function
+        // 3D Griewank function
+        new NFunction( 
+            ( x, y ) -> {
+                double sum = x * x + y * y;
+                double prod = Math.cos( x / 1 ) * Math.cos( y / Math.sqrt( 2 ) );
+                return 1.0/4000.0 * sum - prod + 1;
+            }
+        )
+            .setTitle( "Griewank 3D" )
+            .setText( "griewank", FunctionTextFormatter::image )
+            .constraint( RangeConstraint.create( -600, 600, 2 ) )
+            .minima( new CalculatedPoint( 0, 0, 0 ) )
+            .register();
+
+        // 10D Griewank function
+        new NFunction( 
+            ( x ) -> {
+                double sum = 0;
+                for ( int i = 0; i < 9; i++ ) {
+                    sum += x.get( i ) * x.get( i );
+                }
+                sum /= 4000;
+                
+                double prod = 1;
+                for ( int i = 0; i < 9; i++ ) {
+                    prod *= Math.cos( x.get( i ) / Math.sqrt( i + 1 ) );
+                }
+                return sum - prod + 1;
+            }, 10
+        )
+            .setTitle( "Griewank 11D" )
+            .setText( "griewank", FunctionTextFormatter::image )
+            .constraint( RangeConstraint.create( -600, 600, 10 ) )
+            .minima( new CalculatedPoint( new Point( 10, 0) , 0 ) )
+            .register();
+       
+        // Himmelblau function
         new NFunction( ( x, y ) 
-            -> Math.pow( x - y, 2 ) + Math.pow( ( x + y - 10 ) /  3, 2 )
-        ).setTitle( "Мартина-Гедди" )
-        .setText( FunctionTextFormatter.toHTML(
-            "(x_1 - x_2)^2 + ((x_1 + x_2 - 10)/3)^2", true
-        )).register();
-        
+            -> Math.pow( ( Math.pow( x, 2 ) + y - 11 ), 2 ) 
+                + Math.pow( ( Math.pow( y, 2 ) + x - 7 ), 2 ) )
+            .setTitle( "Himmelblau" )
+            .setText( 
+                "I(x_1, x_2) = (x_1^2 + x_2 - 11)^2 + (x_2^2 + x_1 - 7)^2", 
+                FunctionTextFormatter::toHTML 
+            )
+            .constraint( RangeConstraint.create( -6.0, 6.0, 2 ) )
+            .minima( new CalculatedPoint( 0, 3, 2 ) )
+            .minima( new CalculatedPoint( 0, -3.779, -3.283 ) )
+            .minima( new CalculatedPoint( 0, -2.805, 3.131 ) )
+            .minima( new CalculatedPoint( 0, 3.584, -1.848 ) )
+            .register();
+    
         // Rosenbrock function
-        new NFunction( ( x, y ) 
-            -> 100 * Math.pow( x * x - y, 2 ) + Math.pow( 1 - x, 2 )
-        ).setTitle( "Розенброка" )
-        .setText( FunctionTextFormatter.toHTML(
-            "100(x_1^2 - x_2)^2 + (1 - x_1)^2", true
-        )).register();
+        new NFunction( 
+            ( x, y ) -> 100 * Math.pow( x * x - y, 2 ) + Math.pow( x - 1, 2 )
+        )
+            .setTitle( "Розенброка" )
+            .setText( "100(x_1^2 - x_2)^2 + (1 - x_1)^2", FunctionTextFormatter::toHTML )
+            .constraint( RangeConstraint.create( -5, 10, 2 ) )
+            .minima( new CalculatedPoint( 0, 1, 1 ) )
+            .register();
         
         // 6D Hypersphere
         new NFunction( ( x ) 
@@ -301,29 +337,6 @@ public class Nemeton {
                 return minValue;
             }
         ).setTitle("Многоэсктремальная").register();
-        
-        // 3D Griewank function
-        new NFunction( ( x, y ) 
-            -> {
-                final double num = 1.1 + ( x * x / 4000 + y * y / 4000) - ( Math.cos( x ) * Math.cos( y / Math.sqrt( 2 ) ) );
-                return num;
-            }
-        ).setTitle( "Гриванка 3D" ).register();
-       
-        // 10D Griewank function
-        new NFunction( ( x ) 
-            -> {
-                double sum = 0;
-                for ( int i = 0; i < 9; i++ ) {
-                    sum += x.get( i ) * x.get( i ) / 4000;
-                }
-                
-                double prod = 1;
-                for ( int i = 0; i < 9; i++ ) {
-                    prod *= Math.cos( x.get( i ) / Math.sqrt( i + 1 ) );
-                }
-                return 1 / ( 1.1 + sum + prod );
-            }, 10
-        ).setTitle( "Гриванка 10D" ).register();
+      
     }
 }

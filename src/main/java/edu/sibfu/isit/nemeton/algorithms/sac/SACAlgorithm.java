@@ -24,7 +24,7 @@
 package edu.sibfu.isit.nemeton.algorithms.sac;
 
 import edu.sibfu.isit.nemeton.algorithms.OptimizationAlgorithm;
-import edu.sibfu.isit.nemeton.algorithms.PointHistory;
+import edu.sibfu.isit.nemeton.models.PointHistory;
 import edu.sibfu.isit.nemeton.models.CalculatedPoint;
 import edu.sibfu.isit.nemeton.models.Pair;
 import edu.sibfu.isit.nemeton.models.Point;
@@ -178,51 +178,54 @@ public class SACAlgorithm extends OptimizationAlgorithm {
     }
     
     @Override
-    public Result run(Comparator<Point> comparator) {
+    public Result run( Comparator<Point> comparator ) {
         String endClause = "нет данных";
         final PointHistory history = new PointHistory();
-        history.add(centre, f.eval(centre));
+        final String deltaXId = "Δx";
+        history.add( centre, f.eval( centre ) );
+        history.addPointParameter( deltaXId, delta );
         
-        Point centre = new Point(this.centre);
-        Point delta = new Point(this.delta);
+        Point centre = new Point( this.centre );
+        Point delta = new Point( this.delta );
         
         int it;
-        for (it = 0; it < params.iterations; it++) {
-            ArrayList<Pair<CalculatedPoint, Point>> points = generateSample(params.sampleSize, centre, delta);
-            Pair<Point, Point> res = uMin(centre.getArity(), points, delta);
+        for ( it = 0; it < params.iterations; it++ ) {
+            ArrayList<Pair<CalculatedPoint, Point>> points = generateSample( params.sampleSize, centre, delta );
+            Pair<Point, Point> res = uMin( centre.getArity(), points, delta );
             Point uMin = res.left();
-            centre = centre.add(delta.mul(uMin));
+            centre = centre.add( delta.mul( uMin ) );
             delta = res.right();
             
-            history.add(centre, f.eval(centre));
-            if (stopCondition(delta, params.accuracy)) {
+            history.add( centre, f.eval( centre ) );
+            history.addPointParameter( deltaXId, delta );
+            if ( stopCondition( delta, params.accuracy ) ) {
                 endClause = "по точности";
                 break;
             }
         }
-        if (it == params.iterations) {
+        if ( it == params.iterations ) {
             endClause = "по итерациям";
         }
         
         Result result = new Result(
             this, f, 
-            new CalculatedPoint[] { new CalculatedPoint(centre, f.eval(centre)) }, 
+            new CalculatedPoint[] { new CalculatedPoint( centre, f.eval( centre ) ) }, 
             it, evaluations, params.accuracy
         );
-        result.setEndClause(endClause);
-        result.setHistory(history);
+        result.setEndClause( endClause );
+        result.setHistory( history );
         return result;
     }
 
     @Override
     public Result maximize() {
-        transition = (val, min, max) -> { return (max - val) / (max - min); };
+        transition = ( val, min, max ) -> { return ( max - val ) / ( max - min ); };
         return super.maximize(); 
     }
 
     @Override
     public Result minimize() {
-        transition = (val, min, max) -> { return (val - min) / (max - min); };
+        transition = ( val, min, max ) -> { return ( val - min ) / ( max - min ); };
         return super.minimize();
     }
 

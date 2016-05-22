@@ -121,6 +121,12 @@ public class NFunction {
         this.text = text;
         return this;
     }
+    
+    public NFunction setText( String aText, Function<String, String> aFormatter ) {
+        text = aFormatter.apply( aText );
+        return this;
+    }
+    
     /**
      * @return Function textual representation
      */

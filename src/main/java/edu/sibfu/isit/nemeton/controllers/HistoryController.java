@@ -25,17 +25,22 @@ package edu.sibfu.isit.nemeton.controllers;
 
 import de.erichseifert.gral.data.DataSeries;
 import de.erichseifert.gral.data.DataTable;
+import de.erichseifert.gral.data.Row;
 import de.erichseifert.gral.plots.XYPlot;
 import de.erichseifert.gral.plots.lines.DefaultLineRenderer2D;
 import de.erichseifert.gral.plots.lines.LineRenderer;
 import de.erichseifert.gral.plots.points.DefaultPointRenderer2D;
 import de.erichseifert.gral.plots.points.PointRenderer;
-import edu.sibfu.isit.nemeton.algorithms.PointHistory;
+import edu.sibfu.isit.nemeton.models.PointHistory;
 import edu.sibfu.isit.nemeton.models.CalculatedPoint;
+import edu.sibfu.isit.nemeton.models.Pair;
+import edu.sibfu.isit.nemeton.models.Point;
 import edu.sibfu.isit.nemeton.models.Result;
 import edu.sibfu.isit.nemeton.views.HistoryView;
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -45,15 +50,17 @@ import java.util.Random;
 public class HistoryController {
     
     private final HistoryView view;
-    private final ArrayList<Result> results;
+    private final List<Result> results;
     
     private final XYPlot plot;
+    private List<Pair<String, XYPlot>> coordinates;
     
-    public HistoryController(final HistoryView aView, final ArrayList<Result> aResults) {
+    public HistoryController( HistoryView aView, List<Result> aResults, boolean showCoordinates ) {
         view = aView;
         results = aResults;
+        coordinates = new ArrayList<>();
         
-        final ArrayList<DataSeries> data = generateDataSeries(aResults);
+        final List<DataSeries> data = generateDataSeries(aResults);
         plot = new XYPlot();
         
         final Random rnd = new Random();
@@ -65,27 +72,46 @@ public class HistoryController {
             points.setColor(colour);
             
             plot.add(series);
-            plot.setLineRenderers(series, lines);
-            plot.setPointRenderers(series, points);
+            plot.setLineRenderers( series, lines );
+            plot.setPointRenderers( series, points );
         }
-        plot.setLegendVisible(true);
+        plot.setLegendVisible( true );
+        
+        if ( !showCoordinates ) return;
+        List<Pair<String, List<DataSeries>>> coords = generateParametersSeries( aResults );
+        for ( Pair<String, List<DataSeries>> algo : coords ) {
+            XYPlot coordPlot = new XYPlot();
+            for ( DataSeries c : algo.right() ) {
+                final Color colour = new Color(rnd.nextFloat(), rnd.nextFloat(), rnd.nextFloat());
+                final LineRenderer lines = new DefaultLineRenderer2D();
+                lines.setColor(colour);
+                final PointRenderer points = new DefaultPointRenderer2D();
+                points.setColor(colour);
+
+                coordPlot.add( c );
+                coordPlot.setLineRenderers( c, lines );
+                coordPlot.setPointRenderers( c, points );
+                coordPlot.setLegendVisible( true );
+            }
+            coordinates.add( new Pair<>( algo.left(), coordPlot ) );
+        }
     }
     
-    private ArrayList<DataSeries> generateDataSeries(final ArrayList<Result> aResults) {
-        final ArrayList<DataSeries> dataSeries = new ArrayList<>();
+    private List<DataSeries> generateDataSeries( List<Result> aResults ) {
+        ArrayList<DataSeries> dataSeries = new ArrayList<>();
         final int n = aResults.size();
-        for (int i = 0; i < n; i++) {
-            final Result result = aResults.get(i);
-            final PointHistory history = result.getHistory();
+        for ( int i = 0; i < n; i++ ) {
+            Result result = aResults.get( i );
+            PointHistory history = result.getHistory();
             final int m = history.size();
-            for (int j = 0; j < m; j++) {
-                final ArrayList<CalculatedPoint> points = history.get(j);
-                final DataTable data = new DataTable(Integer.class, Double.class);
+            for ( int j = 0; j < m; j++ ) {
+                List<CalculatedPoint> points = history.get ( j );
+                DataTable data = new DataTable( Integer.class, Double.class );
                 final int o = points.size();
-                for (int k = 0; k < o; k++) {
-                    data.add(k, points.get(k).getValue());
+                for ( int k = 0; k < o; k++ ) {
+                    data.add( k, points.get( k ).getValue() );
                 }
-                final DataSeries series = new DataSeries(
+                DataSeries series = new DataSeries(
                     String.format(
                         "%s-%d", 
                         result.getAlgorithm().toString(),
@@ -93,15 +119,61 @@ public class HistoryController {
                     ), 
                     data, 0, 1
                 );
-                dataSeries.add(series);
+                dataSeries.add( series );
             }
         }
-       
+        return dataSeries;
+    }
+    
+    private List<Pair<String, List<DataSeries>>> generateParametersSeries( List<Result> aResults ) {
+        List<Pair<String, List<DataSeries>>> dataSeries = new ArrayList<>();
+        for ( Result result : aResults ) {
+            List<DataSeries> data = generateParameterSeries( result );
+            dataSeries.add( new Pair<>( result.getAlgorithm().toString(), data ) );
+        }
+        return dataSeries;
+    }
+    
+    private List<DataSeries> generateParameterSeries( Result aResult ) {
+        List<DataSeries> dataSeries = new ArrayList<>();
+        PointHistory history = aResult.getHistory();
+        final int m = history.size();
+//        final int m = history.size() > 0 ? 1 : 0;
+        for ( int i = 0; i < m; i++ ) {
+            List<CalculatedPoint> points = history.get( i );
+            final int o = points.size();
+            final int arity = points.get( 0 ).getArity();
+            DataTable[] data = new DataTable[ arity ];
+            for (int j = 0; j < arity; j++) {
+                data[ j ] = new DataTable( Integer.class, Double.class );
+            }
+            
+            for ( int iter = 0; iter < o; iter++ ) {
+                Point point = points.get( iter );
+                for ( int dim = 0; dim < arity; dim++ ) {
+                    data[ dim ].add( iter, point.get( dim ) );
+                }
+            }
+            
+            for ( int dim = 0; dim < arity; dim ++ ) {
+                DataSeries series = new DataSeries(
+                    String.format( "x_%d-%d", dim, i ), 
+                    data[ dim ], 
+                    0, 1
+                );
+                dataSeries.add( series );
+            }
+        }
+           
         return dataSeries;
     }
     
     public XYPlot getPlot() {
         return plot;
+    }
+    
+    public List<Pair<String, XYPlot>> getCoordinatePlots() {
+        return coordinates;
     }
     
 }

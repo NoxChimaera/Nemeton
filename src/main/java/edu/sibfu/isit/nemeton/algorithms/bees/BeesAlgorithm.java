@@ -23,7 +23,7 @@
  */
 package edu.sibfu.isit.nemeton.algorithms.bees;
 
-import edu.sibfu.isit.nemeton.algorithms.PointHistory;
+import edu.sibfu.isit.nemeton.models.PointHistory;
 import edu.sibfu.isit.nemeton.models.CalculatedPoint;
 import edu.sibfu.isit.nemeton.models.Point;
 import edu.sibfu.isit.nemeton.models.Result;
@@ -67,6 +67,12 @@ public class BeesAlgorithm extends OptimizationAlgorithm {
     
     private int evaluations;
     
+    /**
+     * Creates new Bees Algorithm object.
+     * 
+     * @param aFunction Optimized function
+     * @param aParams Algorithm parameters
+     */
     public BeesAlgorithm(final NFunction aFunction, final BeesAlgorithmParameters aParams) {
         super(aFunction);
         hivePosition = aParams.hivePosition;

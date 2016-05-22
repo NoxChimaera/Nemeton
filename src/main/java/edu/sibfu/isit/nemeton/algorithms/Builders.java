@@ -41,10 +41,21 @@ public class Builders {
        builders = new ArrayList<>();
     }
     
-    public static void subscribe( final Listener<AlgorithmBuilder> aSubscriber ) {
-        subscribers.add(aSubscriber);
+    /**
+     * Subscribes listener.
+     * Messages are sent when registering new algorithm builder
+     * 
+     * @param aListener Listener
+     */
+    public static void subscribe( final Listener<AlgorithmBuilder> aListener ) {
+        subscribers.add(aListener);
     }
     
+    /**
+     * Registers new algorithm builder.
+     * 
+     * @param aBldr Builder
+     */
     public static void register( final AlgorithmBuilder aBldr ) {
         builders.add( aBldr );
         for ( Listener<AlgorithmBuilder> subscriber : subscribers ) {

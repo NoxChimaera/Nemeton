@@ -37,7 +37,6 @@ import edu.sibfu.isit.nemeton.models.CalculatedPoint;
 import edu.sibfu.isit.nemeton.models.Result;
 import edu.sibfu.isit.nemeton.models.functions.NFunction;
 import edu.sibfu.isit.nemeton.views.AnalysisView;
-import edu.sibfu.isit.nemeton.views.HistoryView;
 import edu.sibfu.isit.nemeton.views.MainView;
 import edu.sibfu.isit.nemeton.views.ResultView;
 import java.util.ArrayList;
@@ -53,6 +52,7 @@ import org.jzy3d.colors.colormaps.ColorMapRainbow;
 import org.jzy3d.maths.Range;
 import org.jzy3d.plot3d.rendering.canvas.Quality;
 import edu.sibfu.isit.nemeton.framework.Listener;
+import edu.sibfu.isit.nemeton.views.HistoryView;
 
 /**
  *
@@ -207,8 +207,10 @@ public class MainController {
      * @param aResults Results
      */
     public void showHistory( final ArrayList<Result> aResults ) {
-        HistoryView history = new HistoryView( aResults );
-        history.showAsFrame();
+        new HistoryView( (List<Result>) aResults, true ).setVisible(true);
+        
+//        HistoryView history = new HistoryView( aResults, true );
+//        history.showAsFrame();
     }
     
     /**
@@ -267,7 +269,7 @@ public class MainController {
             // final int n = result.getHistory().size();
             final int n = 1;
             for ( int i = 0; i < n; i++ ) {
-                final ArrayList<CalculatedPoint> points = result.getHistory().get( i );
+                final List<CalculatedPoint> points = result.getHistory().get( i );
                 JzyLinePlot line = new JzyLinePlot( points );
                 chart.addPlot( line );
             }

@@ -38,9 +38,20 @@ import java.util.List;
  */
 public abstract class OptimizationAlgorithm {
     
+    /**
+     * Optimized function.
+     */
     protected final NFunction f;
+    /**
+     * Algorithm constraints.
+     */
     protected final List<Constraint> constraints;
     
+    /**
+     * Creates new optimization algorithm. 
+     * 
+     * @param aFunction Optimized function
+     */
     protected OptimizationAlgorithm(final NFunction aFunction) {
         f = aFunction;
         constraints = new ArrayList<>();
@@ -54,10 +65,20 @@ public abstract class OptimizationAlgorithm {
      */
     public abstract Result run(Comparator<Point> comparator);
     
+    /**
+     * Adds new constraint to algorithm.
+     * 
+     * @param aConstraint Constraint
+     */
     public void constraint( final Constraint aConstraint ) {
         constraints.add( aConstraint );
     }
     
+    /**
+     * Adds new constraints to algorithm.
+     * 
+     * @param aConstraints Constraints
+     */
     public void constraint( final List<Constraint> aConstraints ) {
         aConstraints.forEach((constr) -> constraint(constr));
     }

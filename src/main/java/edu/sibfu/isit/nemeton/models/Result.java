@@ -23,7 +23,6 @@
  */
 package edu.sibfu.isit.nemeton.models;
 
-import edu.sibfu.isit.nemeton.algorithms.PointHistory;
 import edu.sibfu.isit.nemeton.models.functions.NFunction;
 import edu.sibfu.isit.nemeton.algorithms.OptimizationAlgorithm;
 

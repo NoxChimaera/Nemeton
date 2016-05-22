@@ -34,6 +34,10 @@ public class RangeConstraint implements Constraint {
 
     private final Pair<Double, Double>[] range;
     
+    public static RangeConstraint create( double aMin, double aMax, int aArity ) {
+        return new RangeConstraint( new Pair<>(aMin, aMax) , aArity );
+    }
+    
     public RangeConstraint( final Pair<Double, Double> ... aRange ) {
         final int n = aRange.length;
         range = aRange;

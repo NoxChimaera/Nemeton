@@ -56,110 +56,251 @@ public class BeesAlgorithmBuilder extends AlgorithmBuilder {
     private double accuracy = 0.000001;
     private boolean constrained = true;
 
+    /**
+     * Creates new builder with default parameters.
+     */
     public BeesAlgorithmBuilder() {
     }
     
+    /**
+     * Creates new builder with parameters of another builder.
+     * 
+     * @param aSrc Copied builder
+     */
     public BeesAlgorithmBuilder(final BeesAlgorithmBuilder aSrc) {
         copy(aSrc);
     }
 
+    /**
+     * Sets hive position (centre of search area).
+     * 
+     * @param aPosition Hive position
+     * @return Self
+     */
     public BeesAlgorithmBuilder hivePosition(final Point aPosition) {
         hivePosition = aPosition;
         return this;
     }
+    /**
+     * Returns hive position (centre of search area).
+     * 
+     * @return Hive position
+     */
     public Point hivePosition() {
         return hivePosition;
     }
     
+    /**
+     * Sets hive size (search range).
+     * 
+     * @param aHiveSize Hive size
+     * @return Self
+     */
     public BeesAlgorithmBuilder hiveSize(final int aHiveSize) {
         hiveSize = aHiveSize;
         return this;
     }
+    /**
+     * Returns hive size (search range).
+     * 
+     * @return Hive size
+     */
     public int hiveSize() {
         return hiveSize;
     }
 
+    /**
+     * Sets amount of scouts.
+     * 
+     * @param aScouts Amount of scouts
+     * @return Self
+     */    
     public BeesAlgorithmBuilder scouts(final int aScouts) {
         scouts = aScouts;
         return this;
     }
+    /**
+     * Returns amount of scouts.
+     * 
+     * @return Amount of scouts.
+     */
     public int scouts() {
         return scouts;
     }
  
+    /**
+     * Sets amount of selected sources.
+     * 
+     * @param aSources Selected sources
+     * @return Self
+     */
     public BeesAlgorithmBuilder sources(final int aSources) {
         sources = aSources;
         return this;
     }
+    /**
+     * Returns amount of sources.
+     * 
+     * @return Amount of sorces
+     */
     public int sources() {
         return sources;
     }
     
+    /**
+     * Sets source size (local search area range).
+     * 
+     * @param aSize Source size
+     * @return Self
+     */
     public BeesAlgorithmBuilder sourceSize(final int aSize) {
         sourceSize = aSize;
         return this;
     }
+    /**
+     * Returns source size (local search area range).
+     * 
+     * @return Source size
+     */
     public int sourceSize() {
         return sourceSize;
     }
     
+    /**
+     * Sets gamma (shrink coefficient).
+     * 
+     * @param aGamma Gamma
+     * @return Self
+     */
     public BeesAlgorithmBuilder gamma(final double aGamma) {
         gamma = aGamma;
         return this;
     }
+    /**
+     * Returns gamma (shrink coefficient).
+     * 
+     * @return Gamma
+     */
     public double gamma() {
         return gamma;
     }
     
+    /**
+     * Sets amount of elite sources.
+     * 
+     * @param aBest Amount of elite sources
+     * @return Self
+     */
     public BeesAlgorithmBuilder eliteSources(final int aBest) {
         eliteSources = aBest;
         return this;
     }
+    /**
+     * Returns amount of elite sources.
+     * 
+     * @return Amount of elite sources
+     */
     public int eliteSources() {
         return eliteSources;
     }
 
-    public BeesAlgorithmBuilder onElite(final int aOnBest) {
-        onElite = aOnBest;
+    /**
+     * Sets amount of workers on elite sources.
+     * 
+     * @param aOnElite Amount of workers on elite sources
+     * @return Self
+     */
+    public BeesAlgorithmBuilder onElite(final int aOnElite) {
+        onElite = aOnElite;
         return this;
     }
+    /**
+     * Returns amount of workers on elite sources.
+     * 
+     * @return Amount of workers on elite sources
+     */
     public int onElite() {
         return onElite;
     }
+    
+    /**
+     * Sets amount of workers on another sources (total sources - elite sources).
+     * 
+     * @param aOnNonBest Amount of workers on non-best sources
+     * @return Self
+     */
     public BeesAlgorithmBuilder onOther(final int aOnNonBest) {
         onOther = aOnNonBest;
         return this;
     }
+    /**
+     * Returns amount of workers on non-best sources (total sources - elite sources).
+     * 
+     * @return Amount of workers on non-best sources
+     */
     public int onOther() {
         return onOther;
     }
 
+    /**
+     * Sets maximum iterations.
+     * 
+     * @param aMax Maximum iterations
+     * @return Self
+     */
     public BeesAlgorithmBuilder maxIteration(final int aMax) {
         maxIteration = aMax;
         return this;
     }
+    /**
+     * Returns maximum iterations.
+     * 
+     * @return Maximum iterations
+     */
     public int maxIteration() {
         return maxIteration;
     }
     
+    /**
+     * Sets accuracy.
+     * 
+     * @param aAccuracy Accuracy
+     * @return Self
+     */
     public BeesAlgorithmBuilder accuracy(final double aAccuracy) {
         accuracy = aAccuracy;
         return this;
     }
+    /**
+     * Returns accuracy.
+     * 
+     * @return Accuracy
+     */
     public double accuracy() {
         return accuracy;
     }
     
+    /**
+     * Sets function constraint mode.
+     * 
+     * @param aConstrained If true add function constraints
+     * @return Self
+     */
     public BeesAlgorithmBuilder constrained( final boolean aConstrained ) {
         constrained = aConstrained;
         return this;
     }
+    
     @Override
     public boolean isConstrained() {
         return constrained;
     }
    
-    // ??
+    /**
+     * Copies parameters from another builder.
+     * 
+     * @param aSrc Copied builder
+     */
     public void copy(final BeesAlgorithmBuilder aSrc) {
         scouts = aSrc.scouts;
         sources = aSrc.sources;
