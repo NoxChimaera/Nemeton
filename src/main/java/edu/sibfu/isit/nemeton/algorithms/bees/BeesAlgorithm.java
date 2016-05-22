@@ -81,7 +81,13 @@ public class BeesAlgorithm extends OptimizationAlgorithm {
         super(aFunction);
         hivePosition = aParams.hivePosition;
         hiveSize = aParams.hiveSize;
-        constraints.add( new RangeConstraint( new Pair<>( (double) -hiveSize, (double) hiveSize ), hivePosition.getArity() ) );
+        int n = aFunction.getArity();
+        List<Pair<Double, Double>> consts = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            double centre = hivePosition.get(i);
+            consts.add(new Pair<>(centre - hiveSize, centre + hiveSize));
+        }
+        constraints.add(new RangeConstraint(consts.toArray(new Pair[]{})));
         
         scouts = aParams.scouts;
         
