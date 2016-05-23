@@ -163,6 +163,7 @@ public class MainController {
             if ( (boolean) vector.get( 0 ) ) {
                 AlgorithmBuilder bldr = (AlgorithmBuilder) vector.get( 1 );
                 if ( bldr.isConstrained() ) {
+                    bldr.clearConstraints();
                     bldr.constraint( aFunction.constraints() );
                 }
                 builders.add( bldr );

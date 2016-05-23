@@ -80,10 +80,17 @@ public abstract class AlgorithmBuilder {
      * 
      * @param aConstraints constraints
      */
-    public void constraint( final List<Constraint> aConstraints ) {
-        aConstraints.forEach((constr) -> constraint(constr));
+    public void constraint( List<Constraint> aConstraints ) {
+        aConstraints.forEach( ( constr ) -> constraint( constr) );
     }
 
+    /**
+     * Deletes all contraints.
+     */
+    public void clearConstraints() {
+        constraints.clear();
+    }
+    
     /**
      * Show settings window.
      * 

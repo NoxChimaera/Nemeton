@@ -63,14 +63,14 @@ public abstract class OptimizationAlgorithm {
      * @param comparator custom comparator for points
      * @return result
      */
-    public abstract Result run(Comparator<Point> comparator);
+    public abstract Result run( Comparator<Point> comparator );
     
     /**
      * Adds new constraint to algorithm.
      * 
      * @param aConstraint constraint
      */
-    public void constraint( final Constraint aConstraint ) {
+    public void constraint( Constraint aConstraint ) {
         constraints.add( aConstraint );
     }
     
@@ -79,10 +79,10 @@ public abstract class OptimizationAlgorithm {
      * 
      * @param aConstraints constraints
      */
-    public void constraint( final List<Constraint> aConstraints ) {
+    public void constraint( List<Constraint> aConstraints ) {
         aConstraints.forEach((constr) -> constraint(constr));
     }
-    
+        
     /**
      * Minimizes function.
      * 

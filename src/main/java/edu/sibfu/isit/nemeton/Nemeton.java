@@ -172,7 +172,6 @@ public class Nemeton {
         )
             .setTitle( "Bird" )
             .setText( "bird", FunctionTextFormatter::image )
-            .constraint( new RangeConstraint( new Pair<>( -Math.PI * 2, Math.PI * 2 ), 2 ) )
             .constraint( RangeConstraint.create( -Math.PI * 2, Math.PI * 2, 2 ) )
             .minima( new CalculatedPoint( -106.76453, 4.70105575, 3.15294601 ) )
             .minima( new CalculatedPoint( -106.76453, -1.58214217, -3.13024679 ) )
