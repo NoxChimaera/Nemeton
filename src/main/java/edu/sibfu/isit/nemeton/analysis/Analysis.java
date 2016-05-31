@@ -90,9 +90,12 @@ public class Analysis {
                 final int ipp = i + 1;
                 SwingUtilities.invokeLater( () -> listener.publish( ipp ) );
 
+                boolean wasNaN = false;
                 loop:
                 for ( CalculatedPoint point : solutions ) {
+                    wasNaN = false;
                     if ( Double.isNaN( point.getValue() ) ) {
+                        wasNaN = true;
                         continue;
                     }
 
@@ -100,12 +103,13 @@ public class Analysis {
                         double distance = min.distance(point);
                         double valueDiff = Math.abs( min.getValue() - point.getValue() );
                         if ( distance < accuracy || valueDiff < accuracy ) {
-                            success++; total++;
+                            success++;
                             evaluations += result.getEvaluations();
                             break loop;
                         } 
                     }
                 }
+                if (!wasNaN) total++;
             }
             
             double prob = total != 0 ? (double) success / total : 0;
